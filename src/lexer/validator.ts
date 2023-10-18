@@ -23,8 +23,6 @@ export default class Validator {
         return [Keyword.Return];
       case 8:
         return [Keyword.Function, Keyword.Continue];
-      case 11:
-        return [Keyword.ImportCode];
       default:
         return [];
     }
