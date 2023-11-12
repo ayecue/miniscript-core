@@ -984,14 +984,14 @@ export default class Parser {
   parseIsa(asLval: boolean = false, statementStart: boolean = false): ASTBase {
     const me = this;
     const start = me.token.getStart();
-    const val = me.parseBitwiseOr(asLval, statementStart);
+    const val = me.parseComparisons(asLval, statementStart);
 
     if (me.is(Selectors.Isa)) {
       me.next();
 
       me.skipNewlines();
 
-      const opB = me.parseBitwiseOr();
+      const opB = me.parseComparisons();
 
       return me.astProvider.binaryExpression({
         operator: Operator.Isa,
@@ -1004,60 +1004,6 @@ export default class Parser {
     }
 
     return val;
-  }
-
-  parseBitwiseOr(
-    asLval: boolean = false,
-    statementStart: boolean = false
-  ): ASTBase {
-    const me = this;
-    const start = me.token.getStart();
-    const val = me.parseBitwiseAnd(asLval, statementStart);
-    let base = val;
-
-    while (me.is(Selectors.BitwiseOr)) {
-      me.next();
-
-      const opB = me.parseBitwiseAnd();
-
-      base = me.astProvider.binaryExpression({
-        operator: Operator.BitwiseOr,
-        left: base,
-        right: opB,
-        start,
-        end: me.previousToken.getEnd(),
-        scope: me.currentScope
-      });
-    }
-
-    return base;
-  }
-
-  parseBitwiseAnd(
-    asLval: boolean = false,
-    statementStart: boolean = false
-  ): ASTBase {
-    const me = this;
-    const start = me.token.getStart();
-    const val = me.parseComparisons(asLval, statementStart);
-    let base = val;
-
-    while (me.is(Selectors.BitwiseAnd)) {
-      me.next();
-
-      const opB = me.parseComparisons();
-
-      base = me.astProvider.binaryExpression({
-        operator: Operator.BitwiseAnd,
-        left: base,
-        right: opB,
-        start,
-        end: me.previousToken.getEnd(),
-        scope: me.currentScope
-      });
-    }
-
-    return base;
   }
 
   parseComparisons(
@@ -1104,46 +1050,10 @@ export default class Parser {
   ): ASTBase {
     const me = this;
     const start = me.token.getStart();
-    const val = me.parseBitwise(asLval, statementStart);
-    let base = val;
-
-    while (me.isOneOf(Selectors.Plus, Selectors.Minus)) {
-      const token = me.token;
-
-      me.next();
-      me.skipNewlines();
-
-      const opB = me.parseBitwise();
-
-      base = me.astProvider.binaryExpression({
-        operator: <Operator>token.value,
-        left: base,
-        right: opB,
-        start,
-        end: me.previousToken.getEnd(),
-        scope: me.currentScope
-      });
-    }
-
-    return base;
-  }
-
-  parseBitwise(
-    asLval: boolean = false,
-    statementStart: boolean = false
-  ): ASTBase {
-    const me = this;
-    const start = me.token.getStart();
     const val = me.parseMultDiv(asLval, statementStart);
     let base = val;
 
-    while (
-      me.isOneOf(
-        Selectors.LeftShift,
-        Selectors.RightShift,
-        Selectors.UnsignedRightShift
-      )
-    ) {
+    while (me.isOneOf(Selectors.Plus, Selectors.Minus)) {
       const token = me.token;
 
       me.next();

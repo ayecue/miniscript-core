@@ -95,12 +95,7 @@ export enum SelectorTypes {
   LessEqual = 'LessEqual',
   New = 'New',
   Not = 'Not',
-  Comment = 'Comment',
-  LeftShift = 'LeftShift',
-  RightShift = 'RightShift',
-  UnsignedRightShift = 'UnsignedRightShift',
-  BitwiseOr = 'BitwiseOr',
-  BitwiseAnd = 'BitwiseAnd'
+  Comment = 'Comment'
 }
 
 export const Selectors: Record<SelectorTypes, Selector> = {
@@ -306,25 +301,5 @@ export const Selectors: Record<SelectorTypes, Selector> = {
   }),
   Comment: new SelectorOfType({
     type: TokenType.Comment
-  }),
-  LeftShift: new Selector({
-    type: TokenType.Punctuator,
-    value: Operator.LeftShift
-  }),
-  RightShift: new Selector({
-    type: TokenType.Punctuator,
-    value: Operator.RightShift
-  }),
-  UnsignedRightShift: new Selector({
-    type: TokenType.Punctuator,
-    value: Operator.UnsignedRightShift
-  }),
-  BitwiseOr: new Selector({
-    type: TokenType.Punctuator,
-    value: Operator.BitwiseOr
-  }),
-  BitwiseAnd: new Selector({
-    type: TokenType.Punctuator,
-    value: Operator.BitwiseAnd
   })
 };

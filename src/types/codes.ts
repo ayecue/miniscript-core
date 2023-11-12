@@ -36,8 +36,6 @@ export enum CharacterCode {
   COLON = 58,
   ARROW_LEFT = 60,
   ARROW_RIGHT = 62,
-  VERTICAL_LINE = 124,
-  AMPERSAND = 38,
   LETTER_E = 69,
   LETTER_e = 101
 }

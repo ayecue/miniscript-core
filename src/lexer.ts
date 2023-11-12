@@ -67,17 +67,10 @@ export default class Lexer {
       case CharacterCode.ARROW_LEFT:
         if (CharacterCode.EQUAL === nextCode)
           return me.scanPunctuator(Operator.LessThanOrEqual, afterSpace);
-        if (CharacterCode.ARROW_LEFT === nextCode)
-          return me.scanPunctuator(Operator.LeftShift, afterSpace);
         return me.scanPunctuator(Operator.LessThan, afterSpace);
       case CharacterCode.ARROW_RIGHT:
         if (CharacterCode.EQUAL === nextCode)
           return me.scanPunctuator(Operator.GreaterThanOrEqual, afterSpace);
-        if (CharacterCode.ARROW_RIGHT === nextCode) {
-          if (CharacterCode.ARROW_RIGHT === lastCode)
-            return me.scanPunctuator(Operator.UnsignedRightShift, afterSpace);
-          return me.scanPunctuator(Operator.RightShift, afterSpace);
-        }
         return me.scanPunctuator(Operator.GreaterThan, afterSpace);
       case CharacterCode.EXCLAMATION_MARK:
         if (CharacterCode.EQUAL === nextCode)
@@ -111,8 +104,6 @@ export default class Lexer {
       case CharacterCode.PARENTHESIS_LEFT:
       case CharacterCode.PARENTHESIS_RIGHT:
       case CharacterCode.AT_SIGN:
-      case CharacterCode.AMPERSAND:
-      case CharacterCode.VERTICAL_LINE:
         return me.scanPunctuator(String.fromCharCode(code), afterSpace);
       case CharacterCode.NUMBER_0:
       case CharacterCode.NUMBER_1:
