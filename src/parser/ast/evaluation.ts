@@ -2,18 +2,18 @@ import { Operator } from '../../types/operators';
 import { ASTBase, ASTBaseOptions, ASTType } from './base';
 
 export interface ASTEvaluationExpressionOptions extends ASTBaseOptions {
-  operator: Operator;
+  operator: string;
   left: ASTBase;
   right: ASTBase;
 }
 
 export class ASTEvaluationExpression extends ASTBase {
-  operator: Operator;
+  operator: string;
   left: ASTBase;
   right: ASTBase;
 
   static getExpressionType(
-    operator: Operator
+    operator: string
   ):
     | ASTType.BinaryExpression
     | ASTType.LogicalExpression

@@ -512,58 +512,6 @@ exports[`parse default scripts ascii.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts binary-expressions.src 1`] = `
-"Chunk[1:1-21:9][
-	AssignmentStatement[1:1-1:7][Identifier[1:1-1:2][a] = BinaryExpression[1:6-1:7][Identifier[1:1-1:2][a] / Identifier[1:6-1:7][b]]]
-	AssignmentStatement[2:1-2:7][Identifier[2:1-2:2][a] = BinaryExpression[2:6-2:7][Identifier[2:1-2:2][a] * Identifier[2:6-2:7][b]]]
-	AssignmentStatement[3:1-3:7][Identifier[3:1-3:2][a] = BinaryExpression[3:6-3:7][Identifier[3:1-3:2][a] - Identifier[3:6-3:7][b]]]
-	AssignmentStatement[4:1-4:7][Identifier[4:1-4:2][a] = BinaryExpression[4:6-4:7][Identifier[4:1-4:2][a] + Identifier[4:6-4:7][b]]]
-	BinaryExpression[5:1-5:7][Identifier[5:1-5:2][a] << Identifier[5:6-5:7][b]]
-	BinaryExpression[6:1-6:7][Identifier[6:1-6:2][a] >> Identifier[6:6-6:7][b]]
-	AssignmentStatement[7:1-7:24][Identifier[7:1-7:2][w] = BinaryExpression[7:5-7:24][BinaryExpression[7:5-7:19][Identifier[7:5-7:6][a] >>> BinaryExpression[7:12-7:18][Identifier[7:12-7:13][b] << Identifier[7:17-7:18][c]]] >> Identifier[7:23-7:24][a]]]
-	BinaryExpression[8:1-8:6][Identifier[8:1-8:2][a] | Identifier[8:5-8:6][b]]
-	BinaryExpression[9:1-9:6][Identifier[9:1-9:2][a] & Identifier[9:5-9:6][b]]
-	BinaryExpression[10:1-10:6][Identifier[10:1-10:2][a] ^ Identifier[10:5-10:6][b]]
-	LogicalExpression[11:1-11:8][Identifier[11:1-11:2][a] and Identifier[11:7-11:8][b]]
-	LogicalExpression[12:1-12:7][Identifier[12:1-12:2][a] or Identifier[12:6-12:7][b]]
-	IsaExpression[13:1-13:8][Identifier[13:1-13:2][a] isa Identifier[13:7-13:8][b]]
-	LogicalExpression[14:1-14:20][IsaExpression[14:1-14:8][Identifier[14:1-14:2][a] isa Identifier[14:7-14:8][b]] and IsaExpression[14:13-14:20][Identifier[14:13-14:14][a] isa Identifier[14:19-14:20][b]]]
-	BinaryExpression[17:1-17:13][MemberExpression[17:1-17:9][Identifier[17:1-17:5][test].Identifier[17:6-17:9][len]] / Literal[17:12-17:13][2]]
-	BinaryExpression[18:1-18:13][MemberExpression[18:1-18:9][Identifier[18:1-18:5][test].Identifier[18:6-18:9][len]] + Literal[18:12-18:13][2]]
-	BinaryExpression[19:1-19:13][MemberExpression[19:1-19:9][Identifier[19:1-19:5][test].Identifier[19:6-19:9][len]] - Literal[19:12-19:13][2]]
-	AssignmentStatement[21:1-21:9][Identifier[21:1-21:4][bar] = Literal[21:7-21:9][0.1]]
-]"
-`;
-
-exports[`parse default scripts binary-expressions.src 2`] = `undefined`;
-
-exports[`parse default scripts binary-expressions.src 3`] = `4`;
-
-exports[`parse default scripts binary-expressions.src 4`] = `6`;
-
-exports[`parse default scripts binary-expressions.src unsafe 1`] = `
-"Chunk[1:1-21:9][
-	AssignmentStatement[1:1-1:7][Identifier[1:1-1:2][a] = BinaryExpression[1:6-1:7][Identifier[1:1-1:2][a] / Identifier[1:6-1:7][b]]]
-	AssignmentStatement[2:1-2:7][Identifier[2:1-2:2][a] = BinaryExpression[2:6-2:7][Identifier[2:1-2:2][a] * Identifier[2:6-2:7][b]]]
-	AssignmentStatement[3:1-3:7][Identifier[3:1-3:2][a] = BinaryExpression[3:6-3:7][Identifier[3:1-3:2][a] - Identifier[3:6-3:7][b]]]
-	AssignmentStatement[4:1-4:7][Identifier[4:1-4:2][a] = BinaryExpression[4:6-4:7][Identifier[4:1-4:2][a] + Identifier[4:6-4:7][b]]]
-	BinaryExpression[5:1-5:7][Identifier[5:1-5:2][a] << Identifier[5:6-5:7][b]]
-	BinaryExpression[6:1-6:7][Identifier[6:1-6:2][a] >> Identifier[6:6-6:7][b]]
-	AssignmentStatement[7:1-7:24][Identifier[7:1-7:2][w] = BinaryExpression[7:5-7:24][BinaryExpression[7:5-7:19][Identifier[7:5-7:6][a] >>> BinaryExpression[7:12-7:18][Identifier[7:12-7:13][b] << Identifier[7:17-7:18][c]]] >> Identifier[7:23-7:24][a]]]
-	BinaryExpression[8:1-8:6][Identifier[8:1-8:2][a] | Identifier[8:5-8:6][b]]
-	BinaryExpression[9:1-9:6][Identifier[9:1-9:2][a] & Identifier[9:5-9:6][b]]
-	BinaryExpression[10:1-10:6][Identifier[10:1-10:2][a] ^ Identifier[10:5-10:6][b]]
-	LogicalExpression[11:1-11:8][Identifier[11:1-11:2][a] and Identifier[11:7-11:8][b]]
-	LogicalExpression[12:1-12:7][Identifier[12:1-12:2][a] or Identifier[12:6-12:7][b]]
-	IsaExpression[13:1-13:8][Identifier[13:1-13:2][a] isa Identifier[13:7-13:8][b]]
-	LogicalExpression[14:1-14:20][IsaExpression[14:1-14:8][Identifier[14:1-14:2][a] isa Identifier[14:7-14:8][b]] and IsaExpression[14:13-14:20][Identifier[14:13-14:14][a] isa Identifier[14:19-14:20][b]]]
-	BinaryExpression[17:1-17:13][MemberExpression[17:1-17:9][Identifier[17:1-17:5][test].Identifier[17:6-17:9][len]] / Literal[17:12-17:13][2]]
-	BinaryExpression[18:1-18:13][MemberExpression[18:1-18:9][Identifier[18:1-18:5][test].Identifier[18:6-18:9][len]] + Literal[18:12-18:13][2]]
-	BinaryExpression[19:1-19:13][MemberExpression[19:1-19:9][Identifier[19:1-19:5][test].Identifier[19:6-19:9][len]] - Literal[19:12-19:13][2]]
-	AssignmentStatement[21:1-21:9][Identifier[21:1-21:4][bar] = Literal[21:7-21:9][0.1]]
-]"
-`;
-
 exports[`parse default scripts call-with-spaces.src 1`] = `
 "Chunk[1:1-7:16][
 	CallExpression[1:1-1:38][Identifier[1:1-1:6][print](Identifier[1:7-1:17][myVariable], Literal[1:19-1:24][abc], BinaryExpression[1:26-1:31][Literal[1:26-1:27][1] + Literal[1:30-1:31][2]], ListConstructor[1:33-1:38][
