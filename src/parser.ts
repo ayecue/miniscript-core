@@ -854,6 +854,21 @@ export default class Parser {
 
         if (me.consume(Selectors.Assign)) {
           const defaultValue = me.parseExpr();
+
+          if (!(defaultValue instanceof ASTLiteral)) {
+            return me.raise(
+              `parameter default value must be a literal value`,
+              new Range(
+                parameterStart,
+                new Position(
+                  me.token.lastLine ?? me.token.line,
+                  me.token.lineRange[1]
+                )
+              ),
+              false
+            );
+          }
+
           const assign = me.astProvider.assignmentStatement({
             variable: parameter,
             init: defaultValue,
