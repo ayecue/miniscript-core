@@ -244,8 +244,9 @@ export default class Parser {
     }
   }
 
-  skipNewlines() {
+  skipNewlines(): number {
     const me = this;
+    let lines = 0;
     while (me.isOneOf(Selectors.EndOfLine, Selectors.Comment)) {
       if (me.is(Selectors.Comment)) {
         const comment = me.astProvider.comment({
@@ -257,10 +258,14 @@ export default class Parser {
 
         me.currentBlock.push(comment);
         me.addLine(comment);
+      } else {
+        lines++;
       }
 
       me.next();
     }
+
+    return lines;
   }
 
   pushScope(scope: ASTBaseBlockWithScope) {
@@ -1383,9 +1388,9 @@ export default class Parser {
     if (me.is(Selectors.CRBracket)) {
       me.next();
     } else {
-      while (!me.is(Selectors.EndOfFile)) {
-        me.skipNewlines();
+      me.skipNewlines();
 
+      while (!me.is(Selectors.EndOfFile)) {
         if (me.is(Selectors.CRBracket)) {
           me.next();
           break;
@@ -1434,17 +1439,19 @@ export default class Parser {
           })
         );
 
-        me.skipNewlines();
+        if (Selectors.MapSeperator.is(me.token)) {
+          me.next();
+          me.skipNewlines();
+        }
 
         if (
           Selectors.CRBracket.is(
-            me.requireTokenOfAny(
-              [Selectors.MapSeperator, Selectors.CRBracket],
-              start
-            )
+            me.token
           )
-        )
+        ) {
+          me.next();
           break;
+        }
       }
     }
 
@@ -1474,9 +1481,9 @@ export default class Parser {
     if (me.is(Selectors.SRBracket)) {
       me.next();
     } else {
-      while (!me.is(Selectors.EndOfFile)) {
-        me.skipNewlines();
+      me.skipNewlines();
 
+      while (!me.is(Selectors.EndOfFile)) {
         if (me.is(Selectors.SRBracket)) {
           me.next();
           break;
@@ -1531,17 +1538,19 @@ export default class Parser {
           })
         );
 
-        me.skipNewlines();
+        if (Selectors.MapSeperator.is(me.token)) {
+          me.next();
+          me.skipNewlines();
+        }
 
         if (
           Selectors.SRBracket.is(
-            me.requireTokenOfAny(
-              [Selectors.ListSeperator, Selectors.SRBracket],
-              start
-            )
+            me.token
           )
-        )
+        ) {
+          me.next();
           break;
+        }
       }
     }
 
