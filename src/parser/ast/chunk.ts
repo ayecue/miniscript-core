@@ -40,8 +40,8 @@ export class ASTChunk extends ASTBaseBlockWithScope {
 
   clone(): ASTChunk {
     return new ASTChunk({
-      literals: this.literals,
-      scopes: this.scopes,
+      literals: this.literals.map((it) => it.clone()),
+      scopes: this.scopes.map((it) => it.clone()),
       lines: this.lines,
       start: this.start,
       end: this.end,
