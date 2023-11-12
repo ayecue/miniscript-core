@@ -45,9 +45,9 @@ export default class Lexer {
   }
 
   scan(
-    code: CharacterCode,
-    nextCode: CharacterCode | undefined,
-    lastCode: CharacterCode | undefined,
+    code: number,
+    nextCode: number | undefined,
+    lastCode: number | undefined,
     afterSpace: boolean
   ): BaseToken<any> | null {
     const me = this;
@@ -135,7 +135,7 @@ export default class Lexer {
     return me.index;
   }
 
-  codeAt(offset: number = 0): CharacterCode {
+  codeAt(offset: number = 0): number {
     const me = this;
     return <CharacterCode>me.content.charCodeAt(me.index + offset);
   }

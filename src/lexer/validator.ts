@@ -35,17 +35,17 @@ export default class Validator {
     return keywords.indexOf(value) !== -1;
   }
 
-  isWhiteSpace(code: CharacterCode): boolean {
+  isWhiteSpace(code: number): boolean {
     return CharacterCode.WHITESPACE === code || CharacterCode.TAB === code;
   }
 
-  isEndOfLine(code: CharacterCode): boolean {
+  isEndOfLine(code: number): boolean {
     return (
       CharacterCode.NEW_LINE === code || CharacterCode.RETURN_LINE === code
     );
   }
 
-  isComment(code: CharacterCode, nextCode: CharacterCode): boolean {
+  isComment(code: number, nextCode: number): boolean {
     return CharacterCode.SLASH === code && CharacterCode.SLASH === nextCode;
   }
 
@@ -68,7 +68,7 @@ export default class Validator {
     );
   }
 
-  isDecDigit(code: CharacterCode): boolean {
+  isDecDigit(code: number): boolean {
     return code >= CharacterCode.NUMBER_0 && code <= CharacterCode.NUMBER_9;
   }
 }
