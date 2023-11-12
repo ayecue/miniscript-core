@@ -26,4 +26,13 @@ export class ASTWhileStatement extends ASTBaseBlock {
 
     return `WhileStatement[${this.start}-${this.end}][${this.condition}\n${body}\n]`;
   }
+
+  clone(): ASTWhileStatement {
+    return new ASTWhileStatement({
+      condition: this.condition.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }

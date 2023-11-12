@@ -18,6 +18,16 @@ export class ASTMapKeyString extends ASTBase {
   toString(): string {
     return `MapKeyString[${this.start}-${this.end}][${this.key}: ${this.value}]`;
   }
+
+  clone(): ASTMapKeyString {
+    return new ASTMapKeyString({
+      key: this.key.clone(),
+      value: this.value.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTMapConstructorExpressionOptions extends ASTBaseOptions {
@@ -45,5 +55,14 @@ export class ASTMapConstructorExpression extends ASTBase {
       .join('\n');
 
     return `MapConstructor[${this.start}-${this.end}][\n${body}\n]`;
+  }
+
+  clone(): ASTMapConstructorExpression {
+    return new ASTMapConstructorExpression({
+      fields: this.fields.map((it) => it.clone()),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
   }
 }

@@ -21,4 +21,15 @@ export class ASTSliceExpression extends ASTBase {
   toString(): string {
     return `SliceExpression[${this.start}-${this.end}][${this.base}[${this.left}:${this.right}]]`;
   }
+
+  clone(): ASTSliceExpression {
+    return new ASTSliceExpression({
+      base: this.base.clone(),
+      left: this.left.clone(),
+      right: this.right.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }

@@ -15,6 +15,15 @@ export class ASTIdentifier extends ASTBase {
   toString(): string {
     return `Identifier[${this.start}-${this.end}][${this.name}]`;
   }
+
+  clone(): ASTIdentifier {
+    return new ASTIdentifier({
+      name: this.name,
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTMemberExpressionOptions extends ASTBaseOptions {
@@ -38,6 +47,17 @@ export class ASTMemberExpression extends ASTBase {
   toString(): string {
     return `MemberExpression[${this.start}-${this.end}][${this.base}.${this.identifier}]`;
   }
+
+  clone(): ASTMemberExpression {
+    return new ASTMemberExpression({
+      indexer: this.indexer,
+      identifier: this.identifier.clone(),
+      base: this.base,
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTIndexExpressionOptions extends ASTBaseOptions {
@@ -57,5 +77,15 @@ export class ASTIndexExpression extends ASTBase {
 
   toString(): string {
     return `IndexExpression[${this.start}-${this.end}][${this.base}[${this.index}]]`;
+  }
+
+  clone(): ASTIndexExpression {
+    return new ASTIndexExpression({
+      base: this.base.clone(),
+      index: this.index.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
   }
 }

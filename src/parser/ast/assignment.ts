@@ -18,4 +18,14 @@ export class ASTAssignmentStatement extends ASTBase {
   toString(): string {
     return `AssignmentStatement[${this.start}-${this.end}][${this.variable} = ${this.init}]`;
   }
+
+  clone(): ASTAssignmentStatement {
+    return new ASTAssignmentStatement({
+      variable: this.variable.clone(),
+      init: this.init.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }

@@ -15,4 +15,13 @@ export class ASTReturnStatement extends ASTBase {
   toString(): string {
     return `ReturnStatement[${this.start}-${this.end}][${this.argument}]`;
   }
+
+  clone(): ASTReturnStatement {
+    return new ASTReturnStatement({
+      argument: this.argument.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }

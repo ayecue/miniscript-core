@@ -15,6 +15,15 @@ export class ASTCallStatement extends ASTBase {
   toString(): string {
     return `CallStatment[${this.start}-${this.end}][${this.expression}]`;
   }
+
+  clone(): ASTCallStatement {
+    return new ASTCallStatement({
+      expression: this.expression,
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTCallExpressionOptions extends ASTBaseOptions {
@@ -36,5 +45,15 @@ export class ASTCallExpression extends ASTBase {
     return `CallExpression[${this.start}-${this.end}][${
       this.base
     }(${this.arguments.map((item) => item.toString()).join(', ')})]`;
+  }
+
+  clone(): ASTCallExpression {
+    return new ASTCallExpression({
+      base: this.base.clone(),
+      arguments: this.arguments.map((it) => it.clone()),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
   }
 }

@@ -459,7 +459,7 @@ export default class Parser {
 
       assignmentStatement.init = me.astProvider.binaryExpression({
         operator,
-        left: expr,
+        left: expr.clone(),
         right,
         start: binaryExpressionStart,
         end: me.previousToken.getEnd(),
@@ -1319,7 +1319,7 @@ export default class Parser {
           end: me.previousToken.getEnd(),
           scope: me.currentScope
         });
-      } else if (me.is(Selectors.SLBracket)) {
+      } else if (me.is(Selectors.SLBracket) && !me.token.afterSpace) {
         me.next();
         me.skipNewlines();
 

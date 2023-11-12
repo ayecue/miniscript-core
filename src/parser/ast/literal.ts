@@ -41,4 +41,17 @@ export class ASTLiteral extends ASTBase {
   toString(): string {
     return `Literal[${this.start}-${this.end}][${this.value}]`;
   }
+
+  clone(): ASTLiteral {
+    return new ASTLiteral(this.type as TokenType.StringLiteral
+      | TokenType.NumericLiteral
+      | TokenType.BooleanLiteral
+      | TokenType.NilLiteral, {
+      value: this.value,
+      raw: this.raw,
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }

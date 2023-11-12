@@ -37,6 +37,15 @@ export class ASTIfStatement extends ASTBase {
 
     return `IfStatement[${this.start}-${this.end}][\n${clauses}\n]`;
   }
+
+  clone(): ASTIfStatement {
+    return new ASTIfStatement(this.type as ASTType.IfShortcutStatement | ASTType.IfStatement, {
+      clauses: this.clauses.map((it) => it.clone()),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTIfClauseOptions extends ASTBaseBlockOptions {
@@ -72,6 +81,18 @@ export class ASTIfClause extends ASTClause {
 
     return `${this.type}[${this.start}-${this.end}][${this.condition}\n${body}\n]`;
   }
+
+  clone(): ASTIfClause {
+    return new ASTIfClause(this.type as ASTType.IfShortcutClause
+      | ASTType.ElseifShortcutClause
+      | ASTType.IfClause
+      | ASTType.ElseifClause, {
+      condition: this.condition.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export class ASTElseClause extends ASTClause {
@@ -95,5 +116,13 @@ export class ASTElseClause extends ASTClause {
       .join('\n');
 
     return `${this.type}[${this.start}-${this.end}][\n${body}\n}]`;
+  }
+
+  clone(): ASTElseClause {
+    return new ASTElseClause(this.type as ASTType.ElseShortcutClause | ASTType.ElseClause, {
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
   }
 }

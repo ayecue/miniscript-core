@@ -15,6 +15,15 @@ export class ASTListValue extends ASTBase {
   toString(): string {
     return `ListValue[${this.start}-${this.end}][${this.value}]`;
   }
+
+  clone(): ASTListValue {
+    return new ASTListValue({
+      value: this.value.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTListConstructorExpressionOptions extends ASTBaseOptions {
@@ -42,5 +51,14 @@ export class ASTListConstructorExpression extends ASTBase {
       .join('\n');
 
     return `ListConstructor[${this.start}-${this.end}][\n${body}\n]`;
+  }
+
+  clone(): ASTListConstructorExpression {
+    return new ASTListConstructorExpression({
+      fields: this.fields.map((it) => it.clone()),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
   }
 }
