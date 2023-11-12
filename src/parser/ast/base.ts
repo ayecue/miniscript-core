@@ -42,6 +42,7 @@ export enum ASTType {
   LogicalExpression = 'LogicalExpression',
   IsaExpression = 'IsaExpression',
   SliceExpression = 'SliceExpression',
+  ImportCodeExpression = 'ImportCodeExpression',
   InvalidCodeExpression = 'InvalidCodeExpression',
   ParenthesisExpression = 'ParenthesisExpression'
 }
@@ -67,6 +68,14 @@ export class ASTBase {
 
   toString(): string {
     return `${this.type}[${this.start}-${this.end}][]`;
+  }
+
+  clone(): ASTBase {
+    return new ASTBase(this.type, {
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
   }
 }
 
@@ -94,6 +103,15 @@ export class ASTBaseBlock extends ASTBase {
       body.length > 0 ? `\n${body}\n` : ''
     }]`;
   }
+
+  clone(): ASTBaseBlock {
+    return new ASTBaseBlock(this.type, {
+      body: this.body.map((it) => it.clone()),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTBaseBlockWithScopeOptions extends ASTBaseBlockOptions {
@@ -115,6 +133,18 @@ export class ASTBaseBlockWithScope extends ASTBaseBlock {
     this.assignments = options.assignments || [];
     this.returns = options.returns || [];
   }
+
+  clone(): ASTBaseBlockWithScope {
+    return new ASTBaseBlockWithScope(this.type, {
+      namespaces: this.namespaces,
+      assignments: this.assignments.map((it) => it.clone()),
+      returns: this.returns.map((it) => it.clone()),
+      body: this.body.map((it) => it.clone()),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
 
 export interface ASTCommentOptions extends ASTBaseOptions {
@@ -134,5 +164,15 @@ export class ASTComment extends ASTBase {
 
   toString(): string {
     return `Comment[${this.start}-${this.end}][${this.value}]`;
+  }
+
+  clone(): ASTComment {
+    return new ASTComment({
+      value: this.value,
+      isMultiline: this.isMultiline,
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
   }
 }

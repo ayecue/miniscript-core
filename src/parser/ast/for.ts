@@ -29,4 +29,14 @@ export class ASTForGenericStatement extends ASTBaseBlock {
 
     return `For[${this.start}-${this.end}][${this.variable} in ${this.iterator}\n${body}\n]`;
   }
+
+  clone(): ASTForGenericStatement {
+    return new ASTForGenericStatement({
+      variable: this.variable.clone(),
+      iterator: this.iterator.clone(),
+      start: this.start,
+      end: this.end,
+      scope: this.scope
+    });
+  }
 }
