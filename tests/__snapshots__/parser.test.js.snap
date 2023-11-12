@@ -601,7 +601,7 @@ exports[`parse default scripts comments.src unsafe 1`] = `
 `;
 
 exports[`parse default scripts default-args.src 1`] = `
-"Chunk[1:1-17:13][
+"Chunk[1:1-12:13][
 	AssignmentStatement[1:1-4:13][Identifier[1:1-1:5][test] = Function[1:8-4:13][AssignmentStatement[1:17-1:25][Identifier[1:17-1:21][arg1] = Literal[1:24-1:25][0]], AssignmentStatement[1:27-1:40][Identifier[1:27-1:31][arg2] = Literal[1:34-1:40][test]] =>
 		CallExpression[2:3-2:14][Identifier[2:3-2:8][print](Identifier[2:9-2:13][arg1])]
 		CallExpression[3:3-3:14][Identifier[3:3-3:8][print](Identifier[3:9-3:13][arg2])]
@@ -611,10 +611,6 @@ exports[`parse default scripts default-args.src 1`] = `
 	AssignmentStatement[9:1-12:13][Identifier[9:1-9:4][bar] = Function[9:7-12:13][AssignmentStatement[9:16-9:25][Identifier[9:16-9:20][arg1] = BinaryNegatedExpression[9:23-9:25][- Literal[9:24-9:25][1]]], AssignmentStatement[9:27-9:38][Identifier[9:27-9:31][arg2] = Literal[9:34-9:38][null]] =>
 		CallExpression[10:3-10:14][Identifier[10:3-10:8][print](Identifier[10:9-10:13][arg1])]
 		CallExpression[11:3-11:14][Identifier[11:3-11:8][print](Identifier[11:9-11:13][arg2])]
-	]]
-	AssignmentStatement[14:1-17:13][Identifier[14:1-14:4][foo] = Function[14:7-17:13][AssignmentStatement[14:16-14:28][Identifier[14:16-14:20][arg1] = UnaryExpression[14:23-14:28][@ Identifier[14:24-14:28][test]]], AssignmentStatement[14:30-14:39][Identifier[14:30-14:34][arg2] = MapConstructor[14:37-14:39][]] =>
-		CallExpression[15:3-15:14][Identifier[15:3-15:8][print](Identifier[15:9-15:13][arg1])]
-		CallExpression[16:3-16:14][Identifier[16:3-16:8][print](Identifier[16:9-16:13][arg2])]
 	]]
 ]"
 `;
@@ -623,10 +619,10 @@ exports[`parse default scripts default-args.src 2`] = `undefined`;
 
 exports[`parse default scripts default-args.src 3`] = `6`;
 
-exports[`parse default scripts default-args.src 4`] = `3`;
+exports[`parse default scripts default-args.src 4`] = `2`;
 
 exports[`parse default scripts default-args.src unsafe 1`] = `
-"Chunk[1:1-17:13][
+"Chunk[1:1-12:13][
 	AssignmentStatement[1:1-4:13][Identifier[1:1-1:5][test] = Function[1:8-4:13][AssignmentStatement[1:17-1:25][Identifier[1:17-1:21][arg1] = Literal[1:24-1:25][0]], AssignmentStatement[1:27-1:40][Identifier[1:27-1:31][arg2] = Literal[1:34-1:40][test]] =>
 		CallExpression[2:3-2:14][Identifier[2:3-2:8][print](Identifier[2:9-2:13][arg1])]
 		CallExpression[3:3-3:14][Identifier[3:3-3:8][print](Identifier[3:9-3:13][arg2])]
@@ -636,10 +632,6 @@ exports[`parse default scripts default-args.src unsafe 1`] = `
 	AssignmentStatement[9:1-12:13][Identifier[9:1-9:4][bar] = Function[9:7-12:13][AssignmentStatement[9:16-9:25][Identifier[9:16-9:20][arg1] = BinaryNegatedExpression[9:23-9:25][- Literal[9:24-9:25][1]]], AssignmentStatement[9:27-9:38][Identifier[9:27-9:31][arg2] = Literal[9:34-9:38][null]] =>
 		CallExpression[10:3-10:14][Identifier[10:3-10:8][print](Identifier[10:9-10:13][arg1])]
 		CallExpression[11:3-11:14][Identifier[11:3-11:8][print](Identifier[11:9-11:13][arg2])]
-	]]
-	AssignmentStatement[14:1-17:13][Identifier[14:1-14:4][foo] = Function[14:7-17:13][AssignmentStatement[14:16-14:28][Identifier[14:16-14:20][arg1] = UnaryExpression[14:23-14:28][@ Identifier[14:24-14:28][test]]], AssignmentStatement[14:30-14:39][Identifier[14:30-14:34][arg2] = MapConstructor[14:37-14:39][]] =>
-		CallExpression[15:3-15:14][Identifier[15:3-15:8][print](Identifier[15:9-15:13][arg1])]
-		CallExpression[16:3-16:14][Identifier[16:3-16:8][print](Identifier[16:9-16:13][arg2])]
 	]]
 ]"
 `;

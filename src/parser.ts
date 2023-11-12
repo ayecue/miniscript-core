@@ -15,6 +15,7 @@ import {
   ASTMapKeyString,
   ASTProvider,
   ASTReturnStatement,
+  ASTUnaryExpression,
   ASTWhileStatement
 } from './parser/ast';
 import Validator from './parser/validator';
@@ -855,7 +856,18 @@ export default class Parser {
         if (me.consume(Selectors.Assign)) {
           const defaultValue = me.parseExpr();
 
-          if (!(defaultValue instanceof ASTLiteral)) {
+          if (defaultValue instanceof ASTLiteral || (defaultValue instanceof ASTUnaryExpression && defaultValue.argument instanceof ASTLiteral)) {
+            const assign = me.astProvider.assignmentStatement({
+              variable: parameter,
+              init: defaultValue,
+              start: parameterStart,
+              end: me.previousToken.getEnd(),
+              scope: me.currentScope
+            });
+  
+            me.currentScope.assignments.push(assign);
+            parameters.push(assign);
+          } else {
             return me.raise(
               `parameter default value must be a literal value`,
               new Range(
@@ -868,17 +880,6 @@ export default class Parser {
               false
             );
           }
-
-          const assign = me.astProvider.assignmentStatement({
-            variable: parameter,
-            init: defaultValue,
-            start: parameterStart,
-            end: me.previousToken.getEnd(),
-            scope: me.currentScope
-          });
-
-          me.currentScope.assignments.push(assign);
-          parameters.push(assign);
         } else {
           const assign = me.astProvider.assignmentStatement({
             variable: parameter,
