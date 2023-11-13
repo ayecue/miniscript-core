@@ -58,6 +58,8 @@ export enum SelectorTypes {
   SubtractShorthand = 'SubtractShorthand',
   MultiplyShorthand = 'MultiplyShorthand',
   DivideShorthand = 'DivideShorthand',
+  PowerShorthand = 'PowerShorthand',
+  ModuloShorthand = 'ModuloShorthand',
   Seperator = 'Seperator',
   Function = 'Function',
   EndFunction = 'EndFunction',
@@ -150,6 +152,14 @@ export const Selectors: Record<SelectorTypes, Selector> = {
   DivideShorthand: new Selector({
     type: TokenType.Punctuator,
     value: Operator.DivideShorthand
+  }),
+  PowerShorthand: new Selector({
+    type: TokenType.Punctuator,
+    value: Operator.PowerShorthand
+  }),
+  ModuloShorthand: new Selector({
+    type: TokenType.Punctuator,
+    value: Operator.ModuloShorthand
   }),
   Seperator: new Selector({
     type: TokenType.Punctuator,
@@ -265,7 +275,7 @@ export const Selectors: Record<SelectorTypes, Selector> = {
   }),
   Mod: new Selector({
     type: TokenType.Punctuator,
-    value: Operator.PercentSign
+    value: Operator.Modulo
   }),
   Equal: new Selector({
     type: TokenType.Punctuator,

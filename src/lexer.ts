@@ -95,7 +95,13 @@ export default class Lexer {
       case CharacterCode.COLON:
         return me.scanSliceOperator(afterSpace);
       case CharacterCode.CARET:
+        if (CharacterCode.EQUAL === nextCode)
+          return me.scanPunctuator(Operator.PowerShorthand, afterSpace);
+        return me.scanPunctuator(Operator.Power, afterSpace);
       case CharacterCode.PERCENT:
+        if (CharacterCode.EQUAL === nextCode)
+          return me.scanPunctuator(Operator.ModuloShorthand, afterSpace);
+        return me.scanPunctuator(Operator.Modulo, afterSpace);
       case CharacterCode.COMMA:
       case CharacterCode.CURLY_BRACKET_LEFT:
       case CharacterCode.CURLY_BRACKET_RIGHT:

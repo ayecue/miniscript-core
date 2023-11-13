@@ -441,7 +441,9 @@ export default class Parser {
         Selectors.AddShorthand,
         Selectors.SubtractShorthand,
         Selectors.MultiplyShorthand,
-        Selectors.DivideShorthand
+        Selectors.DivideShorthand,
+        Selectors.PowerShorthand,
+        Selectors.ModuloShorthand
       )
     ) {
       const op = me.token;
@@ -529,7 +531,7 @@ export default class Parser {
     const start = me.previousToken.getStart();
     let expression = null;
 
-    if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment)) {
+    if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment, Selectors.Else)) {
       expression = me.parseExpr();
     }
 
@@ -1049,6 +1051,7 @@ export default class Parser {
       const token = me.token;
 
       me.next();
+      me.skipNewlines();
 
       const opB = me.parseAddSub();
 

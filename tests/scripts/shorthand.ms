@@ -45,3 +45,5 @@ end while
 if true then //x
 	print("moo")
 end if
+
+if x < 0 then return else print x

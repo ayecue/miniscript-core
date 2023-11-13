@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`parse default scripts ascii.src 1`] = `
+exports[`parse default scripts ascii.ms 1`] = `
 "Chunk[1:1-71:29][
 	AssignmentStatement[1:1-1:14][Identifier[1:1-1:9][AsciiGen] = MapConstructor[1:12-1:14][]]
 	AssignmentStatement[3:1-3:9][Identifier[3:1-3:4][map] = MapConstructor[3:7-3:9][]]
@@ -253,13 +253,13 @@ exports[`parse default scripts ascii.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts ascii.src 2`] = `undefined`;
+exports[`parse default scripts ascii.ms 2`] = `undefined`;
 
-exports[`parse default scripts ascii.src 3`] = `171`;
+exports[`parse default scripts ascii.ms 3`] = `171`;
 
-exports[`parse default scripts ascii.src 4`] = `152`;
+exports[`parse default scripts ascii.ms 4`] = `152`;
 
-exports[`parse default scripts ascii.src unsafe 1`] = `
+exports[`parse default scripts ascii.ms unsafe 1`] = `
 "Chunk[1:1-71:29][
 	AssignmentStatement[1:1-1:14][Identifier[1:1-1:9][AsciiGen] = MapConstructor[1:12-1:14][]]
 	AssignmentStatement[3:1-3:9][Identifier[3:1-3:4][map] = MapConstructor[3:7-3:9][]]
@@ -512,7 +512,35 @@ exports[`parse default scripts ascii.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts call-with-spaces.src 1`] = `
+exports[`parse default scripts assign-shorthands.ms 1`] = `
+"Chunk[1:1-6:11][
+	AssignmentStatement[1:1-1:12][Identifier[1:1-1:6][value] = BinaryExpression[1:10-1:12][Identifier[1:1-1:6][value] + Literal[1:10-1:12][12]]]
+	AssignmentStatement[2:1-2:11][Identifier[2:1-2:6][value] = BinaryExpression[2:10-2:11][Identifier[2:1-2:6][value] - Literal[2:10-2:11][2]]]
+	AssignmentStatement[3:1-3:11][Identifier[3:1-3:6][value] = BinaryExpression[3:10-3:11][Identifier[3:1-3:6][value] * Literal[3:10-3:11][3]]]
+	AssignmentStatement[4:1-4:11][Identifier[4:1-4:6][value] = BinaryExpression[4:10-4:11][Identifier[4:1-4:6][value] / Literal[4:10-4:11][5]]]
+	AssignmentStatement[5:1-5:11][Identifier[5:1-5:6][value] = BinaryExpression[5:10-5:11][Identifier[5:1-5:6][value] % Literal[5:10-5:11][4]]]
+	AssignmentStatement[6:1-6:11][Identifier[6:1-6:6][value] = BinaryExpression[6:10-6:11][Identifier[6:1-6:6][value] ^ Literal[6:10-6:11][3]]]
+]"
+`;
+
+exports[`parse default scripts assign-shorthands.ms 2`] = `undefined`;
+
+exports[`parse default scripts assign-shorthands.ms 3`] = `6`;
+
+exports[`parse default scripts assign-shorthands.ms 4`] = `6`;
+
+exports[`parse default scripts assign-shorthands.ms unsafe 1`] = `
+"Chunk[1:1-6:11][
+	AssignmentStatement[1:1-1:12][Identifier[1:1-1:6][value] = BinaryExpression[1:10-1:12][Identifier[1:1-1:6][value] + Literal[1:10-1:12][12]]]
+	AssignmentStatement[2:1-2:11][Identifier[2:1-2:6][value] = BinaryExpression[2:10-2:11][Identifier[2:1-2:6][value] - Literal[2:10-2:11][2]]]
+	AssignmentStatement[3:1-3:11][Identifier[3:1-3:6][value] = BinaryExpression[3:10-3:11][Identifier[3:1-3:6][value] * Literal[3:10-3:11][3]]]
+	AssignmentStatement[4:1-4:11][Identifier[4:1-4:6][value] = BinaryExpression[4:10-4:11][Identifier[4:1-4:6][value] / Literal[4:10-4:11][5]]]
+	AssignmentStatement[5:1-5:11][Identifier[5:1-5:6][value] = BinaryExpression[5:10-5:11][Identifier[5:1-5:6][value] % Literal[5:10-5:11][4]]]
+	AssignmentStatement[6:1-6:11][Identifier[6:1-6:6][value] = BinaryExpression[6:10-6:11][Identifier[6:1-6:6][value] ^ Literal[6:10-6:11][3]]]
+]"
+`;
+
+exports[`parse default scripts call-with-spaces.ms 1`] = `
 "Chunk[1:1-7:16][
 	CallExpression[1:1-1:38][Identifier[1:1-1:6][print](Identifier[1:7-1:17][myVariable], Literal[1:19-1:24][abc], BinaryExpression[1:26-1:31][Literal[1:26-1:27][1] + Literal[1:30-1:31][2]], ListConstructor[1:33-1:38][
 		ListValue[1:34-1:37][Identifier[1:34-1:37][was]]
@@ -531,13 +559,13 @@ exports[`parse default scripts call-with-spaces.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts call-with-spaces.src 2`] = `undefined`;
+exports[`parse default scripts call-with-spaces.ms 2`] = `undefined`;
 
-exports[`parse default scripts call-with-spaces.src 3`] = `13`;
+exports[`parse default scripts call-with-spaces.ms 3`] = `13`;
 
-exports[`parse default scripts call-with-spaces.src 4`] = `0`;
+exports[`parse default scripts call-with-spaces.ms 4`] = `0`;
 
-exports[`parse default scripts call-with-spaces.src unsafe 1`] = `
+exports[`parse default scripts call-with-spaces.ms unsafe 1`] = `
 "Chunk[1:1-7:16][
 	CallExpression[1:1-1:38][Identifier[1:1-1:6][print](Identifier[1:7-1:17][myVariable], Literal[1:19-1:24][abc], BinaryExpression[1:26-1:31][Literal[1:26-1:27][1] + Literal[1:30-1:31][2]], ListConstructor[1:33-1:38][
 		ListValue[1:34-1:37][Identifier[1:34-1:37][was]]
@@ -556,25 +584,25 @@ exports[`parse default scripts call-with-spaces.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts callexpr-with-nl.src 1`] = `
+exports[`parse default scripts callexpr-with-nl.ms 1`] = `
 "Chunk[1:1-7:2][
 	CallExpression[1:1-7:2][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
 ]"
 `;
 
-exports[`parse default scripts callexpr-with-nl.src 2`] = `undefined`;
+exports[`parse default scripts callexpr-with-nl.ms 2`] = `undefined`;
 
-exports[`parse default scripts callexpr-with-nl.src 3`] = `5`;
+exports[`parse default scripts callexpr-with-nl.ms 3`] = `5`;
 
-exports[`parse default scripts callexpr-with-nl.src 4`] = `0`;
+exports[`parse default scripts callexpr-with-nl.ms 4`] = `0`;
 
-exports[`parse default scripts callexpr-with-nl.src unsafe 1`] = `
+exports[`parse default scripts callexpr-with-nl.ms unsafe 1`] = `
 "Chunk[1:1-7:2][
 	CallExpression[1:1-7:2][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
 ]"
 `;
 
-exports[`parse default scripts comments.src 1`] = `
+exports[`parse default scripts comments.ms 1`] = `
 "Chunk[1:1-3:20][
 	Comment[1:1-1:10][comment]
 	Identifier[2:1-2:11][myVariable]
@@ -584,13 +612,13 @@ exports[`parse default scripts comments.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts comments.src 2`] = `undefined`;
+exports[`parse default scripts comments.ms 2`] = `undefined`;
 
-exports[`parse default scripts comments.src 3`] = `1`;
+exports[`parse default scripts comments.ms 3`] = `1`;
 
-exports[`parse default scripts comments.src 4`] = `1`;
+exports[`parse default scripts comments.ms 4`] = `1`;
 
-exports[`parse default scripts comments.src unsafe 1`] = `
+exports[`parse default scripts comments.ms unsafe 1`] = `
 "Chunk[1:1-3:20][
 	Comment[1:1-1:10][comment]
 	Identifier[2:1-2:11][myVariable]
@@ -600,7 +628,7 @@ exports[`parse default scripts comments.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts default-args.src 1`] = `
+exports[`parse default scripts default-args.ms 1`] = `
 "Chunk[1:1-12:13][
 	AssignmentStatement[1:1-4:13][Identifier[1:1-1:5][test] = Function[1:8-4:13][AssignmentStatement[1:17-1:25][Identifier[1:17-1:21][arg1] = Literal[1:24-1:25][0]], AssignmentStatement[1:27-1:40][Identifier[1:27-1:31][arg2] = Literal[1:34-1:40][test]] =>
 		CallExpression[2:3-2:14][Identifier[2:3-2:8][print](Identifier[2:9-2:13][arg1])]
@@ -615,13 +643,13 @@ exports[`parse default scripts default-args.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts default-args.src 2`] = `undefined`;
+exports[`parse default scripts default-args.ms 2`] = `undefined`;
 
-exports[`parse default scripts default-args.src 3`] = `6`;
+exports[`parse default scripts default-args.ms 3`] = `6`;
 
-exports[`parse default scripts default-args.src 4`] = `2`;
+exports[`parse default scripts default-args.ms 4`] = `2`;
 
-exports[`parse default scripts default-args.src unsafe 1`] = `
+exports[`parse default scripts default-args.ms unsafe 1`] = `
 "Chunk[1:1-12:13][
 	AssignmentStatement[1:1-4:13][Identifier[1:1-1:5][test] = Function[1:8-4:13][AssignmentStatement[1:17-1:25][Identifier[1:17-1:21][arg1] = Literal[1:24-1:25][0]], AssignmentStatement[1:27-1:40][Identifier[1:27-1:31][arg2] = Literal[1:34-1:40][test]] =>
 		CallExpression[2:3-2:14][Identifier[2:3-2:8][print](Identifier[2:9-2:13][arg1])]
@@ -636,7 +664,7 @@ exports[`parse default scripts default-args.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts eol.src 1`] = `
+exports[`parse default scripts eol.ms 1`] = `
 "Chunk[1:1-13:9][
 	IfStatement[1:1-5:7][
 		IfClause[1:1-3:5][Literal[1:5-1:9][true]
@@ -655,13 +683,13 @@ exports[`parse default scripts eol.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts eol.src 2`] = `undefined`;
+exports[`parse default scripts eol.ms 2`] = `undefined`;
 
-exports[`parse default scripts eol.src 3`] = `6`;
+exports[`parse default scripts eol.ms 3`] = `6`;
 
-exports[`parse default scripts eol.src 4`] = `2`;
+exports[`parse default scripts eol.ms 4`] = `2`;
 
-exports[`parse default scripts eol.src unsafe 1`] = `
+exports[`parse default scripts eol.ms unsafe 1`] = `
 "Chunk[1:1-13:9][
 	IfStatement[1:1-5:7][
 		IfClause[1:1-3:5][Literal[1:5-1:9][true]
@@ -680,7 +708,7 @@ exports[`parse default scripts eol.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts float.src 1`] = `
+exports[`parse default scripts float.ms 1`] = `
 "Chunk[1:1-19:25][
 	AssignmentStatement[1:1-1:14][Identifier[1:1-1:10][integer_1] = Literal[1:13-1:14][1]]
 	AssignmentStatement[2:1-2:15][Identifier[2:1-2:10][integer_2] = Literal[2:13-2:15][21]]
@@ -702,13 +730,13 @@ exports[`parse default scripts float.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts float.src 2`] = `undefined`;
+exports[`parse default scripts float.ms 2`] = `undefined`;
 
-exports[`parse default scripts float.src 3`] = `17`;
+exports[`parse default scripts float.ms 3`] = `17`;
 
-exports[`parse default scripts float.src 4`] = `17`;
+exports[`parse default scripts float.ms 4`] = `17`;
 
-exports[`parse default scripts float.src unsafe 1`] = `
+exports[`parse default scripts float.ms unsafe 1`] = `
 "Chunk[1:1-19:25][
 	AssignmentStatement[1:1-1:14][Identifier[1:1-1:10][integer_1] = Literal[1:13-1:14][1]]
 	AssignmentStatement[2:1-2:15][Identifier[2:1-2:10][integer_2] = Literal[2:13-2:15][21]]
@@ -730,7 +758,7 @@ exports[`parse default scripts float.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts function.src 1`] = `
+exports[`parse default scripts function.ms 1`] = `
 "Chunk[1:1-8:13][
 	AssignmentStatement[1:1-2:13][Identifier[1:1-1:2][a] = FunctionDeclaration[1:5-2:13][]]
 	AssignmentStatement[4:1-5:13][Identifier[4:1-4:2][b] = FunctionDeclaration[4:5-5:13][Identifier[4:14-4:15][a], AssignmentStatement[4:17-4:27][Identifier[4:17-4:18][b] = Literal[4:21-4:27][test]], Identifier[4:29-4:30][c]]]
@@ -738,13 +766,13 @@ exports[`parse default scripts function.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts function.src 2`] = `undefined`;
+exports[`parse default scripts function.ms 2`] = `undefined`;
 
-exports[`parse default scripts function.src 3`] = `1`;
+exports[`parse default scripts function.ms 3`] = `1`;
 
-exports[`parse default scripts function.src 4`] = `3`;
+exports[`parse default scripts function.ms 4`] = `3`;
 
-exports[`parse default scripts function.src unsafe 1`] = `
+exports[`parse default scripts function.ms unsafe 1`] = `
 "Chunk[1:1-8:13][
 	AssignmentStatement[1:1-2:13][Identifier[1:1-1:2][a] = FunctionDeclaration[1:5-2:13][]]
 	AssignmentStatement[4:1-5:13][Identifier[4:1-4:2][b] = FunctionDeclaration[4:5-5:13][Identifier[4:14-4:15][a], AssignmentStatement[4:17-4:27][Identifier[4:17-4:18][b] = Literal[4:21-4:27][test]], Identifier[4:29-4:30][c]]]
@@ -770,7 +798,7 @@ Array [
 ]
 `;
 
-exports[`parse default scripts list.src 1`] = `
+exports[`parse default scripts list.ms 1`] = `
 "Chunk[1:1-9:2][
 	AssignmentStatement[1:1-1:15][Identifier[1:1-1:5][test] = ListConstructor[1:8-1:15][
 		ListValue[1:9-1:14][Literal[1:9-1:14][foo]]
@@ -786,13 +814,13 @@ exports[`parse default scripts list.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts list.src 2`] = `undefined`;
+exports[`parse default scripts list.ms 2`] = `undefined`;
 
-exports[`parse default scripts list.src 3`] = `5`;
+exports[`parse default scripts list.ms 3`] = `5`;
 
-exports[`parse default scripts list.src 4`] = `8`;
+exports[`parse default scripts list.ms 4`] = `8`;
 
-exports[`parse default scripts list.src unsafe 1`] = `
+exports[`parse default scripts list.ms unsafe 1`] = `
 "Chunk[1:1-9:2][
 	AssignmentStatement[1:1-1:15][Identifier[1:1-1:5][test] = ListConstructor[1:8-1:15][
 		ListValue[1:9-1:14][Literal[1:9-1:14][foo]]
@@ -808,7 +836,7 @@ exports[`parse default scripts list.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts map.src 1`] = `
+exports[`parse default scripts map.ms 1`] = `
 "Chunk[1:1-19:2][
 	AssignmentStatement[1:1-3:2][Identifier[1:1-1:5][test] = MapConstructor[1:8-3:2][
 		MapKeyString[2:5-2:30][MapConstructor[2:5-2:24][
@@ -838,13 +866,13 @@ exports[`parse default scripts map.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts map.src 2`] = `undefined`;
+exports[`parse default scripts map.ms 2`] = `undefined`;
 
-exports[`parse default scripts map.src 3`] = `17`;
+exports[`parse default scripts map.ms 3`] = `17`;
 
-exports[`parse default scripts map.src 4`] = `17`;
+exports[`parse default scripts map.ms 4`] = `17`;
 
-exports[`parse default scripts map.src unsafe 1`] = `
+exports[`parse default scripts map.ms unsafe 1`] = `
 "Chunk[1:1-19:2][
 	AssignmentStatement[1:1-3:2][Identifier[1:1-1:5][test] = MapConstructor[1:8-3:2][
 		MapKeyString[2:5-2:30][MapConstructor[2:5-2:24][
@@ -874,25 +902,25 @@ exports[`parse default scripts map.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts member-with-nl.src 1`] = `
+exports[`parse default scripts member-with-nl.ms 1`] = `
 "Chunk[1:1-4:5][
 	MemberExpression[1:1-4:5][MemberExpression[1:1-3:5][MemberExpression[1:1-2:5][Identifier[1:1-1:2][x].Identifier[2:1-2:5][test]].Identifier[3:1-3:5][test]].Identifier[4:1-4:5][test]]
 ]"
 `;
 
-exports[`parse default scripts member-with-nl.src 2`] = `undefined`;
+exports[`parse default scripts member-with-nl.ms 2`] = `undefined`;
 
-exports[`parse default scripts member-with-nl.src 3`] = `0`;
+exports[`parse default scripts member-with-nl.ms 3`] = `0`;
 
-exports[`parse default scripts member-with-nl.src 4`] = `0`;
+exports[`parse default scripts member-with-nl.ms 4`] = `0`;
 
-exports[`parse default scripts member-with-nl.src unsafe 1`] = `
+exports[`parse default scripts member-with-nl.ms unsafe 1`] = `
 "Chunk[1:1-4:5][
 	MemberExpression[1:1-4:5][MemberExpression[1:1-3:5][MemberExpression[1:1-2:5][Identifier[1:1-1:2][x].Identifier[2:1-2:5][test]].Identifier[3:1-3:5][test]].Identifier[4:1-4:5][test]]
 ]"
 `;
 
-exports[`parse default scripts multiline.src 1`] = `
+exports[`parse default scripts multiline.ms 1`] = `
 "Chunk[1:1-29:12][
 	CallExpression[1:1-6:3][Identifier[1:1-1:6][print](Literal[1:7-6:2][
 	
@@ -923,13 +951,13 @@ exports[`parse default scripts multiline.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts multiline.src 2`] = `undefined`;
+exports[`parse default scripts multiline.ms 2`] = `undefined`;
 
-exports[`parse default scripts multiline.src 3`] = `11`;
+exports[`parse default scripts multiline.ms 3`] = `11`;
 
-exports[`parse default scripts multiline.src 4`] = `0`;
+exports[`parse default scripts multiline.ms 4`] = `0`;
 
-exports[`parse default scripts multiline.src unsafe 1`] = `
+exports[`parse default scripts multiline.ms unsafe 1`] = `
 "Chunk[1:1-29:12][
 	CallExpression[1:1-6:3][Identifier[1:1-1:6][print](Literal[1:7-6:2][
 	
@@ -960,7 +988,7 @@ exports[`parse default scripts multiline.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts multiline-binary-expression.src 1`] = `
+exports[`parse default scripts multiline-binary-expression.ms 1`] = `
 "Chunk[1:1-8:7][
 	IfStatement[1:1-8:7][
 		IfClause[1:1-8:7][BinaryExpression[1:5-6:21][CallExpression[1:5-6:13][MemberExpression[1:5-6:10][ListConstructor[1:5-6:2][
@@ -973,13 +1001,13 @@ exports[`parse default scripts multiline-binary-expression.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts multiline-binary-expression.src 2`] = `undefined`;
+exports[`parse default scripts multiline-binary-expression.ms 2`] = `undefined`;
 
-exports[`parse default scripts multiline-binary-expression.src 3`] = `6`;
+exports[`parse default scripts multiline-binary-expression.ms 3`] = `6`;
 
-exports[`parse default scripts multiline-binary-expression.src 4`] = `0`;
+exports[`parse default scripts multiline-binary-expression.ms 4`] = `0`;
 
-exports[`parse default scripts multiline-binary-expression.src unsafe 1`] = `
+exports[`parse default scripts multiline-binary-expression.ms unsafe 1`] = `
 "Chunk[1:1-8:7][
 	IfStatement[1:1-8:7][
 		IfClause[1:1-8:7][BinaryExpression[1:5-6:21][CallExpression[1:5-6:13][MemberExpression[1:5-6:10][ListConstructor[1:5-6:2][
@@ -992,33 +1020,35 @@ exports[`parse default scripts multiline-binary-expression.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts multiline-condition.src 1`] = `
-"Chunk[1:1-6:7][
+exports[`parse default scripts multiline-condition.ms 1`] = `
+"Chunk[1:1-14:12][
 	IfStatement[1:1-6:7][
 		IfClause[1:1-6:7][LogicalExpression[1:4-4:10][LogicalExpression[1:4-2:5][Literal[1:4-1:8][true] or Literal[2:1-2:5][true]] or LogicalExpression[3:1-4:10][Literal[3:1-3:6][false] and NegationExpression[4:1-4:10][not Literal[4:5-4:10][false]]]]
 			CallExpression[5:3-5:16][Identifier[5:3-5:8][print](Literal[5:9-5:15][test])]
 		]
 	]
+	CallExpression[8:1-14:12][Identifier[8:1-8:6][print](BinaryExpression[8:7-14:12][BinaryExpression[8:7-13:12][BinaryExpression[8:7-12:12][BinaryExpression[8:7-11:12][BinaryExpression[8:7-10:12][BinaryExpression[8:7-9:12][CallExpression[8:7-8:16][Identifier[8:7-8:8][p](Literal[8:9-8:12][A], Literal[8:14-8:15][1])] == CallExpression[9:3-9:12][Identifier[9:3-9:4][p](Literal[9:5-9:8][B], Literal[9:10-9:11][1])]] != CallExpression[10:3-10:12][Identifier[10:3-10:4][p](Literal[10:5-10:8][C], Literal[10:10-10:11][1])]] > CallExpression[11:3-11:12][Identifier[11:3-11:4][p](Literal[11:5-11:8][D], Literal[11:10-11:11][1])]] < CallExpression[12:3-12:12][Identifier[12:3-12:4][p](Literal[12:5-12:8][E], Literal[12:10-12:11][1])]] >= CallExpression[13:3-13:12][Identifier[13:3-13:4][p](Literal[13:5-13:8][F], Literal[13:10-13:11][1])]] <= CallExpression[14:3-14:12][Identifier[14:3-14:4][p](Literal[14:5-14:8][G], Literal[14:10-14:11][1])]])]
 ]"
 `;
 
-exports[`parse default scripts multiline-condition.src 2`] = `undefined`;
+exports[`parse default scripts multiline-condition.ms 2`] = `undefined`;
 
-exports[`parse default scripts multiline-condition.src 3`] = `5`;
+exports[`parse default scripts multiline-condition.ms 3`] = `19`;
 
-exports[`parse default scripts multiline-condition.src 4`] = `0`;
+exports[`parse default scripts multiline-condition.ms 4`] = `0`;
 
-exports[`parse default scripts multiline-condition.src unsafe 1`] = `
-"Chunk[1:1-6:7][
+exports[`parse default scripts multiline-condition.ms unsafe 1`] = `
+"Chunk[1:1-14:12][
 	IfStatement[1:1-6:7][
 		IfClause[1:1-6:7][LogicalExpression[1:4-4:10][LogicalExpression[1:4-2:5][Literal[1:4-1:8][true] or Literal[2:1-2:5][true]] or LogicalExpression[3:1-4:10][Literal[3:1-3:6][false] and NegationExpression[4:1-4:10][not Literal[4:5-4:10][false]]]]
 			CallExpression[5:3-5:16][Identifier[5:3-5:8][print](Literal[5:9-5:15][test])]
 		]
 	]
+	CallExpression[8:1-14:12][Identifier[8:1-8:6][print](BinaryExpression[8:7-14:12][BinaryExpression[8:7-13:12][BinaryExpression[8:7-12:12][BinaryExpression[8:7-11:12][BinaryExpression[8:7-10:12][BinaryExpression[8:7-9:12][CallExpression[8:7-8:16][Identifier[8:7-8:8][p](Literal[8:9-8:12][A], Literal[8:14-8:15][1])] == CallExpression[9:3-9:12][Identifier[9:3-9:4][p](Literal[9:5-9:8][B], Literal[9:10-9:11][1])]] != CallExpression[10:3-10:12][Identifier[10:3-10:4][p](Literal[10:5-10:8][C], Literal[10:10-10:11][1])]] > CallExpression[11:3-11:12][Identifier[11:3-11:4][p](Literal[11:5-11:8][D], Literal[11:10-11:11][1])]] < CallExpression[12:3-12:12][Identifier[12:3-12:4][p](Literal[12:5-12:8][E], Literal[12:10-12:11][1])]] >= CallExpression[13:3-13:12][Identifier[13:3-13:4][p](Literal[13:5-13:8][F], Literal[13:10-13:11][1])]] <= CallExpression[14:3-14:12][Identifier[14:3-14:4][p](Literal[14:5-14:8][G], Literal[14:10-14:11][1])]])]
 ]"
 `;
 
-exports[`parse default scripts negation.src 1`] = `
+exports[`parse default scripts negation.ms 1`] = `
 "Chunk[1:1-5:11][
 	AssignmentStatement[1:1-1:23][Identifier[1:1-1:5][test] = BinaryExpression[1:8-1:23][BinaryExpression[1:8-1:19][BinaryExpression[1:8-1:14][BinaryNegatedExpression[1:8-1:10][- Literal[1:9-1:10][1]] + Literal[1:13-1:14][2]] + BinaryNegatedExpression[1:17-1:19][- Literal[1:18-1:19][2]]] + Literal[1:22-1:23][3]]]
 	AssignmentStatement[2:1-2:34][Identifier[2:1-2:4][foo] = ListConstructor[2:7-2:34][
@@ -1031,13 +1061,13 @@ exports[`parse default scripts negation.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts negation.src 2`] = `undefined`;
+exports[`parse default scripts negation.ms 2`] = `undefined`;
 
-exports[`parse default scripts negation.src 3`] = `10`;
+exports[`parse default scripts negation.ms 3`] = `10`;
 
-exports[`parse default scripts negation.src 4`] = `5`;
+exports[`parse default scripts negation.ms 4`] = `5`;
 
-exports[`parse default scripts negation.src unsafe 1`] = `
+exports[`parse default scripts negation.ms unsafe 1`] = `
 "Chunk[1:1-5:11][
 	AssignmentStatement[1:1-1:23][Identifier[1:1-1:5][test] = BinaryExpression[1:8-1:23][BinaryExpression[1:8-1:19][BinaryExpression[1:8-1:14][BinaryNegatedExpression[1:8-1:10][- Literal[1:9-1:10][1]] + Literal[1:13-1:14][2]] + BinaryNegatedExpression[1:17-1:19][- Literal[1:18-1:19][2]]] + Literal[1:22-1:23][3]]]
 	AssignmentStatement[2:1-2:34][Identifier[2:1-2:4][foo] = ListConstructor[2:7-2:34][
@@ -1050,7 +1080,7 @@ exports[`parse default scripts negation.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts obj-init.src 1`] = `
+exports[`parse default scripts obj-init.ms 1`] = `
 "Chunk[1:1-21:14][
 	AssignmentStatement[1:1-1:26][Identifier[1:1-1:18][valueOfIdentifier] = Literal[1:21-1:26][foo]]
 	AssignmentStatement[3:1-9:2][Identifier[3:1-3:9][myObject] = MapConstructor[3:12-9:2][
@@ -1076,13 +1106,13 @@ exports[`parse default scripts obj-init.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts obj-init.src 2`] = `undefined`;
+exports[`parse default scripts obj-init.ms 2`] = `undefined`;
 
-exports[`parse default scripts obj-init.src 3`] = `10`;
+exports[`parse default scripts obj-init.ms 3`] = `10`;
 
-exports[`parse default scripts obj-init.src 4`] = `11`;
+exports[`parse default scripts obj-init.ms 4`] = `11`;
 
-exports[`parse default scripts obj-init.src unsafe 1`] = `
+exports[`parse default scripts obj-init.ms unsafe 1`] = `
 "Chunk[1:1-21:14][
 	AssignmentStatement[1:1-1:26][Identifier[1:1-1:18][valueOfIdentifier] = Literal[1:21-1:26][foo]]
 	AssignmentStatement[3:1-9:2][Identifier[3:1-3:9][myObject] = MapConstructor[3:12-9:2][
@@ -1108,7 +1138,7 @@ exports[`parse default scripts obj-init.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts parentheses.src 1`] = `
+exports[`parse default scripts parentheses.ms 1`] = `
 "Chunk[1:1-4:75][
 	AssignmentStatement[1:1-1:40][Identifier[1:1-1:7][params] = ListConstructor[1:10-1:40][
 		ListValue[1:11-1:23][Literal[1:11-1:23][/home/test]]
@@ -1119,13 +1149,13 @@ exports[`parse default scripts parentheses.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts parentheses.src 2`] = `undefined`;
+exports[`parse default scripts parentheses.ms 2`] = `undefined`;
 
-exports[`parse default scripts parentheses.src 3`] = `12`;
+exports[`parse default scripts parentheses.ms 3`] = `12`;
 
-exports[`parse default scripts parentheses.src 4`] = `3`;
+exports[`parse default scripts parentheses.ms 4`] = `3`;
 
-exports[`parse default scripts parentheses.src unsafe 1`] = `
+exports[`parse default scripts parentheses.ms unsafe 1`] = `
 "Chunk[1:1-4:75][
 	AssignmentStatement[1:1-1:40][Identifier[1:1-1:7][params] = ListConstructor[1:10-1:40][
 		ListValue[1:11-1:23][Literal[1:11-1:23][/home/test]]
@@ -1136,7 +1166,7 @@ exports[`parse default scripts parentheses.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts password-generator.src 1`] = `
+exports[`parse default scripts password-generator.ms 1`] = `
 "Chunk[1:1-65:14][
 	AssignmentStatement[1:1-1:23][Identifier[1:1-1:18][PasswordGenerator] = MapConstructor[1:21-1:23][]]
 	AssignmentStatement[3:1-3:43][MemberExpression[3:1-3:38][Identifier[3:1-3:18][PasswordGenerator].Identifier[3:19-3:38][MAX_PASSWORD_LENGTH]] = Literal[3:41-3:43][15]]
@@ -1212,13 +1242,13 @@ exports[`parse default scripts password-generator.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts password-generator.src 2`] = `undefined`;
+exports[`parse default scripts password-generator.ms 2`] = `undefined`;
 
-exports[`parse default scripts password-generator.src 3`] = `19`;
+exports[`parse default scripts password-generator.ms 3`] = `19`;
 
-exports[`parse default scripts password-generator.src 4`] = `13`;
+exports[`parse default scripts password-generator.ms 4`] = `13`;
 
-exports[`parse default scripts password-generator.src unsafe 1`] = `
+exports[`parse default scripts password-generator.ms unsafe 1`] = `
 "Chunk[1:1-65:14][
 	AssignmentStatement[1:1-1:23][Identifier[1:1-1:18][PasswordGenerator] = MapConstructor[1:21-1:23][]]
 	AssignmentStatement[3:1-3:43][MemberExpression[3:1-3:38][Identifier[3:1-3:18][PasswordGenerator].Identifier[3:19-3:38][MAX_PASSWORD_LENGTH]] = Literal[3:41-3:43][15]]
@@ -1294,7 +1324,7 @@ exports[`parse default scripts password-generator.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts pseudo-crypto.src 1`] = `
+exports[`parse default scripts pseudo-crypto.ms 1`] = `
 "Chunk[1:1-213:1][
 	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][String] = MapConstructor[1:10-1:12][]]
 	AssignmentStatement[3:1-6:13][MemberExpression[3:1-3:19][Identifier[3:1-3:7][String].Identifier[3:8-3:19][constructor]] = Function[3:22-6:13][Identifier[3:31-3:34][str] =>
@@ -1530,13 +1560,13 @@ exports[`parse default scripts pseudo-crypto.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts pseudo-crypto.src 2`] = `undefined`;
+exports[`parse default scripts pseudo-crypto.ms 2`] = `undefined`;
 
-exports[`parse default scripts pseudo-crypto.src 3`] = `76`;
+exports[`parse default scripts pseudo-crypto.ms 3`] = `76`;
 
-exports[`parse default scripts pseudo-crypto.src 4`] = `29`;
+exports[`parse default scripts pseudo-crypto.ms 4`] = `29`;
 
-exports[`parse default scripts pseudo-crypto.src unsafe 1`] = `
+exports[`parse default scripts pseudo-crypto.ms unsafe 1`] = `
 "Chunk[1:1-213:1][
 	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][String] = MapConstructor[1:10-1:12][]]
 	AssignmentStatement[3:1-6:13][MemberExpression[3:1-3:19][Identifier[3:1-3:7][String].Identifier[3:8-3:19][constructor]] = Function[3:22-6:13][Identifier[3:31-3:34][str] =>
@@ -1772,7 +1802,7 @@ exports[`parse default scripts pseudo-crypto.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts random.src 1`] = `
+exports[`parse default scripts random.ms 1`] = `
 "Chunk[1:1-62:39][
 	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][Random] = MapConstructor[1:10-1:12][]]
 	AssignmentStatement[3:1-3:17][MemberExpression[3:1-3:12][Identifier[3:1-3:7][Random].Identifier[3:8-3:12][pool]] = MapConstructor[3:15-3:17][]]
@@ -1849,13 +1879,13 @@ exports[`parse default scripts random.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts random.src 2`] = `undefined`;
+exports[`parse default scripts random.ms 2`] = `undefined`;
 
-exports[`parse default scripts random.src 3`] = `20`;
+exports[`parse default scripts random.ms 3`] = `20`;
 
-exports[`parse default scripts random.src 4`] = `8`;
+exports[`parse default scripts random.ms 4`] = `8`;
 
-exports[`parse default scripts random.src unsafe 1`] = `
+exports[`parse default scripts random.ms unsafe 1`] = `
 "Chunk[1:1-62:39][
 	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][Random] = MapConstructor[1:10-1:12][]]
 	AssignmentStatement[3:1-3:17][MemberExpression[3:1-3:12][Identifier[3:1-3:7][Random].Identifier[3:8-3:12][pool]] = MapConstructor[3:15-3:17][]]
@@ -1932,8 +1962,8 @@ exports[`parse default scripts random.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts shorthand.src 1`] = `
-"Chunk[1:1-47:7][
+exports[`parse default scripts shorthand.ms 1`] = `
+"Chunk[1:1-49:34][
 	IfStatement[1:1-1:29][
 		IfShortcutClause[1:1-1:29][Literal[1:5-1:9][true]
 			CallExpression[1:16-1:29][Identifier[1:16-1:21][print](Literal[1:22-1:28][true])]
@@ -2013,17 +2043,25 @@ exports[`parse default scripts shorthand.src 1`] = `
 			CallExpression[46:3-46:15][Identifier[46:3-46:8][print](Literal[46:9-46:14][moo])]
 		]
 	]
+	IfStatement[49:1-49:34][
+		IfShortcutClause[49:1-49:26][BinaryExpression[49:4-49:9][Identifier[49:4-49:5][x] < Literal[49:8-49:9][0]]
+			ReturnStatement[49:15-49:21][null]
+		]
+		ElseShortcutClause[49:27-49:34][
+			CallExpression[49:27-49:34][Identifier[49:27-49:32][print](Identifier[49:33-49:34][x])]
+		}]
+	]
 ]"
 `;
 
-exports[`parse default scripts shorthand.src 2`] = `undefined`;
+exports[`parse default scripts shorthand.ms 2`] = `undefined`;
 
-exports[`parse default scripts shorthand.src 3`] = `24`;
+exports[`parse default scripts shorthand.ms 3`] = `25`;
 
-exports[`parse default scripts shorthand.src 4`] = `11`;
+exports[`parse default scripts shorthand.ms 4`] = `11`;
 
-exports[`parse default scripts shorthand.src unsafe 1`] = `
-"Chunk[1:1-47:7][
+exports[`parse default scripts shorthand.ms unsafe 1`] = `
+"Chunk[1:1-49:34][
 	IfStatement[1:1-1:29][
 		IfShortcutClause[1:1-1:29][Literal[1:5-1:9][true]
 			CallExpression[1:16-1:29][Identifier[1:16-1:21][print](Literal[1:22-1:28][true])]
@@ -2103,10 +2141,18 @@ exports[`parse default scripts shorthand.src unsafe 1`] = `
 			CallExpression[46:3-46:15][Identifier[46:3-46:8][print](Literal[46:9-46:14][moo])]
 		]
 	]
+	IfStatement[49:1-49:34][
+		IfShortcutClause[49:1-49:26][BinaryExpression[49:4-49:9][Identifier[49:4-49:5][x] < Literal[49:8-49:9][0]]
+			ReturnStatement[49:15-49:21][null]
+		]
+		ElseShortcutClause[49:27-49:34][
+			CallExpression[49:27-49:34][Identifier[49:27-49:32][print](Identifier[49:33-49:34][x])]
+		}]
+	]
 ]"
 `;
 
-exports[`parse default scripts simple-object.src 1`] = `
+exports[`parse default scripts simple-object.ms 1`] = `
 "Chunk[1:1-9:18][
 	AssignmentStatement[1:1-1:10][Identifier[1:1-1:5][test] = MapConstructor[1:8-1:10][]]
 	AssignmentStatement[3:1-3:18][MemberExpression[3:1-3:10][Identifier[3:1-3:5][test].Identifier[3:6-3:10][here]] = Literal[3:13-3:18][was]]
@@ -2117,13 +2163,13 @@ exports[`parse default scripts simple-object.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts simple-object.src 2`] = `undefined`;
+exports[`parse default scripts simple-object.ms 2`] = `undefined`;
 
-exports[`parse default scripts simple-object.src 3`] = `1`;
+exports[`parse default scripts simple-object.ms 3`] = `1`;
 
-exports[`parse default scripts simple-object.src 4`] = `3`;
+exports[`parse default scripts simple-object.ms 4`] = `3`;
 
-exports[`parse default scripts simple-object.src unsafe 1`] = `
+exports[`parse default scripts simple-object.ms unsafe 1`] = `
 "Chunk[1:1-9:18][
 	AssignmentStatement[1:1-1:10][Identifier[1:1-1:5][test] = MapConstructor[1:8-1:10][]]
 	AssignmentStatement[3:1-3:18][MemberExpression[3:1-3:10][Identifier[3:1-3:5][test].Identifier[3:6-3:10][here]] = Literal[3:13-3:18][was]]
@@ -2134,7 +2180,7 @@ exports[`parse default scripts simple-object.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts slice.src 1`] = `
+exports[`parse default scripts slice.ms 1`] = `
 "Chunk[1:1-27:21][
 	AssignmentStatement[1:1-13:13][Identifier[1:1-1:13][divideString] = Function[1:16-13:13][Identifier[1:25-1:28][str], Identifier[1:29-1:34][limit] =>
 		AssignmentStatement[2:3-2:13][Identifier[2:3-2:9][offset] = Literal[2:12-2:13][0]]
@@ -2169,13 +2215,13 @@ exports[`parse default scripts slice.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts slice.src 2`] = `undefined`;
+exports[`parse default scripts slice.ms 2`] = `undefined`;
 
-exports[`parse default scripts slice.src 3`] = `21`;
+exports[`parse default scripts slice.ms 3`] = `21`;
 
-exports[`parse default scripts slice.src 4`] = `7`;
+exports[`parse default scripts slice.ms 4`] = `7`;
 
-exports[`parse default scripts slice.src unsafe 1`] = `
+exports[`parse default scripts slice.ms unsafe 1`] = `
 "Chunk[1:1-27:21][
 	AssignmentStatement[1:1-13:13][Identifier[1:1-1:13][divideString] = Function[1:16-13:13][Identifier[1:25-1:28][str], Identifier[1:29-1:34][limit] =>
 		AssignmentStatement[2:3-2:13][Identifier[2:3-2:9][offset] = Literal[2:12-2:13][0]]
@@ -2210,7 +2256,7 @@ exports[`parse default scripts slice.src unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts unary.src 1`] = `
+exports[`parse default scripts unary.ms 1`] = `
 "Chunk[1:1-11:1][
 	AssignmentStatement[1:1-3:13][Identifier[1:1-1:5][test] = Function[1:8-3:13][ =>
 		ReturnStatement[2:3-2:14][Literal[2:10-2:14][null]]
@@ -2224,13 +2270,13 @@ exports[`parse default scripts unary.src 1`] = `
 ]"
 `;
 
-exports[`parse default scripts unary.src 2`] = `undefined`;
+exports[`parse default scripts unary.ms 2`] = `undefined`;
 
-exports[`parse default scripts unary.src 3`] = `17`;
+exports[`parse default scripts unary.ms 3`] = `17`;
 
-exports[`parse default scripts unary.src 4`] = `1`;
+exports[`parse default scripts unary.ms 4`] = `1`;
 
-exports[`parse default scripts unary.src unsafe 1`] = `
+exports[`parse default scripts unary.ms unsafe 1`] = `
 "Chunk[1:1-11:1][
 	AssignmentStatement[1:1-3:13][Identifier[1:1-1:5][test] = Function[1:8-3:13][ =>
 		ReturnStatement[2:3-2:14][Literal[2:10-2:14][null]]

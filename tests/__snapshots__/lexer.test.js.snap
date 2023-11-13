@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`parse default scripts ascii.src 1`] = `
+exports[`parse default scripts ascii.ms 1`] = `
 "Identifier[1:1 - 1:9: value = 'AsciiGen']
 Punctuator[1:10 - 1:11: value = '=']
 Punctuator[1:12 - 1:13: value = '{']
@@ -800,7 +800,33 @@ Punctuator[71:27 - 71:28: value = ')']
 Punctuator[71:28 - 71:29: value = ')']"
 `;
 
-exports[`parse default scripts call-with-spaces.src 1`] = `
+exports[`parse default scripts assign-shorthands.ms 1`] = `
+"Identifier[1:1 - 1:6: value = 'value']
+Punctuator[1:7 - 1:9: value = '+=']
+NumericLiteral[1:10 - 1:12: value = 12]
+EOL[1:12 - 1:12: value = ';']
+Identifier[2:1 - 2:6: value = 'value']
+Punctuator[2:7 - 2:9: value = '-=']
+NumericLiteral[2:10 - 2:11: value = 2]
+EOL[2:11 - 2:11: value = ';']
+Identifier[3:1 - 3:6: value = 'value']
+Punctuator[3:7 - 3:9: value = '*=']
+NumericLiteral[3:10 - 3:11: value = 3]
+EOL[3:11 - 3:11: value = ';']
+Identifier[4:1 - 4:6: value = 'value']
+Punctuator[4:7 - 4:9: value = '/=']
+NumericLiteral[4:10 - 4:11: value = 5]
+EOL[4:11 - 4:11: value = ';']
+Identifier[5:1 - 5:6: value = 'value']
+Punctuator[5:7 - 5:9: value = '%=']
+NumericLiteral[5:10 - 5:11: value = 4]
+EOL[5:11 - 5:11: value = ';']
+Identifier[6:1 - 6:6: value = 'value']
+Punctuator[6:7 - 6:9: value = '^=']
+NumericLiteral[6:10 - 6:11: value = 3]"
+`;
+
+exports[`parse default scripts call-with-spaces.ms 1`] = `
 "Identifier[1:1 - 1:6: value = 'print']
 Identifier[1:7 - 1:17: value = 'myVariable']
 Punctuator[1:17 - 1:18: value = ',']
@@ -850,7 +876,7 @@ NumericLiteral[7:14 - 7:15: value = 4]
 Punctuator[7:15 - 7:16: value = ']']"
 `;
 
-exports[`parse default scripts callexpr-with-nl.src 1`] = `
+exports[`parse default scripts callexpr-with-nl.ms 1`] = `
 "Identifier[1:1 - 1:2: value = 'x']
 Punctuator[1:2 - 1:3: value = '(']
 EOL[1:3 - 1:3: value = ';']
@@ -871,7 +897,7 @@ EOL[6:6 - 6:6: value = ';']
 Punctuator[7:1 - 7:2: value = ')']"
 `;
 
-exports[`parse default scripts comments.src 1`] = `
+exports[`parse default scripts comments.ms 1`] = `
 "Comment[1:1 - 1:10: value = 'comment']
 EOL[1:10 - 1:10: value = ';']
 Identifier[2:1 - 2:11: value = 'myVariable']
@@ -883,7 +909,7 @@ NumericLiteral[3:8 - 3:9: value = 2]
 Comment[3:10 - 3:20: value = 'comment3']"
 `;
 
-exports[`parse default scripts default-args.src 1`] = `
+exports[`parse default scripts default-args.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']
 Punctuator[1:6 - 1:7: value = '=']
 Keyword[1:8 - 1:16: value = 'function']
@@ -949,7 +975,7 @@ EOL[11:16 - 11:16: value = ';']
 Keyword[12:1 - 12:13: value = 'end function']"
 `;
 
-exports[`parse default scripts eol.src 1`] = `
+exports[`parse default scripts eol.ms 1`] = `
 "Keyword[1:1 - 1:3: value = 'if']
 Punctuator[1:4 - 1:5: value = '(']
 BooleanLiteral[1:5 - 1:9: value = true]
@@ -1005,7 +1031,7 @@ Keyword[13:1 - 13:8: value = 'end for']
 EOL[13:8 - 13:9: value = ';']"
 `;
 
-exports[`parse default scripts float.src 1`] = `
+exports[`parse default scripts float.ms 1`] = `
 "Identifier[1:1 - 1:10: value = 'integer_1']
 Punctuator[1:11 - 1:12: value = '=']
 NumericLiteral[1:13 - 1:14: value = 1]
@@ -1080,7 +1106,7 @@ Punctuator[19:20 - 19:21: value = '-']
 NumericLiteral[19:21 - 19:25: value = .525]"
 `;
 
-exports[`parse default scripts function.src 1`] = `
+exports[`parse default scripts function.ms 1`] = `
 "Identifier[1:1 - 1:2: value = 'a']
 Punctuator[1:3 - 1:4: value = '=']
 Keyword[1:5 - 1:13: value = 'function']
@@ -1115,7 +1141,7 @@ Keyword[8:1 - 8:13: value = 'end function']"
 
 exports[`parse default scripts invalid code 1`] = `Array []`;
 
-exports[`parse default scripts list.src 1`] = `
+exports[`parse default scripts list.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']
 Punctuator[1:6 - 1:7: value = '=']
 Punctuator[1:8 - 1:9: value = '[']
@@ -1147,7 +1173,7 @@ EOL[8:11 - 8:11: value = ';']
 Punctuator[9:1 - 9:2: value = ']']"
 `;
 
-exports[`parse default scripts map.src 1`] = `
+exports[`parse default scripts map.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']
 Punctuator[1:6 - 1:7: value = '=']
 Punctuator[1:8 - 1:9: value = '{']
@@ -1232,7 +1258,7 @@ EOL[18:15 - 18:15: value = ';']
 Punctuator[19:1 - 19:2: value = '}']"
 `;
 
-exports[`parse default scripts member-with-nl.src 1`] = `
+exports[`parse default scripts member-with-nl.ms 1`] = `
 "Identifier[1:1 - 1:2: value = 'x']
 Punctuator[1:2 - 1:3: value = '.']
 EOL[1:3 - 1:3: value = ';']
@@ -1245,7 +1271,7 @@ EOL[3:6 - 3:6: value = ';']
 Identifier[4:1 - 4:5: value = 'test']"
 `;
 
-exports[`parse default scripts multiline.src 1`] = `
+exports[`parse default scripts multiline.ms 1`] = `
 "Identifier[1:1 - 1:6: value = 'print']
 Punctuator[1:6 - 1:7: value = '(']
 StringLiteral[1:7 - 6:2: value = \\"
@@ -1314,7 +1340,7 @@ BooleanLiteral[29:7 - 29:11: value = true]
 Punctuator[29:11 - 29:12: value = ')']"
 `;
 
-exports[`parse default scripts multiline-binary-expression.src 1`] = `
+exports[`parse default scripts multiline-binary-expression.ms 1`] = `
 "Keyword[1:1 - 1:3: value = 'if']
 Punctuator[1:4 - 1:5: value = '(']
 Punctuator[1:5 - 1:6: value = '[']
@@ -1346,7 +1372,7 @@ EOL[7:1 - 7:1: value = ';']
 Keyword[8:1 - 8:7: value = 'end if']"
 `;
 
-exports[`parse default scripts multiline-condition.src 1`] = `
+exports[`parse default scripts multiline-condition.ms 1`] = `
 "Keyword[1:1 - 1:3: value = 'if']
 BooleanLiteral[1:4 - 1:8: value = true]
 Keyword[1:9 - 1:11: value = 'or']
@@ -1366,10 +1392,67 @@ Punctuator[5:8 - 5:9: value = '(']
 StringLiteral[5:9 - 5:15: value = \\"test\\"]
 Punctuator[5:15 - 5:16: value = ')']
 EOL[5:16 - 5:16: value = ';']
-Keyword[6:1 - 6:7: value = 'end if']"
+Keyword[6:1 - 6:7: value = 'end if']
+EOL[6:7 - 6:7: value = ';']
+EOL[7:1 - 7:1: value = ';']
+Identifier[8:1 - 8:6: value = 'print']
+Identifier[8:7 - 8:8: value = 'p']
+Punctuator[8:8 - 8:9: value = '(']
+StringLiteral[8:9 - 8:12: value = \\"A\\"]
+Punctuator[8:12 - 8:13: value = ',']
+NumericLiteral[8:14 - 8:15: value = 1]
+Punctuator[8:15 - 8:16: value = ')']
+Punctuator[8:17 - 8:19: value = '==']
+EOL[8:19 - 8:19: value = ';']
+Identifier[9:3 - 9:4: value = 'p']
+Punctuator[9:4 - 9:5: value = '(']
+StringLiteral[9:5 - 9:8: value = \\"B\\"]
+Punctuator[9:8 - 9:9: value = ',']
+NumericLiteral[9:10 - 9:11: value = 1]
+Punctuator[9:11 - 9:12: value = ')']
+Punctuator[9:13 - 9:15: value = '!=']
+EOL[9:15 - 9:15: value = ';']
+Identifier[10:3 - 10:4: value = 'p']
+Punctuator[10:4 - 10:5: value = '(']
+StringLiteral[10:5 - 10:8: value = \\"C\\"]
+Punctuator[10:8 - 10:9: value = ',']
+NumericLiteral[10:10 - 10:11: value = 1]
+Punctuator[10:11 - 10:12: value = ')']
+Punctuator[10:13 - 10:14: value = '>']
+EOL[10:14 - 10:14: value = ';']
+Identifier[11:3 - 11:4: value = 'p']
+Punctuator[11:4 - 11:5: value = '(']
+StringLiteral[11:5 - 11:8: value = \\"D\\"]
+Punctuator[11:8 - 11:9: value = ',']
+NumericLiteral[11:10 - 11:11: value = 1]
+Punctuator[11:11 - 11:12: value = ')']
+Punctuator[11:13 - 11:14: value = '<']
+EOL[11:14 - 11:14: value = ';']
+Identifier[12:3 - 12:4: value = 'p']
+Punctuator[12:4 - 12:5: value = '(']
+StringLiteral[12:5 - 12:8: value = \\"E\\"]
+Punctuator[12:8 - 12:9: value = ',']
+NumericLiteral[12:10 - 12:11: value = 1]
+Punctuator[12:11 - 12:12: value = ')']
+Punctuator[12:13 - 12:15: value = '>=']
+EOL[12:15 - 12:15: value = ';']
+Identifier[13:3 - 13:4: value = 'p']
+Punctuator[13:4 - 13:5: value = '(']
+StringLiteral[13:5 - 13:8: value = \\"F\\"]
+Punctuator[13:8 - 13:9: value = ',']
+NumericLiteral[13:10 - 13:11: value = 1]
+Punctuator[13:11 - 13:12: value = ')']
+Punctuator[13:13 - 13:15: value = '<=']
+EOL[13:15 - 13:15: value = ';']
+Identifier[14:3 - 14:4: value = 'p']
+Punctuator[14:4 - 14:5: value = '(']
+StringLiteral[14:5 - 14:8: value = \\"G\\"]
+Punctuator[14:8 - 14:9: value = ',']
+NumericLiteral[14:10 - 14:11: value = 1]
+Punctuator[14:11 - 14:12: value = ')']"
 `;
 
-exports[`parse default scripts negation.src 1`] = `
+exports[`parse default scripts negation.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']
 Punctuator[1:6 - 1:7: value = '=']
 Punctuator[1:8 - 1:9: value = '-']
@@ -1416,7 +1499,7 @@ Identifier[5:7 - 5:10: value = 'foo']
 Punctuator[5:10 - 5:11: value = ')']"
 `;
 
-exports[`parse default scripts obj-init.src 1`] = `
+exports[`parse default scripts obj-init.ms 1`] = `
 "Identifier[1:1 - 1:18: value = 'valueOfIdentifier']
 Punctuator[1:19 - 1:20: value = '=']
 StringLiteral[1:21 - 1:26: value = \\"foo\\"]
@@ -1500,7 +1583,7 @@ Identifier[21:7 - 21:13: value = 'myList']
 Punctuator[21:13 - 21:14: value = ')']"
 `;
 
-exports[`parse default scripts parentheses.src 1`] = `
+exports[`parse default scripts parentheses.ms 1`] = `
 "Identifier[1:1 - 1:7: value = 'params']
 Punctuator[1:8 - 1:9: value = '=']
 Punctuator[1:10 - 1:11: value = '[']
@@ -1563,7 +1646,7 @@ Punctuator[4:73 - 4:74: value = ')']
 Punctuator[4:74 - 4:75: value = ')']"
 `;
 
-exports[`parse default scripts password-generator.src 1`] = `
+exports[`parse default scripts password-generator.ms 1`] = `
 "Identifier[1:1 - 1:18: value = 'PasswordGenerator']
 Punctuator[1:19 - 1:20: value = '=']
 Punctuator[1:21 - 1:22: value = '{']
@@ -1916,7 +1999,7 @@ Identifier[65:7 - 65:13: value = 'result']
 Punctuator[65:13 - 65:14: value = ')']"
 `;
 
-exports[`parse default scripts pseudo-crypto.src 1`] = `
+exports[`parse default scripts pseudo-crypto.ms 1`] = `
 "Identifier[1:1 - 1:7: value = 'String']
 Punctuator[1:8 - 1:9: value = '=']
 Punctuator[1:10 - 1:11: value = '{']
@@ -3425,7 +3508,7 @@ Punctuator[212:16 - 212:17: value = ')']
 EOL[212:17 - 212:17: value = ';']"
 `;
 
-exports[`parse default scripts random.src 1`] = `
+exports[`parse default scripts random.ms 1`] = `
 "Identifier[1:1 - 1:7: value = 'Random']
 Punctuator[1:8 - 1:9: value = '=']
 Punctuator[1:10 - 1:11: value = '{']
@@ -3840,7 +3923,7 @@ Punctuator[62:37 - 62:38: value = ')']
 Punctuator[62:38 - 62:39: value = ')']"
 `;
 
-exports[`parse default scripts shorthand.src 1`] = `
+exports[`parse default scripts shorthand.ms 1`] = `
 "Keyword[1:1 - 1:3: value = 'if']
 Punctuator[1:4 - 1:5: value = '(']
 BooleanLiteral[1:5 - 1:9: value = true]
@@ -4057,10 +4140,21 @@ Punctuator[46:10 - 46:11: value = '(']
 StringLiteral[46:11 - 46:16: value = \\"moo\\"]
 Punctuator[46:16 - 46:17: value = ')']
 EOL[46:17 - 46:17: value = ';']
-Keyword[47:1 - 47:7: value = 'end if']"
+Keyword[47:1 - 47:7: value = 'end if']
+EOL[47:7 - 47:7: value = ';']
+EOL[48:1 - 48:1: value = ';']
+Keyword[49:1 - 49:3: value = 'if']
+Identifier[49:4 - 49:5: value = 'x']
+Punctuator[49:6 - 49:7: value = '<']
+NumericLiteral[49:8 - 49:9: value = 0]
+Keyword[49:10 - 49:14: value = 'then']
+Keyword[49:15 - 49:21: value = 'return']
+Keyword[49:22 - 49:26: value = 'else']
+Identifier[49:27 - 49:32: value = 'print']
+Identifier[49:33 - 49:34: value = 'x']"
 `;
 
-exports[`parse default scripts simple-object.src 1`] = `
+exports[`parse default scripts simple-object.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']
 Punctuator[1:6 - 1:7: value = '=']
 Punctuator[1:8 - 1:9: value = '{']
@@ -4102,7 +4196,7 @@ Punctuator[9:16 - 9:17: value = ')']
 Punctuator[9:17 - 9:18: value = ')']"
 `;
 
-exports[`parse default scripts slice.src 1`] = `
+exports[`parse default scripts slice.ms 1`] = `
 "Identifier[1:1 - 1:13: value = 'divideString']
 Punctuator[1:14 - 1:15: value = '=']
 Keyword[1:16 - 1:24: value = 'function']
@@ -4330,7 +4424,7 @@ Punctuator[27:19 - 27:20: value = ']']
 Punctuator[27:20 - 27:21: value = ']']"
 `;
 
-exports[`parse default scripts unary.src 1`] = `
+exports[`parse default scripts unary.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']
 Punctuator[1:6 - 1:7: value = '=']
 Keyword[1:8 - 1:16: value = 'function']
