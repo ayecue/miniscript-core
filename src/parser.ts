@@ -1051,6 +1051,7 @@ export default class Parser {
       const token = me.token;
 
       me.next();
+      me.skipNewlines();
 
       const opB = me.parseAddSub();
 
