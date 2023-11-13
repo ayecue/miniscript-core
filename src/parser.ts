@@ -529,7 +529,7 @@ export default class Parser {
     const start = me.previousToken.getStart();
     let expression = null;
 
-    if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment)) {
+    if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment, Selectors.Else)) {
       expression = me.parseExpr();
     }
 
