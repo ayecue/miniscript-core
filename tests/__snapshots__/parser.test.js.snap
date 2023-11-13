@@ -1049,7 +1049,7 @@ exports[`parse default scripts multiline-condition.ms unsafe 1`] = `
 `;
 
 exports[`parse default scripts negation.ms 1`] = `
-"Chunk[1:1-5:11][
+"Chunk[1:1-6:9][
 	AssignmentStatement[1:1-1:23][Identifier[1:1-1:5][test] = BinaryExpression[1:8-1:23][BinaryExpression[1:8-1:19][BinaryExpression[1:8-1:14][BinaryNegatedExpression[1:8-1:10][- Literal[1:9-1:10][1]] + Literal[1:13-1:14][2]] + BinaryNegatedExpression[1:17-1:19][- Literal[1:18-1:19][2]]] + Literal[1:22-1:23][3]]]
 	AssignmentStatement[2:1-2:34][Identifier[2:1-2:4][foo] = ListConstructor[2:7-2:34][
 		ListValue[2:8-2:10][BinaryNegatedExpression[2:8-2:10][- Literal[2:9-2:10][1]]]
@@ -1058,17 +1058,18 @@ exports[`parse default scripts negation.ms 1`] = `
 	]]
 	CallExpression[4:1-4:12][Identifier[4:1-4:6][print](Identifier[4:7-4:11][test])]
 	CallExpression[5:1-5:11][Identifier[5:1-5:6][print](Identifier[5:7-5:10][foo])]
+	CallExpression[6:1-6:9][Identifier[6:1-6:6][print](BinaryNegatedExpression[6:7-6:9][- Literal[6:8-6:9][2]])]
 ]"
 `;
 
 exports[`parse default scripts negation.ms 2`] = `undefined`;
 
-exports[`parse default scripts negation.ms 3`] = `10`;
+exports[`parse default scripts negation.ms 3`] = `11`;
 
 exports[`parse default scripts negation.ms 4`] = `5`;
 
 exports[`parse default scripts negation.ms unsafe 1`] = `
-"Chunk[1:1-5:11][
+"Chunk[1:1-6:9][
 	AssignmentStatement[1:1-1:23][Identifier[1:1-1:5][test] = BinaryExpression[1:8-1:23][BinaryExpression[1:8-1:19][BinaryExpression[1:8-1:14][BinaryNegatedExpression[1:8-1:10][- Literal[1:9-1:10][1]] + Literal[1:13-1:14][2]] + BinaryNegatedExpression[1:17-1:19][- Literal[1:18-1:19][2]]] + Literal[1:22-1:23][3]]]
 	AssignmentStatement[2:1-2:34][Identifier[2:1-2:4][foo] = ListConstructor[2:7-2:34][
 		ListValue[2:8-2:10][BinaryNegatedExpression[2:8-2:10][- Literal[2:9-2:10][1]]]
@@ -1077,6 +1078,7 @@ exports[`parse default scripts negation.ms unsafe 1`] = `
 	]]
 	CallExpression[4:1-4:12][Identifier[4:1-4:6][print](Identifier[4:7-4:11][test])]
 	CallExpression[5:1-5:11][Identifier[5:1-5:6][print](Identifier[5:7-5:10][foo])]
+	CallExpression[6:1-6:9][Identifier[6:1-6:6][print](BinaryNegatedExpression[6:7-6:9][- Literal[6:8-6:9][2]])]
 ]"
 `;
 

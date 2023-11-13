@@ -1077,7 +1077,7 @@ export default class Parser {
     const val = me.parseMultDiv(asLval, statementStart);
     let base = val;
 
-    while (me.isOneOf(Selectors.Plus, Selectors.Minus)) {
+    while (me.isOneOf(Selectors.Plus, Selectors.Minus) && (!statementStart || !this.token.afterSpace)) {
       const token = me.token;
 
       me.next();
