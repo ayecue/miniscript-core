@@ -441,7 +441,9 @@ export default class Parser {
         Selectors.AddShorthand,
         Selectors.SubtractShorthand,
         Selectors.MultiplyShorthand,
-        Selectors.DivideShorthand
+        Selectors.DivideShorthand,
+        Selectors.PowerShorthand,
+        Selectors.ModuloShorthand
       )
     ) {
       const op = me.token;
