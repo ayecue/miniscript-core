@@ -222,7 +222,7 @@ export default class Lexer {
       .replace(/""/g, Operator.Escape);
     const rawString = me.content.slice(me.tokenStart, me.index);
 
-    const token = new LiteralToken({
+    const literalToken = new LiteralToken({
       type: TokenType.StringLiteral,
       value: string,
       raw: rawString,
@@ -236,8 +236,9 @@ export default class Lexer {
     });
 
     me.offset = endOffset;
+    me.snapshot?.push(literalToken as Token);
 
-    return token;
+    return literalToken;
   }
 
   scanComment(afterSpace: boolean): Token {
@@ -312,8 +313,7 @@ export default class Lexer {
   scanNumericLiteral(afterSpace: boolean): LiteralToken {
     const me = this;
     const literal = me.readDecLiteral();
-
-    return new LiteralToken({
+    const literalToken = new LiteralToken({
       type: TokenType.NumericLiteral,
       value: literal.value,
       raw: literal.raw,
@@ -323,6 +323,10 @@ export default class Lexer {
       offset: me.offset,
       afterSpace
     });
+
+    me.snapshot?.push(literalToken as Token);
+
+    return literalToken;
   }
 
   scanPunctuator(value: string, afterSpace: boolean): Token {
@@ -453,7 +457,7 @@ export default class Lexer {
 
       return token;
     } else if (value === Literal.True || value === Literal.False) {
-      return new LiteralToken({
+      const literalToken = new LiteralToken({
         type: TokenType.BooleanLiteral,
         value: value === Literal.True,
         raw: value,
@@ -463,8 +467,12 @@ export default class Lexer {
         offset: me.offset,
         afterSpace
       });
+
+      me.snapshot?.push(literalToken as Token);
+
+      return literalToken;
     } else if (value === Literal.Null) {
-      return new LiteralToken({
+      const literalToken = new LiteralToken({
         type: TokenType.NilLiteral,
         value: null,
         raw: value,
@@ -474,6 +482,10 @@ export default class Lexer {
         offset: me.offset,
         afterSpace
       });
+
+      me.snapshot?.push(literalToken as Token);
+
+      return literalToken;
     }
 
     const token = new Token({
