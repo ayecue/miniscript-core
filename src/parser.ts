@@ -371,12 +371,6 @@ export default class Parser {
           const item = me.parseReturnStatement();
           if (item.end !== null) {
             me.addLine(item);
-          } else if (item.argument?.type === ASTType.FunctionDeclaration) {
-            const pendingBlock = me.backpatches.peek();
-            pendingBlock.onComplete = (it) => {
-              item.end = it.block.end;
-              me.addLine(item);
-            };
           }
           pendingBlock.body.push(item);
           return;
@@ -513,7 +507,7 @@ export default class Parser {
     const me = this;
     const scope = me.currentScope;
     const start = me.token.getStart();
-    const expr = me.parseExpr(true, true);
+    const expr = me.parseExpr(null, true, true);
 
     if (
       me.isOneOf(
@@ -540,7 +534,7 @@ export default class Parser {
 
       me.currentAssignment = assignmentStatement;
 
-      assignmentStatement.init = me.parseExpr();
+      assignmentStatement.init = me.parseExpr(assignmentStatement);
       assignmentStatement.end = me.previousToken.getEnd();
 
       if (assignmentStatement.init.type === ASTType.FunctionDeclaration) {
@@ -580,7 +574,7 @@ export default class Parser {
 
       const binaryExpressionStart = me.token.getStart();
       const operator = <Operator>op.value.charAt(0);
-      const right = me.parseExpr();
+      const right = me.parseExpr(assignmentStatement);
 
       assignmentStatement.init = me.astProvider.binaryExpression({
         operator,
@@ -602,7 +596,7 @@ export default class Parser {
     const expressions = [];
 
     while (!me.is(Selectors.EndOfFile)) {
-      const arg = me.parseExpr();
+      const arg = me.parseExpr(null);
       expressions.push(arg);
 
       if (me.isOneOf(Selectors.EndOfLine, Selectors.Comment)) break;
@@ -657,7 +651,7 @@ export default class Parser {
     });
 
     if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment, Selectors.Else)) {
-      expression = me.parseExpr();
+      expression = me.parseExpr(returnStatement);
 
       if (expression.type === ASTType.FunctionDeclaration) {
         const pendingBlock = me.backpatches.peek();
@@ -679,7 +673,7 @@ export default class Parser {
   parseIfStatement(): void {
     const me = this;
     const start = me.previousToken.getStart();
-    const ifCondition = me.parseExpr();
+    const ifCondition = me.parseExpr(null);
 
     me.addLine(ifCondition);
     me.requireToken(Selectors.Then, start);
@@ -725,7 +719,7 @@ export default class Parser {
     switch (type) {
       case ASTType.ElseifClause: {
         const ifStatementStart = me.token.getStart();
-        const ifCondition = me.parseExpr();
+        const ifCondition = me.parseExpr(null);
 
         me.requireToken(Selectors.Then, ifStatementStart);
 
@@ -773,8 +767,6 @@ export default class Parser {
     });
     const item = me.parseShortcutStatement();
 
-    me.addLine(item);
-
     clauses.push(
       me.astProvider.ifShortcutClause({
         condition,
@@ -812,7 +804,7 @@ export default class Parser {
   parseWhileStatement(): void {
     const me = this;
     const start = me.previousToken.getStart();
-    const condition = me.parseExpr();
+    const condition = me.parseExpr(null);
 
     if (!condition) {
       me.raise(
@@ -870,8 +862,6 @@ export default class Parser {
     const me = this;
     const item = me.parseShortcutStatement();
 
-    me.addLine(item);
-
     const whileStatement = me.astProvider.whileStatement({
       condition,
       body: [item],
@@ -923,7 +913,7 @@ export default class Parser {
 
     me.requireToken(Selectors.In, start);
 
-    const iterator = me.parseExpr();
+    const iterator = me.parseExpr(null);
 
     if (!iterator) {
       me.raise(
@@ -985,8 +975,6 @@ export default class Parser {
     const me = this;
     const item = me.parseShortcutStatement();
 
-    me.addLine(item);
-
     const forStatement = me.astProvider.forGenericStatement({
       variable,
       iterator,
@@ -1000,12 +988,12 @@ export default class Parser {
     me.backpatches.peek().body.push(forStatement);
   }
 
-  parseExpr(asLval: boolean = false, statementStart: boolean = false): ASTBase {
+  parseExpr(base: ASTBase, asLval: boolean = false, statementStart: boolean = false): ASTBase {
     const me = this;
-    return me.parseFunctionDeclaration(asLval, statementStart);
+    return me.parseFunctionDeclaration(base, asLval, statementStart);
   }
 
-  parseFunctionDeclaration(asLval: boolean = false, statementStart: boolean = false): ASTFunctionStatement | ASTBase {
+  parseFunctionDeclaration(base: ASTBase, asLval: boolean = false, statementStart: boolean = false): ASTFunctionStatement | ASTBase {
     const me = this;
 
     if (!me.is(Selectors.Function)) return me.parseOr(asLval, statementStart);
@@ -1032,7 +1020,7 @@ export default class Parser {
         const parameterStart = parameter.start;
 
         if (me.consume(Selectors.Assign)) {
-          const defaultValue = me.parseExpr();
+          const defaultValue = me.parseExpr(null);
 
           if (defaultValue instanceof ASTLiteral || (defaultValue instanceof ASTUnaryExpression && defaultValue.argument instanceof ASTLiteral)) {
             const assign = me.astProvider.assignmentStatement({
@@ -1087,6 +1075,14 @@ export default class Parser {
 
     const pendingBlock = new PendingFunction(functionStatement);
     me.backpatches.push(pendingBlock);
+    pendingBlock.onComplete = (it) => {
+      if (base !== null) {
+        base.end = it.block.end;
+        me.addLine(base);
+      } else {
+        me.addLine(it.block);
+      }
+    };
 
     return functionStatement;
   }
@@ -1108,7 +1104,6 @@ export default class Parser {
 
     pendingBlock.complete(me.previousToken);
 
-    me.addLine(pendingBlock.block);
     me.backpatches.pop();
   }
 
@@ -1454,7 +1449,7 @@ export default class Parser {
                 end: me.previousToken.getEnd(),
                 scope: me.currentScope
               })
-            : me.parseExpr();
+            : me.parseExpr(null);
 
           base = me.astProvider.sliceExpression({
             base,
@@ -1465,7 +1460,7 @@ export default class Parser {
             scope: me.currentScope
           });
         } else {
-          const index = me.parseExpr();
+          const index = me.parseExpr(null);
 
           if (me.is(Selectors.SliceSeperator)) {
             me.next();
@@ -1477,7 +1472,7 @@ export default class Parser {
                   end: me.previousToken.getEnd(),
                   scope: me.currentScope
                 })
-              : me.parseExpr();
+              : me.parseExpr(null);
 
             base = me.astProvider.sliceExpression({
               base,
@@ -1532,7 +1527,7 @@ export default class Parser {
       } else {
         while (!me.is(Selectors.EndOfFile)) {
           me.skipNewlines();
-          const arg = me.parseExpr();
+          const arg = me.parseExpr(null);
           expressions.push(arg);
           me.skipNewlines();
           if (
@@ -1581,7 +1576,7 @@ export default class Parser {
           break;
         }
 
-        const key = me.parseExpr();
+        const key = me.parseExpr(null);
         let value: ASTBase = null;
 
         me.requireToken(Selectors.MapKeyValueSeperator);
@@ -1603,7 +1598,7 @@ export default class Parser {
           const previousAssignment = me.currentAssignment;
 
           me.currentAssignment = assign;
-          value = me.parseExpr();
+          value = me.parseExpr(null);
           me.currentAssignment = previousAssignment;
 
           assign.init = value;
@@ -1611,7 +1606,7 @@ export default class Parser {
 
           scope.assignments.push(assign);
         } else {
-          value = me.parseExpr();
+          value = me.parseExpr(null);
         }
 
         fields.push(
@@ -1700,7 +1695,7 @@ export default class Parser {
 
           me.currentAssignment = previousAssignment;
 
-          value = me.parseExpr();
+          value = me.parseExpr(null);
 
           me.currentAssignment = previousAssignment;
 
@@ -1712,7 +1707,7 @@ export default class Parser {
 
           scope.assignments.push(assign);
         } else {
-          value = me.parseExpr();
+          value = me.parseExpr(null);
         }
 
         fields.push(
@@ -1760,7 +1755,7 @@ export default class Parser {
     me.next();
     me.skipNewlines();
 
-    const val = me.parseExpr();
+    const val = me.parseExpr(null);
 
     me.requireToken(Selectors.RParenthesis, start);
 
