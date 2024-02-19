@@ -1598,7 +1598,7 @@ export default class Parser {
           const previousAssignment = me.currentAssignment;
 
           me.currentAssignment = assign;
-          value = me.parseExpr(null);
+          value = me.parseExpr(assign);
           me.currentAssignment = previousAssignment;
 
           assign.init = value;
@@ -1695,12 +1695,12 @@ export default class Parser {
 
           me.currentAssignment = previousAssignment;
 
-          value = me.parseExpr(null);
+          value = me.parseExpr(assign);
 
           me.currentAssignment = previousAssignment;
 
           assign.variable.start = value.start;
-          assign.variable.end = value.end;
+          assign.variable.end = value.start;
           assign.init = value;
           assign.start = value.start;
           assign.end = value.end;
