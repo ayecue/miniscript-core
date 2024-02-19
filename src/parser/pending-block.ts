@@ -1,3 +1,4 @@
+import { Token } from '../lexer/token';
 import {
   ASTBase,
   ASTChunk,
@@ -24,26 +25,26 @@ export interface PendingBlock {
   block: ASTBase;
   body: ASTBase[];
   type: PendingBlockType;
-  onCompleteCallback: PendingBlockCompleteCallback;
+  onComplete: PendingBlockCompleteCallback;
 
-  onComplete(): void;
+  complete(endToken: Token): void;
 }
 
 abstract class PendingBlockBase {
   block: ASTBase;
   body: ASTBase[];
   type: PendingBlockType;
-  onCompleteCallback: PendingBlockCompleteCallback;
+  onComplete: PendingBlockCompleteCallback;
 
   constructor(block: ASTBase, type: PendingBlockType) {
     this.block = block;
     this.body = [];
     this.type = type;
-    this.onCompleteCallback = null;
+    this.onComplete = null;
   }
 
-  onComplete(): void {
-    this.onCompleteCallback?.(this);
+  complete(_endToken: Token): void {
+    this.onComplete?.(this);
   }
 }
 
@@ -59,6 +60,12 @@ export class PendingChunk extends PendingBlockBase implements PendingBlock {
   constructor(block: ASTChunk) {
     super(block, PendingBlockType.Chunk);
   }
+
+  complete(endToken: Token): void {
+    this.block.body = this.body;
+    this.block.end = endToken.getEnd();
+    super.complete(endToken);
+  }
 }
 
 export function isPendingFor(
@@ -73,6 +80,12 @@ export class PendingFor extends PendingBlockBase implements PendingBlock {
   constructor(block: ASTForGenericStatement) {
     super(block, PendingBlockType.For);
   }
+
+  complete(endToken: Token): void {
+    this.block.body = this.body;
+    this.block.end = endToken.getEnd();
+    super.complete(endToken);
+  }
 }
 
 export function isPendingFunction(
@@ -86,6 +99,12 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
 
   constructor(block: ASTFunctionStatement) {
     super(block, PendingBlockType.Function);
+  }
+
+  complete(endToken: Token): void {
+    this.block.body = this.body;
+    this.block.end = endToken.getEnd();
+    super.complete(endToken);
   }
 }
 
@@ -106,6 +125,20 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
     super(block, PendingBlockType.If);
     this.currentClause = current;
   }
+
+  next(endToken: Token): void {
+    this.currentClause.body = this.body;
+    this.currentClause.end = endToken.getEnd();
+    this.block.clauses.push(this.currentClause);
+    super.complete(endToken);
+    this.body = [];
+  }
+
+  complete(endToken: Token): void {
+    if (this.body.length > 0) this.next(endToken);
+    this.block.end = endToken.getEnd();
+    super.complete(endToken);
+  }
 }
 
 export function isPendingWhile(
@@ -119,5 +152,11 @@ export class PendingWhile extends PendingBlockBase implements PendingBlock {
 
   constructor(block: ASTWhileStatement) {
     super(block, PendingBlockType.While);
+  }
+
+  complete(endToken: Token): void {
+    this.block.body = this.body;
+    this.block.end = endToken.getEnd();
+    super.complete(endToken);
   }
 }

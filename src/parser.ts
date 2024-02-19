@@ -333,10 +333,12 @@ export default class Parser {
     let last = me.backpatches.pop();
 
     while (!isPendingChunk(last)) {
-      const exception = me.raise(`Found open block ${last.block.type}`, new Range(
+      const exception = me.raise(`found open block ${last.block.type}`, new Range(
         last.block.start,
         last.block.start
       ));
+
+      last.complete(me.previousToken);
 
       me.errors.push(exception);
 
@@ -539,7 +541,7 @@ export default class Parser {
 
       if (assignmentStatement.init.type === ASTType.FunctionDeclaration) {
         const pendingBlock = me.backpatches.peek();
-        pendingBlock.onCompleteCallback = (it) => assignmentStatement.end = it.block.end;
+        pendingBlock.onComplete = (it) => assignmentStatement.end = it.block.end;
       }
 
       me.currentAssignment = previousAssignment;
@@ -702,10 +704,7 @@ export default class Parser {
       return;
     }
 
-    pendingBlock.currentClause.body = pendingBlock.body;
-    pendingBlock.currentClause.end = me.previousToken.getEnd();
-    pendingBlock.block.clauses.push(pendingBlock.currentClause);
-    pendingBlock.body = [];
+    pendingBlock.next(me.previousToken);
 
     switch (type) {
       case ASTType.ElseifClause: {
@@ -735,8 +734,7 @@ export default class Parser {
     }
 
     if (type === null) {
-      pendingBlock.block.end = me.previousToken.getEnd();
-      pendingBlock?.onComplete();
+      pendingBlock.complete(me.previousToken);
 
       me.addLine(pendingBlock.block);
       me.backpatches.pop();
@@ -828,6 +826,12 @@ export default class Parser {
 
     const pendingBlock = new PendingWhile(whileStatement);
     me.backpatches.push(pendingBlock);
+    pendingBlock.onComplete = (it) => {
+      me.addLine(it.block);
+      me.backpatches.pop();
+
+      me.backpatches.peek().body.push(it.block);
+    };
   }
 
   finalizeWhileStatement() {
@@ -843,14 +847,7 @@ export default class Parser {
       return;
     }
 
-    pendingBlock.block.body = pendingBlock.body;
-    pendingBlock.block.end = me.previousToken.getEnd();
-    pendingBlock?.onComplete();
-
-    me.addLine(pendingBlock.block);
-    me.backpatches.pop();
-
-    me.backpatches.peek().body.push(pendingBlock.block);
+    pendingBlock.complete(me.previousToken);
   }
 
   parseWhileShortcutStatement(condition: ASTBase, start: ASTPosition): void {
@@ -956,9 +953,7 @@ export default class Parser {
       return;
     }
 
-    pendingBlock.block.body = pendingBlock.body;
-    pendingBlock.block.end = me.previousToken.getEnd();
-    pendingBlock?.onComplete();
+    pendingBlock.complete(me.previousToken);
 
     me.addLine(pendingBlock.block);
     me.backpatches.pop();
@@ -1095,9 +1090,7 @@ export default class Parser {
     
     me.popScope();
 
-    pendingBlock.block.body = pendingBlock.body;
-    pendingBlock.block.end = me.previousToken.getEnd();
-    pendingBlock?.onComplete();
+    pendingBlock.complete(me.previousToken);
 
     me.addLine(pendingBlock.block);
     me.backpatches.pop();
