@@ -4,6 +4,8 @@ export { default as LexerValidator } from './lexer/validator';
 export { default as Parser, ParserOptions } from './parser';
 export * from './parser/ast';
 export { default as ParserValidator } from './parser/validator';
+export * from './parser/pending-block';
+export * from './parser/stack';
 export * from './types/codes';
 export * from './types/errors';
 export * from './types/keywords';
