@@ -128,7 +128,6 @@ export class ASTBaseBlockWithScope extends ASTBaseBlock {
 
   constructor(type: string, options: ASTBaseBlockWithScopeOptions) {
     super(type, options);
-    this.body = options.body;
     this.namespaces = options.namespaces || new Set<string>();
     this.assignments = options.assignments || [];
     this.returns = options.returns || [];

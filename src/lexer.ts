@@ -28,6 +28,11 @@ export default class Lexer {
   unsafe: boolean;
   errors: Error[];
 
+  backlog: Token[];
+  backlogPointer: number;
+
+  snapshot: Token[] | null;
+
   constructor(content: string, options: LexerOptions = {}) {
     const me = this;
 
@@ -41,7 +46,10 @@ export default class Lexer {
     me.offset = 0;
     me.validator = options.validator || new Validator();
     me.unsafe = options.unsafe;
+    me.backlog = [];
+    me.backlogPointer = 0;
     me.errors = [];
+    me.snapshot = null;
   }
 
   scan(
@@ -158,8 +166,7 @@ export default class Lexer {
 
   createEOL(afterSpace: boolean): Token {
     const me = this;
-
-    return new Token({
+    const token = new Token({
       type: TokenType.EOL,
       value: Operator.EndOfLine,
       line: me.line,
@@ -168,6 +175,10 @@ export default class Lexer {
       offset: me.offset,
       afterSpace
     });
+
+    me.snapshot?.push(token);
+
+    return token;
   }
 
   scanStringLiteral(afterSpace: boolean): LiteralToken {
@@ -245,8 +256,7 @@ export default class Lexer {
     }
 
     const value = me.content.slice(me.tokenStart + 2, me.index);
-
-    return new Token({
+    const token = new Token({
       type: TokenType.Comment,
       value,
       line: beginLine,
@@ -255,6 +265,10 @@ export default class Lexer {
       offset: me.offset,
       afterSpace
     });
+
+    me.snapshot?.push(token);
+
+    return token;
   }
 
   readDecLiteral(): {
@@ -316,7 +330,7 @@ export default class Lexer {
 
     me.index = me.index + value.length;
 
-    return new Token({
+    const token = new Token({
       type: TokenType.Punctuator,
       value,
       line: me.line,
@@ -325,6 +339,10 @@ export default class Lexer {
       offset: me.offset,
       afterSpace
     });
+
+    me.snapshot?.push(token);
+
+    return token;
   }
 
   scanSliceOperator(afterSpace: boolean): Token {
@@ -332,7 +350,7 @@ export default class Lexer {
 
     me.index++;
 
-    return new Token({
+    const token = new Token({
       type: TokenType.SliceOperator,
       value: Operator.SliceSeperator,
       line: me.line,
@@ -341,6 +359,10 @@ export default class Lexer {
       offset: me.offset,
       afterSpace
     });
+
+    me.snapshot?.push(token);
+
+    return token;
   }
 
   isWinNewline() {
@@ -417,7 +439,7 @@ export default class Lexer {
         }
       }
 
-      return new Token({
+      const token = new Token({
         type: TokenType.Keyword,
         value,
         line: me.line,
@@ -426,6 +448,10 @@ export default class Lexer {
         offset: me.offset,
         afterSpace
       });
+
+      me.snapshot?.push(token);
+
+      return token;
     } else if (value === Literal.True || value === Literal.False) {
       return new LiteralToken({
         type: TokenType.BooleanLiteral,
@@ -450,7 +476,7 @@ export default class Lexer {
       });
     }
 
-    return new Token({
+    const token = new Token({
       type: TokenType.Identifier,
       value,
       line: me.line,
@@ -459,12 +485,20 @@ export default class Lexer {
       offset: me.offset,
       afterSpace
     });
+
+    me.snapshot?.push(token);
+
+    return token;
   }
 
   next(): BaseToken<any> {
     const me = this;
-    const validator = me.validator;
 
+    if (me.backlog.length > me.backlogPointer) {
+      return this.backlog[me.backlogPointer++];
+    }
+
+    const validator = me.validator;
     const oldPosition = me.index;
     me.skipWhiteSpace();
 
@@ -476,7 +510,7 @@ export default class Lexer {
     }
 
     if (!me.isNotEOF()) {
-      return new Token({
+      const token = new Token({
         type: TokenType.EOF,
         value: Operator.EndOfFile,
         line: me.line,
@@ -485,6 +519,10 @@ export default class Lexer {
         offset: me.offset,
         afterSpace
       });
+
+      me.snapshot?.push(token);
+
+      return token;
     }
 
     const code = me.codeAt();
@@ -519,6 +557,28 @@ export default class Lexer {
         new Position(me.line, me.index - me.offset)
       )
     );
+  }
+
+  recordSnapshot() {
+    const me = this;
+    me.snapshot = [];
+    return me;
+  }
+
+  recoverFromSnapshot() {
+    const me = this;
+    me.backlog = me.snapshot;
+    me.backlogPointer = 0;
+    me.snapshot = null;
+    return me;
+  }
+
+  clearSnapshot() {
+    const me = this;
+    me.backlog = [];
+    me.backlogPointer = 0;
+    me.snapshot = null;
+    return me;
   }
 
   raise(message: string, range: Range): Token {

@@ -1,5 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`parse default scripts anonymous-functions.ms 1`] = `
+"Chunk[1:1-15:13][
+	CallExpression[1:1-1:23][Identifier[1:1-1:4][Foo](Function[1:5-3:13][ =>
+		ReturnStatement[2:3-2:11][Literal[2:10-2:11][1]]
+	], Literal[1:17-1:23][test])]
+	CallExpression[5:1-5:23][Identifier[5:1-5:4][Foo](Literal[5:5-5:11][test], Function[5:13-7:13][ =>
+		ReturnStatement[6:3-6:11][Literal[6:10-6:11][1]]
+	])]
+	AssignmentStatement[9:1-9:27][Identifier[9:1-9:4][Foo] = MapConstructor[9:7-9:27][
+		MapKeyString[9:8-null][Literal[9:8-9:14][test]: Function[9:16-11:13][ =>
+			ReturnStatement[10:3-10:11][Literal[10:10-10:11][1]]
+		]]
+	]]
+	AssignmentStatement[13:1-13:19][Identifier[13:1-13:4][Foo] = ListConstructor[13:7-13:19][
+		ListValue[13:8-null][Function[13:8-15:13][ =>
+			ReturnStatement[14:3-14:11][Literal[14:10-14:11][1]]
+		]]
+	]]
+]"
+`;
+
+exports[`parse default scripts anonymous-functions.ms 2`] = `undefined`;
+
+exports[`parse default scripts anonymous-functions.ms 3`] = `7`;
+
+exports[`parse default scripts anonymous-functions.ms 4`] = `4`;
+
+exports[`parse default scripts anonymous-functions.ms unsafe 1`] = `
+"Chunk[1:1-15:13][
+	CallExpression[1:1-1:23][Identifier[1:1-1:4][Foo](Function[1:5-3:13][ =>
+		ReturnStatement[2:3-2:11][Literal[2:10-2:11][1]]
+	], Literal[1:17-1:23][test])]
+	CallExpression[5:1-5:23][Identifier[5:1-5:4][Foo](Literal[5:5-5:11][test], Function[5:13-7:13][ =>
+		ReturnStatement[6:3-6:11][Literal[6:10-6:11][1]]
+	])]
+	AssignmentStatement[9:1-9:27][Identifier[9:1-9:4][Foo] = MapConstructor[9:7-9:27][
+		MapKeyString[9:8-null][Literal[9:8-9:14][test]: Function[9:16-11:13][ =>
+			ReturnStatement[10:3-10:11][Literal[10:10-10:11][1]]
+		]]
+	]]
+	AssignmentStatement[13:1-13:19][Identifier[13:1-13:4][Foo] = ListConstructor[13:7-13:19][
+		ListValue[13:8-null][Function[13:8-15:13][ =>
+			ReturnStatement[14:3-14:11][Literal[14:10-14:11][1]]
+		]]
+	]]
+]"
+`;
+
 exports[`parse default scripts ascii.ms 1`] = `
 "Chunk[1:1-71:29][
 	AssignmentStatement[1:1-1:14][Identifier[1:1-1:9][AsciiGen] = MapConstructor[1:12-1:14][]]
@@ -785,16 +833,19 @@ exports[`parse default scripts invalid code 1`] = `Array []`;
 exports[`parse default scripts invalid code 2`] = `
 Array [
   [Error: got Identifier[4:9 - 4:14: value = 'print'] where any of ",", ")" is required],
-  [Error: got Punctuator[4:15 - 4:16: value = ')'] where number, string, or identifier is required],
+  [Error: got Punctuator[4:16 - 4:17: value = ')'] where number, string, or identifier is required],
   [Error: got Identifier[8:23 - 8:25: value = 'wa'] where any of ",", ";", "<eof>" is required],
-  [Error: got EOL[8:25 - 8:25: value = ';'] where number, string, or identifier is required],
   [Error: got Punctuator[11:13 - 11:14: value = '+'] where number, string, or identifier is required],
   [Error: got Keyword[13:13 - 13:16: value = 'not'] where number, string, or identifier is required],
+  [Error: got Keyword[13:21 - 13:24: value = 'not'] where number, string, or identifier is required],
+  [Error: got Keyword[13:25 - 13:28: value = 'not'] where any of ",", ";", "<eof>" is required],
+  [Error: got Keyword[13:29 - 13:32: value = 'not'] where number, string, or identifier is required],
+  [Error: got Keyword[13:33 - 13:36: value = 'not'] where any of ",", ";", "<eof>" is required],
+  [Error: got Keyword[13:37 - 13:40: value = 'not'] where number, string, or identifier is required],
+  [Error: got Punctuator[13:41 - 13:42: value = '@'] where any of ",", ";", "<eof>" is required],
   [Error: unexpected keyword Keyword[17:9 - 17:17: value = 'function'] at start of line],
-  [Error: got Punctuator[17:19 - 17:20: value = ')'] where number, string, or identifier is required],
-  [Error: got Keyword[18:9 - 18:17: value = 'end func'] where Identifier is required],
+  [Error: unexpected keyword Keyword[18:9 - 18:17: value = 'end func'] at start of line],
   [Error: got Identifier[28:20 - 28:25: value = 'print'] where "then" is required],
-  [Error: got Punctuator[28:33 - 28:34: value = ')'] where number, string, or identifier is required],
 ]
 `;
 
@@ -1965,7 +2016,7 @@ exports[`parse default scripts random.ms unsafe 1`] = `
 `;
 
 exports[`parse default scripts shorthand.ms 1`] = `
-"Chunk[1:1-49:34][
+"Chunk[1:1-51:34][
 	IfStatement[1:1-1:29][
 		IfShortcutClause[1:1-1:29][Literal[1:5-1:9][true]
 			CallExpression[1:16-1:29][Identifier[1:16-1:21][print](Literal[1:22-1:28][true])]
@@ -2016,41 +2067,41 @@ exports[`parse default scripts shorthand.ms 1`] = `
 	WhileStatement[21:1-23:10][BinaryExpression[21:8-21:13][Identifier[21:8-21:9][b] < Identifier[21:12-21:13][i]]
 		AssignmentStatement[22:3-22:9][Identifier[22:3-22:4][b] = BinaryExpression[22:8-22:9][Identifier[22:3-22:4][b] + Literal[22:8-22:9][1]]]
 	]
-	AssignmentStatement[24:1-24:34][Identifier[24:1-24:11][myFunction] = Function[24:14-24:34][Identifier[24:23-24:24][v] =>
-		CallExpression[24:26-24:34][Identifier[24:26-24:31][print](Identifier[24:32-24:33][v])]
+	AssignmentStatement[24:1-26:13][Identifier[24:1-24:11][myFunction] = Function[24:14-26:13][Identifier[24:23-24:24][v] =>
+		CallExpression[25:3-25:11][Identifier[25:3-25:8][print](Identifier[25:9-25:10][v])]
 	]]
-	AssignmentStatement[25:1-27:13][Identifier[25:1-25:14][otherFunction] = Function[25:17-27:13][Identifier[25:26-25:27][n] =>
-		CallExpression[26:3-26:11][Identifier[26:3-26:8][print](Identifier[26:9-26:10][n])]
+	AssignmentStatement[27:1-29:13][Identifier[27:1-27:14][otherFunction] = Function[27:17-29:13][Identifier[27:26-27:27][n] =>
+		CallExpression[28:3-28:11][Identifier[28:3-28:8][print](Identifier[28:9-28:10][n])]
 	]]
-	IfStatement[29:1-30:7][
-		IfClause[29:1-30:7][NegationExpression[29:4-29:12][not UnaryExpression[29:8-29:12][@ Identifier[29:9-29:12][ref]]]]
+	IfStatement[31:1-32:7][
+		IfClause[31:1-32:7][NegationExpression[31:4-31:12][not UnaryExpression[31:8-31:12][@ Identifier[31:9-31:12][ref]]]]
 	]
-	IfStatement[32:1-35:7][
-		IfClause[32:1-34:5][Literal[32:4-32:8][true]
-			AssignmentStatement[33:3-33:24][Identifier[33:3-33:16][elseSomething] = Literal[33:19-33:24][false]]
+	IfStatement[34:1-37:7][
+		IfClause[34:1-36:5][Literal[34:4-34:8][true]
+			AssignmentStatement[35:3-35:24][Identifier[35:3-35:16][elseSomething] = Literal[35:19-35:24][false]]
 		]
 		ElseClause[]
 	]
-	For[37:1-39:8][Identifier[37:5-37:6][c] in Identifier[37:10-37:15][clist]
-		Comment[37:16-37:19][x]
-		CallExpression[38:3-38:15][Identifier[38:3-38:8][print](Literal[38:9-38:14][moo])]
+	For[39:1-41:8][Identifier[39:5-39:6][c] in Identifier[39:10-39:15][clist]
+		Comment[39:16-39:19][x]
+		CallExpression[40:3-40:15][Identifier[40:3-40:8][print](Literal[40:9-40:14][moo])]
 	]
-	WhileStatement[41:1-43:10][Literal[41:7-41:11][true]
-		Comment[41:12-41:15][x]
-		CallExpression[42:3-42:15][Identifier[42:3-42:8][print](Literal[42:9-42:14][moo])]
+	WhileStatement[43:1-45:10][Literal[43:7-43:11][true]
+		Comment[43:12-43:15][x]
+		CallExpression[44:3-44:15][Identifier[44:3-44:8][print](Literal[44:9-44:14][moo])]
 	]
-	Comment[45:14-45:17][x]
-	IfStatement[45:1-47:7][
-		IfClause[45:1-47:7][Literal[45:4-45:8][true]
-			CallExpression[46:3-46:15][Identifier[46:3-46:8][print](Literal[46:9-46:14][moo])]
+	IfStatement[47:1-49:7][
+		IfClause[47:1-49:7][Literal[47:4-47:8][true]
+			Comment[47:14-47:17][x]
+			CallExpression[48:3-48:15][Identifier[48:3-48:8][print](Literal[48:9-48:14][moo])]
 		]
 	]
-	IfStatement[49:1-49:34][
-		IfShortcutClause[49:1-49:26][BinaryExpression[49:4-49:9][Identifier[49:4-49:5][x] < Literal[49:8-49:9][0]]
-			ReturnStatement[49:15-49:21][null]
+	IfStatement[51:1-51:34][
+		IfShortcutClause[51:1-51:26][BinaryExpression[51:4-51:9][Identifier[51:4-51:5][x] < Literal[51:8-51:9][0]]
+			ReturnStatement[51:15-51:21][null]
 		]
-		ElseShortcutClause[49:27-49:34][
-			CallExpression[49:27-49:34][Identifier[49:27-49:32][print](Identifier[49:33-49:34][x])]
+		ElseShortcutClause[51:27-51:34][
+			CallExpression[51:27-51:34][Identifier[51:27-51:32][print](Identifier[51:33-51:34][x])]
 		}]
 	]
 ]"
@@ -2063,7 +2114,7 @@ exports[`parse default scripts shorthand.ms 3`] = `25`;
 exports[`parse default scripts shorthand.ms 4`] = `11`;
 
 exports[`parse default scripts shorthand.ms unsafe 1`] = `
-"Chunk[1:1-49:34][
+"Chunk[1:1-51:34][
 	IfStatement[1:1-1:29][
 		IfShortcutClause[1:1-1:29][Literal[1:5-1:9][true]
 			CallExpression[1:16-1:29][Identifier[1:16-1:21][print](Literal[1:22-1:28][true])]
@@ -2114,41 +2165,41 @@ exports[`parse default scripts shorthand.ms unsafe 1`] = `
 	WhileStatement[21:1-23:10][BinaryExpression[21:8-21:13][Identifier[21:8-21:9][b] < Identifier[21:12-21:13][i]]
 		AssignmentStatement[22:3-22:9][Identifier[22:3-22:4][b] = BinaryExpression[22:8-22:9][Identifier[22:3-22:4][b] + Literal[22:8-22:9][1]]]
 	]
-	AssignmentStatement[24:1-24:34][Identifier[24:1-24:11][myFunction] = Function[24:14-24:34][Identifier[24:23-24:24][v] =>
-		CallExpression[24:26-24:34][Identifier[24:26-24:31][print](Identifier[24:32-24:33][v])]
+	AssignmentStatement[24:1-26:13][Identifier[24:1-24:11][myFunction] = Function[24:14-26:13][Identifier[24:23-24:24][v] =>
+		CallExpression[25:3-25:11][Identifier[25:3-25:8][print](Identifier[25:9-25:10][v])]
 	]]
-	AssignmentStatement[25:1-27:13][Identifier[25:1-25:14][otherFunction] = Function[25:17-27:13][Identifier[25:26-25:27][n] =>
-		CallExpression[26:3-26:11][Identifier[26:3-26:8][print](Identifier[26:9-26:10][n])]
+	AssignmentStatement[27:1-29:13][Identifier[27:1-27:14][otherFunction] = Function[27:17-29:13][Identifier[27:26-27:27][n] =>
+		CallExpression[28:3-28:11][Identifier[28:3-28:8][print](Identifier[28:9-28:10][n])]
 	]]
-	IfStatement[29:1-30:7][
-		IfClause[29:1-30:7][NegationExpression[29:4-29:12][not UnaryExpression[29:8-29:12][@ Identifier[29:9-29:12][ref]]]]
+	IfStatement[31:1-32:7][
+		IfClause[31:1-32:7][NegationExpression[31:4-31:12][not UnaryExpression[31:8-31:12][@ Identifier[31:9-31:12][ref]]]]
 	]
-	IfStatement[32:1-35:7][
-		IfClause[32:1-34:5][Literal[32:4-32:8][true]
-			AssignmentStatement[33:3-33:24][Identifier[33:3-33:16][elseSomething] = Literal[33:19-33:24][false]]
+	IfStatement[34:1-37:7][
+		IfClause[34:1-36:5][Literal[34:4-34:8][true]
+			AssignmentStatement[35:3-35:24][Identifier[35:3-35:16][elseSomething] = Literal[35:19-35:24][false]]
 		]
 		ElseClause[]
 	]
-	For[37:1-39:8][Identifier[37:5-37:6][c] in Identifier[37:10-37:15][clist]
-		Comment[37:16-37:19][x]
-		CallExpression[38:3-38:15][Identifier[38:3-38:8][print](Literal[38:9-38:14][moo])]
+	For[39:1-41:8][Identifier[39:5-39:6][c] in Identifier[39:10-39:15][clist]
+		Comment[39:16-39:19][x]
+		CallExpression[40:3-40:15][Identifier[40:3-40:8][print](Literal[40:9-40:14][moo])]
 	]
-	WhileStatement[41:1-43:10][Literal[41:7-41:11][true]
-		Comment[41:12-41:15][x]
-		CallExpression[42:3-42:15][Identifier[42:3-42:8][print](Literal[42:9-42:14][moo])]
+	WhileStatement[43:1-45:10][Literal[43:7-43:11][true]
+		Comment[43:12-43:15][x]
+		CallExpression[44:3-44:15][Identifier[44:3-44:8][print](Literal[44:9-44:14][moo])]
 	]
-	Comment[45:14-45:17][x]
-	IfStatement[45:1-47:7][
-		IfClause[45:1-47:7][Literal[45:4-45:8][true]
-			CallExpression[46:3-46:15][Identifier[46:3-46:8][print](Literal[46:9-46:14][moo])]
+	IfStatement[47:1-49:7][
+		IfClause[47:1-49:7][Literal[47:4-47:8][true]
+			Comment[47:14-47:17][x]
+			CallExpression[48:3-48:15][Identifier[48:3-48:8][print](Literal[48:9-48:14][moo])]
 		]
 	]
-	IfStatement[49:1-49:34][
-		IfShortcutClause[49:1-49:26][BinaryExpression[49:4-49:9][Identifier[49:4-49:5][x] < Literal[49:8-49:9][0]]
-			ReturnStatement[49:15-49:21][null]
+	IfStatement[51:1-51:34][
+		IfShortcutClause[51:1-51:26][BinaryExpression[51:4-51:9][Identifier[51:4-51:5][x] < Literal[51:8-51:9][0]]
+			ReturnStatement[51:15-51:21][null]
 		]
-		ElseShortcutClause[49:27-49:34][
-			CallExpression[49:27-49:34][Identifier[49:27-49:32][print](Identifier[49:33-49:34][x])]
+		ElseShortcutClause[51:27-51:34][
+			CallExpression[51:27-51:34][Identifier[51:27-51:32][print](Identifier[51:33-51:34][x])]
 		}]
 	]
 ]"

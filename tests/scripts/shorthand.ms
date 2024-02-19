@@ -21,7 +21,9 @@ while (i < b) i += 1
 while (b < i)
 	b += 1
 end while
-myFunction = function(v) print(v)
+myFunction = function(v)
+  print(v)
+end function
 otherFunction = function(n)
 	print(n)
 end function
