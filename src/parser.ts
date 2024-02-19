@@ -1064,6 +1064,13 @@ export default class Parser {
 
         if (me.is(Selectors.RParenthesis)) break;
         me.requireToken(Selectors.ArgumentSeperator, functionStart);
+        if (me.is(Selectors.RParenthesis)) {
+          me.raise('expected argument instead received right parenthesis', new Range(
+            me.previousToken.getEnd(),
+            me.previousToken.getEnd()
+          ));
+          break;
+        }
       }
 
       me.requireToken(Selectors.RParenthesis, functionStart);
@@ -1821,10 +1828,7 @@ export default class Parser {
     const identifier = me.requireType(TokenType.Identifier);
 
     if (identifier === null) {
-      return me.astProvider.invalidCodeExpression({
-        start,
-        end
-      });
+      return me.parseInvalidCode();
     }
 
     me.currentScope.namespaces.add(identifier.value);
