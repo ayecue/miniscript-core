@@ -781,9 +781,7 @@ export default class Parser {
       me.next();
 
       const elseItemStart = me.token.getStart();
-      const elseItem = me.parseAssignment();
-
-      me.addLine(elseItem);
+      const elseItem = me.parseShortcutStatement();
 
       clauses.push(
         me.astProvider.elseShortcutClause({

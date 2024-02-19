@@ -9,12 +9,12 @@ exports[`parse default scripts anonymous-functions.ms 1`] = `
 		ReturnStatement[6:3-6:11][Literal[6:10-6:11][1]]
 	])]
 	AssignmentStatement[9:1-9:27][Identifier[9:1-9:4][Foo] = MapConstructor[9:7-9:27][
-		MapKeyString[9:8-null][Literal[9:8-9:14][test]: Function[9:16-11:13][ =>
+		MapKeyString[9:8-11:13][Literal[9:8-9:14][test]: Function[9:16-11:13][ =>
 			ReturnStatement[10:3-10:11][Literal[10:10-10:11][1]]
 		]]
 	]]
 	AssignmentStatement[13:1-13:19][Identifier[13:1-13:4][Foo] = ListConstructor[13:7-13:19][
-		ListValue[13:8-null][Function[13:8-15:13][ =>
+		ListValue[13:8-15:13][Function[13:8-15:13][ =>
 			ReturnStatement[14:3-14:11][Literal[14:10-14:11][1]]
 		]]
 	]]
@@ -42,12 +42,12 @@ exports[`parse default scripts anonymous-functions.ms unsafe 1`] = `
 		ReturnStatement[6:3-6:11][Literal[6:10-6:11][1]]
 	])]
 	AssignmentStatement[9:1-9:27][Identifier[9:1-9:4][Foo] = MapConstructor[9:7-9:27][
-		MapKeyString[9:8-null][Literal[9:8-9:14][test]: Function[9:16-11:13][ =>
+		MapKeyString[9:8-11:13][Literal[9:8-9:14][test]: Function[9:16-11:13][ =>
 			ReturnStatement[10:3-10:11][Literal[10:10-10:11][1]]
 		]]
 	]]
 	AssignmentStatement[13:1-13:19][Identifier[13:1-13:4][Foo] = ListConstructor[13:7-13:19][
-		ListValue[13:8-null][Function[13:8-15:13][ =>
+		ListValue[13:8-15:13][Function[13:8-15:13][ =>
 			ReturnStatement[14:3-14:11][Literal[14:10-14:11][1]]
 		]]
 	]]
