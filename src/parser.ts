@@ -695,7 +695,7 @@ export default class Parser {
 
     if (!isPendingIf(pendingBlock)) {
       me.raise('no matching open if block', new Range(
-        pendingBlock.block.start,
+        me.token.getStart(),
         me.token.getEnd()
       ));
 
@@ -836,7 +836,7 @@ export default class Parser {
 
     if (!isPendingWhile(pendingBlock)) {
       me.raise('no matching open while block', new Range(
-        pendingBlock.block.start,
+        me.token.getStart(),
         me.token.getEnd()
       ));
 
@@ -949,7 +949,7 @@ export default class Parser {
 
     if (!isPendingFor(pendingBlock)) {
       me.raise('no matching open for block', new Range(
-        pendingBlock.block.start,
+        me.token.getStart(),
         me.token.getEnd()
       ));
 
@@ -1074,15 +1074,6 @@ export default class Parser {
 
     functionStatement.parameters = parameters;
 
-    if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment)) {
-      const statement = me.parseShortcutStatement();
-      me.addLine(statement);
-      functionStatement.body = [statement];
-      functionStatement.end = me.previousToken.getEnd();
-      me.popScope();
-      return functionStatement;
-    }
-
     const pendingBlock = new PendingFunction(functionStatement);
     me.backpatches.push(pendingBlock);
 
@@ -1095,7 +1086,7 @@ export default class Parser {
 
     if (!isPendingFunction(pendingBlock)) {
       me.raise('no matching open function block', new Range(
-        pendingBlock.block.start,
+        me.token.getStart(),
         me.token.getEnd()
       ));
 
