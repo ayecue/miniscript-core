@@ -371,6 +371,12 @@ export default class Parser {
           const item = me.parseReturnStatement();
           if (item.end !== null) {
             me.addLine(item);
+          } else if (item.argument?.type === ASTType.FunctionDeclaration) {
+            const pendingBlock = me.backpatches.peek();
+            pendingBlock.onComplete = (it) => {
+              item.end = it.block.end;
+              me.addLine(item);
+            };
           }
           pendingBlock.body.push(item);
           return;
@@ -655,10 +661,7 @@ export default class Parser {
 
       if (expression.type === ASTType.FunctionDeclaration) {
         const pendingBlock = me.backpatches.peek();
-        pendingBlock.onComplete = (it) => {
-          returnStatement.end = it.block.end;
-          me.addLine(returnStatement);
-        };
+        pendingBlock.onComplete = (it) => returnStatement.end = it.block.end;
       } else {
         returnStatement.end = me.previousToken.getEnd();
       }
