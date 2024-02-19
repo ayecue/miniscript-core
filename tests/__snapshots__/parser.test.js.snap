@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`parse default scripts anonymous-functions.ms 1`] = `
-"Chunk[1:1-15:13][
+"Chunk[1:1-23:14][
 	CallExpression[1:1-1:23][Identifier[1:1-1:4][Foo](Function[1:5-3:13][ =>
 		ReturnStatement[2:3-2:11][Literal[2:10-2:11][1]]
 	], Literal[1:17-1:23][test])]
@@ -18,17 +18,23 @@ exports[`parse default scripts anonymous-functions.ms 1`] = `
 			ReturnStatement[14:3-14:11][Literal[14:10-14:11][1]]
 		]]
 	]]
+	AssignmentStatement[17:1-21:13][Identifier[17:1-17:4][foo] = Function[17:7-21:13][ =>
+		ReturnStatement[18:5-20:17][Function[18:12-20:17][ =>
+			ReturnStatement[19:9-19:21][Literal[19:16-19:21][faa]]
+		]]
+	]]
+	CallExpression[23:1-23:14][Identifier[23:1-23:6][print](CallExpression[23:7-23:14][CallExpression[23:7-23:12][Identifier[23:7-23:10][foo]()]()])]
 ]"
 `;
 
 exports[`parse default scripts anonymous-functions.ms 2`] = `undefined`;
 
-exports[`parse default scripts anonymous-functions.ms 3`] = `7`;
+exports[`parse default scripts anonymous-functions.ms 3`] = `8`;
 
-exports[`parse default scripts anonymous-functions.ms 4`] = `4`;
+exports[`parse default scripts anonymous-functions.ms 4`] = `5`;
 
 exports[`parse default scripts anonymous-functions.ms unsafe 1`] = `
-"Chunk[1:1-15:13][
+"Chunk[1:1-23:14][
 	CallExpression[1:1-1:23][Identifier[1:1-1:4][Foo](Function[1:5-3:13][ =>
 		ReturnStatement[2:3-2:11][Literal[2:10-2:11][1]]
 	], Literal[1:17-1:23][test])]
@@ -45,6 +51,12 @@ exports[`parse default scripts anonymous-functions.ms unsafe 1`] = `
 			ReturnStatement[14:3-14:11][Literal[14:10-14:11][1]]
 		]]
 	]]
+	AssignmentStatement[17:1-21:13][Identifier[17:1-17:4][foo] = Function[17:7-21:13][ =>
+		ReturnStatement[18:5-20:17][Function[18:12-20:17][ =>
+			ReturnStatement[19:9-19:21][Literal[19:16-19:21][faa]]
+		]]
+	]]
+	CallExpression[23:1-23:14][Identifier[23:1-23:6][print](CallExpression[23:7-23:14][CallExpression[23:7-23:12][Identifier[23:7-23:10][foo]()]()])]
 ]"
 `;
 
@@ -837,12 +849,6 @@ Array [
   [Error: got Identifier[8:23 - 8:25: value = 'wa'] where any of ",", ";", "<eof>" is required],
   [Error: got Punctuator[11:13 - 11:14: value = '+'] where number, string, or identifier is required],
   [Error: got Keyword[13:13 - 13:16: value = 'not'] where number, string, or identifier is required],
-  [Error: got Keyword[13:21 - 13:24: value = 'not'] where number, string, or identifier is required],
-  [Error: got Keyword[13:25 - 13:28: value = 'not'] where any of ",", ";", "<eof>" is required],
-  [Error: got Keyword[13:29 - 13:32: value = 'not'] where number, string, or identifier is required],
-  [Error: got Keyword[13:33 - 13:36: value = 'not'] where any of ",", ";", "<eof>" is required],
-  [Error: got Keyword[13:37 - 13:40: value = 'not'] where number, string, or identifier is required],
-  [Error: got Punctuator[13:41 - 13:42: value = '@'] where any of ",", ";", "<eof>" is required],
   [Error: unexpected keyword Keyword[17:9 - 17:17: value = 'function'] at start of line],
   [Error: unexpected keyword Keyword[18:9 - 18:17: value = 'end func'] at start of line],
   [Error: got Identifier[28:20 - 28:25: value = 'print'] where "then" is required],

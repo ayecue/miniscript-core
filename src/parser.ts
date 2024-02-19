@@ -3,22 +3,18 @@ import { Token, TokenType } from './lexer/token';
 import {
   ASTAssignmentStatement,
   ASTBase,
-  ASTBaseBlock,
   ASTBaseBlockWithScope,
   ASTChunk,
   ASTClause,
-  ASTForGenericStatement,
   ASTFunctionStatement,
   ASTIdentifier,
-  ASTIfStatement,
   ASTListValue,
   ASTLiteral,
   ASTMapKeyString,
   ASTProvider,
   ASTReturnStatement,
   ASTType,
-  ASTUnaryExpression,
-  ASTWhileStatement
+  ASTUnaryExpression
 } from './parser/ast';
 import Validator from './parser/validator';
 import { ParserException } from './types/errors';
@@ -28,7 +24,7 @@ import { Position as ASTPosition, Position } from './types/position';
 import { Range } from './types/range';
 import { Selector, Selectors } from './types/selector';
 import { Stack } from './parser/stack';
-import { PendingBlock, PendingBlockType, PendingChunk, PendingClauseType, PendingFor, PendingFunction, PendingIf, PendingWhile, isPendingChunk, isPendingFor, isPendingFunction, isPendingIf, isPendingWhile } from './parser/pending-block';
+import { PendingBlock, PendingChunk, PendingClauseType, PendingFor, PendingFunction, PendingIf, PendingWhile, isPendingChunk, isPendingFor, isPendingFunction, isPendingIf, isPendingWhile } from './parser/pending-block';
 
 export interface ParserOptions {
   validator?: Validator;
@@ -313,7 +309,7 @@ export default class Parser {
       me.parseStatement();
 
       if (me.statementErrors.length > 0) {
-        me.errors.push(...me.statementErrors);
+        me.errors.push(me.statementErrors[0]);
 
         if (!me.unsafe) {
           me.lexer.clearSnapshot();
@@ -364,6 +360,7 @@ export default class Parser {
 
   parseStatement(): void {
     const me = this;
+    const pendingBlock = me.backpatches.peek();
 
     if (TokenType.Keyword === me.token.type && Keyword.Not !== me.token.value) {
       const value = me.token.value;
@@ -372,8 +369,10 @@ export default class Parser {
         case Keyword.Return: {
           me.next();
           const item = me.parseReturnStatement();
-          me.addLine(item);
-          me.backpatches.peek().body.push(item);
+          if (item.end !== null) {
+            me.addLine(item);
+          }
+          pendingBlock.body.push(item);
           return;
         }
         case Keyword.If: {
@@ -420,7 +419,7 @@ export default class Parser {
             scope: me.currentScope
           });
           me.addLine(item);
-          me.backpatches.peek().body.push(item);
+          pendingBlock.body.push(item);
           return;
         }
         case Keyword.Break: {
@@ -431,7 +430,7 @@ export default class Parser {
             scope: me.currentScope
           });
           me.addLine(item);
-          me.backpatches.peek().body.push(item);
+          pendingBlock.body.push(item);
           return;
         }
         default: {
@@ -449,13 +448,12 @@ export default class Parser {
         }
       }
     } else {
-      const body = me.backpatches.peek().body;
       const item = me.parseAssignment();
 
       if (item.end !== null) {
         me.addLine(item);
       }
-      body.push(item);
+      pendingBlock.body.push(item);
     }
   }
 
@@ -641,21 +639,36 @@ export default class Parser {
 
   parseReturnStatement(): ASTReturnStatement {
     const me = this;
+    const scope = me.currentScope;
     const start = me.previousToken.getStart();
     let expression = null;
 
-    if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment, Selectors.Else)) {
-      expression = me.parseExpr();
-    }
-
     const returnStatement = me.astProvider.returnStatement({
-      argument: expression,
+      argument: null,
       start,
-      end: me.previousToken.getEnd(),
-      scope: me.currentScope
+      end: null,
+      scope
     });
 
-    me.currentScope.returns.push(returnStatement);
+    if (!me.isOneOf(Selectors.EndOfLine, Selectors.Comment, Selectors.Else)) {
+      expression = me.parseExpr();
+
+      if (expression.type === ASTType.FunctionDeclaration) {
+        const pendingBlock = me.backpatches.peek();
+        pendingBlock.onComplete = (it) => {
+          returnStatement.end = it.block.end;
+          me.addLine(returnStatement);
+        };
+      } else {
+        returnStatement.end = me.previousToken.getEnd();
+      }
+
+      returnStatement.argument = expression;
+    } else {
+      returnStatement.end = me.previousToken.getEnd();
+    }
+
+    scope.returns.push(returnStatement);
 
     return returnStatement;
   }
