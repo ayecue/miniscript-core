@@ -1043,7 +1043,10 @@ export default class Parser {
               )
             );
 
-            return;
+            parameters.push(me.astProvider.invalidCodeExpression({
+              start: parameterStart,
+              end: me.previousToken.getEnd()
+            }));
           }
         } else {
           const assign = me.astProvider.assignmentStatement({
