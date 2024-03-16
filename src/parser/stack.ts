@@ -1,10 +1,17 @@
 export class Stack<T> {
   private stack: T[];
   private last: T;
+  private default: T;
 
   constructor(value?: T) {
     this.stack = [];
+    this.default = null;
     if (value != null) this.push(value);
+  }
+
+  setDefault(item: T): this {
+    this.default = item;
+    return this;
   }
 
   push(value: T): number {
@@ -16,11 +23,11 @@ export class Stack<T> {
   pop(): T {
     const ret = this.stack.pop();
     this.last = this.stack[this.stack.length - 1];
-    return ret;
+    return ret ?? this.default;
   }
 
   peek(): T {
-    return this.last;
+    return this.last ?? this.default;
   }
 
   includes(value: T): boolean {

@@ -295,7 +295,7 @@ export default class Parser {
     const chunk = me.astProvider.chunk({ start, end: null });
     const pending = new PendingChunk(chunk);
 
-    me.backpatches.push(pending);
+    me.backpatches.setDefault(pending);
     me.pushScope(chunk);
 
     while (!me.is(Selectors.EndOfFile)) {
@@ -352,8 +352,6 @@ export default class Parser {
     chunk.scopes = me.scopes;
     chunk.lines = me.lines;
     chunk.end = me.token.getEnd();
-
-    me.backpatches.pop();
 
     return chunk;
   }

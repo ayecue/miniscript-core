@@ -1197,6 +1197,15 @@ exports[`parse default scripts obj-init.ms unsafe 1`] = `
 ]"
 `;
 
+exports[`parse default scripts open block 1`] = `Array []`;
+
+exports[`parse default scripts open block 2`] = `
+Array [
+  [Error: unexpected keyword Keyword[40:9 - 40:17: value = 'end whil'] at start of line],
+  [Error: found open block WhileStatement],
+]
+`;
+
 exports[`parse default scripts parentheses.ms 1`] = `
 "Chunk[1:1-4:75][
 	AssignmentStatement[1:1-1:40][Identifier[1:1-1:7][params] = ListConstructor[1:10-1:40][
