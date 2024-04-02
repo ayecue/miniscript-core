@@ -209,8 +209,8 @@ export default class Lexer {
         return me.raise(
           `Unexpected string end of file.`,
           new Range(
-            new Position(beginLine, beginLineStart - endOffset),
-            new Position(me.line, me.index - endOffset)
+            new Position(beginLine, beginLineStart - endOffset + 1),
+            new Position(me.line, me.index - endOffset + 1)
           )
         );
       }
@@ -315,8 +315,8 @@ export default class Lexer {
       return me.raise(
         `Invalid numeric literal: ${literal.raw}`,
         new Range(
-          new Position(me.line, me.tokenStart - me.offset),
-          new Position(me.line, me.index - me.offset)
+          new Position(me.line, me.tokenStart - me.offset + 1),
+          new Position(me.line, me.index - me.offset + 1)
         )
       );
     }
@@ -388,23 +388,6 @@ export default class Lexer {
       (CharacterCode.NEW_LINE === code &&
         CharacterCode.RETURN_LINE === nextCode)
     );
-  }
-
-  skipToNextLine() {
-    const me = this;
-    let code = me.codeAt();
-
-    while (!me.validator.isEndOfLine(code) && me.isNotEOF()) {
-      me.nextIndex();
-      code = me.codeAt();
-    }
-
-    if (me.isWinNewline()) me.nextIndex();
-
-    me.nextLine();
-    me.offset = me.index;
-
-    return me.next();
   }
 
   skipWhiteSpace() {
@@ -574,8 +557,8 @@ export default class Lexer {
     return me.raise(
       `Invalid character ${code} (Code: ${String.fromCharCode(code)})`,
       new Range(
-        new Position(beginLine, me.tokenStart - me.offset),
-        new Position(me.line, me.index - me.offset)
+        new Position(beginLine, me.tokenStart - me.offset + 1),
+        new Position(me.line, me.index - me.offset + 1)
       )
     );
   }
@@ -609,8 +592,14 @@ export default class Lexer {
     me.errors.push(err);
 
     if (me.unsafe) {
-      me.skipToNextLine();
-      return me.next();
+      return new Token({
+        type: TokenType.Invalid,
+        value: '',
+        line: me.line,
+        lineStart: me.lineStart,
+        range: [me.tokenStart, me.index],
+        offset: me.offset
+      });
     }
 
     throw err;

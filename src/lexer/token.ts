@@ -11,7 +11,8 @@ export enum TokenType {
   NilLiteral = 'NilLiteral',
   EOL = 'EOL',
   SliceOperator = 'SliceOperator',
-  Comment = 'Comment'
+  Comment = 'Comment',
+  Invalid = 'Invalid'
 }
 
 export class BaseTokenOptions<T> {
