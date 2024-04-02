@@ -315,8 +315,8 @@ export default class Lexer {
       return me.raise(
         `Invalid numeric literal: ${literal.raw}`,
         new Range(
-          new Position(me.lineStart, me.tokenStart - me.offset),
-          new Position(me.line, me.index - me.offset)
+          new Position(me.line, me.tokenStart),
+          new Position(me.line, me.index)
         )
       );
     }
@@ -566,6 +566,7 @@ export default class Lexer {
     if (validator.isIdentifierStart(code))
       return me.scanIdentifierOrKeyword(afterSpace);
 
+    const beginLine = me.line;
     const item = me.scan(code, nextCode, lastCode, afterSpace);
 
     if (item) return item;
@@ -573,7 +574,7 @@ export default class Lexer {
     return me.raise(
       `Invalid character ${code} (Code: ${String.fromCharCode(code)})`,
       new Range(
-        new Position(me.lineStart, me.tokenStart - me.offset),
+        new Position(beginLine, me.tokenStart - me.offset),
         new Position(me.line, me.index - me.offset)
       )
     );
