@@ -275,44 +275,52 @@ export default class Lexer {
   readDecLiteral(): {
     value: number;
     raw: string;
-    hasFractionPart: boolean;
   } {
     const me = this;
     const validator = me.validator;
+    let previous;
+    let current;
 
-    while (validator.isDecDigit(me.codeAt())) me.nextIndex();
+    while (me.isNotEOF()) {
+      previous = current;
+      current = me.codeAt();
 
-    let foundFraction = false;
-    if (CharacterCode.DOT === me.codeAt()) {
-      foundFraction = true;
-      me.nextIndex();
-      while (validator.isDecDigit(me.codeAt())) me.nextIndex();
-    }
-
-    const notation = me.codeAt();
-    if (
-      CharacterCode.LETTER_E === notation ||
-      CharacterCode.LETTER_e === notation
-    ) {
-      me.nextIndex();
-      const operation = me.codeAt();
-      if (CharacterCode.MINUS === operation || CharacterCode.PLUS === operation)
+      if (
+        validator.isDecDigit(current) ||
+        CharacterCode.DOT === current ||
+        CharacterCode.LETTER_E === current ||
+        CharacterCode.LETTER_e === current ||
+        ((CharacterCode.MINUS === current || CharacterCode.PLUS === current) && (CharacterCode.LETTER_E === previous ||
+          CharacterCode.LETTER_e === previous))
+      ) {
         me.nextIndex();
-      while (validator.isDecDigit(me.codeAt())) me.nextIndex();
+      } else {
+        break;
+      }
     }
 
     const raw = me.content.slice(me.tokenStart, me.index);
 
     return {
-      value: parseFloat(raw),
-      raw,
-      hasFractionPart: foundFraction
+      value: Number(raw),
+      raw
     };
   }
 
   scanNumericLiteral(afterSpace: boolean): LiteralToken {
     const me = this;
     const literal = me.readDecLiteral();
+
+    if (isNaN(literal.value)) {
+      return me.raise(
+        `Invalid numeric literal: ${literal.raw}`,
+        new Range(
+          new Position(me.lineStart, me.tokenStart - me.offset),
+          new Position(me.line, me.index - me.offset)
+        )
+      );
+    }
+
     const literalToken = new LiteralToken({
       type: TokenType.NumericLiteral,
       value: literal.value,
