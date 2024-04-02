@@ -315,8 +315,8 @@ export default class Lexer {
       return me.raise(
         `Invalid numeric literal: ${literal.raw}`,
         new Range(
-          new Position(me.line, me.tokenStart),
-          new Position(me.line, me.index)
+          new Position(me.line, me.tokenStart - me.offset),
+          new Position(me.line, me.index - me.offset)
         )
       );
     }
