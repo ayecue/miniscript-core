@@ -377,6 +377,12 @@ export default class Lexer {
     return token;
   }
 
+  isAtWhitespace() {
+    const me = this;
+    const current = this.content[this.index];
+    return !me.isNotEOF() || current === ' ' || current === '\t';
+  }
+
   isWinNewline() {
     const me = this;
     const code = me.codeAt();

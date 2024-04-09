@@ -768,6 +768,30 @@ exports[`parse default scripts eol.ms unsafe 1`] = `
 ]"
 `;
 
+exports[`parse default scripts expressions.ms 1`] = `
+"Chunk[1:1-4:11][
+	BinaryExpression[1:1-1:12][Literal[1:1-1:5][as] + Literal[1:8-1:12][wa]]
+	BinaryExpression[2:1-2:28][CallExpression[2:1-2:13][Identifier[2:1-2:6][print](Literal[2:7-2:12][was])] - CallExpression[2:14-2:28][Identifier[2:14-2:19][print](Literal[2:20-2:27][hallo])]]
+	CallExpression[3:1-3:11][Identifier[3:1-3:6][print](BinaryNegatedExpression[3:7-3:11][- Literal[3:8-3:11][123]])]
+	BinaryExpression[4:1-4:11][Identifier[4:1-4:6][print] + Literal[4:8-4:11][123]]
+]"
+`;
+
+exports[`parse default scripts expressions.ms 2`] = `undefined`;
+
+exports[`parse default scripts expressions.ms 3`] = `6`;
+
+exports[`parse default scripts expressions.ms 4`] = `0`;
+
+exports[`parse default scripts expressions.ms unsafe 1`] = `
+"Chunk[1:1-4:11][
+	BinaryExpression[1:1-1:12][Literal[1:1-1:5][as] + Literal[1:8-1:12][wa]]
+	BinaryExpression[2:1-2:28][CallExpression[2:1-2:13][Identifier[2:1-2:6][print](Literal[2:7-2:12][was])] - CallExpression[2:14-2:28][Identifier[2:14-2:19][print](Literal[2:20-2:27][hallo])]]
+	CallExpression[3:1-3:11][Identifier[3:1-3:6][print](BinaryNegatedExpression[3:7-3:11][- Literal[3:8-3:11][123]])]
+	BinaryExpression[4:1-4:11][Identifier[4:1-4:6][print] + Literal[4:8-4:11][123]]
+]"
+`;
+
 exports[`parse default scripts float.ms 1`] = `
 "Chunk[1:1-19:25][
 	AssignmentStatement[1:1-1:14][Identifier[1:1-1:10][integer_1] = Literal[1:13-1:14][1]]
