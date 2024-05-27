@@ -83,6 +83,7 @@ export default class Lexer {
       case CharacterCode.EXCLAMATION_MARK:
         if (CharacterCode.EQUAL === nextCode)
           return me.scanPunctuator(Operator.NotEqual, afterSpace);
+        me.nextIndex();
         return null;
       case CharacterCode.MINUS:
         if (CharacterCode.EQUAL === nextCode)
@@ -134,6 +135,7 @@ export default class Lexer {
         me.nextIndex();
         return me.createEOL(afterSpace);
       default:
+        me.nextIndex();
         return null;
     }
   }
