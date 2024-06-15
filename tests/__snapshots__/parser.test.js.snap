@@ -2381,3 +2381,12 @@ exports[`parse default scripts unary.ms unsafe 1`] = `
 	CallExpression[10:1-10:16][Identifier[10:1-10:6][print](BinaryNegatedExpression[10:7-10:15][- BinaryExpression[10:9-10:14][Literal[10:9-10:10][1] + Literal[10:13-10:14][2]]])]
 ]"
 `;
+
+exports[`parse default scripts using repeat keyword 1`] = `Array []`;
+
+exports[`parse default scripts using repeat keyword 2`] = `
+Array [
+  [Error: unexpected keyword Keyword[2:9 - 2:15: value = 'repeat'] at start of line],
+  [Error: no matching open function block],
+]
+`;

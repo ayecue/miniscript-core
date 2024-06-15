@@ -20,7 +20,7 @@ export default class Validator {
       case 5:
         return [Keyword.Break, Keyword.While];
       case 6:
-        return [Keyword.Return];
+        return [Keyword.Return, Keyword.Repeat];
       case 8:
         return [Keyword.Function, Keyword.Continue];
       default:

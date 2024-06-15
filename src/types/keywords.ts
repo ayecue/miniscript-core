@@ -19,5 +19,6 @@ export enum Keyword {
   ElseIf = 'else if',
   Return = 'return',
   Function = 'function',
-  Continue = 'continue'
+  Continue = 'continue',
+  Repeat = 'repeat'
 }
