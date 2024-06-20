@@ -572,7 +572,12 @@ export default class Parser {
 
       const binaryExpressionStart = me.token.getStart();
       const operator = <Operator>op.value.charAt(0);
-      const right = me.parseExpr(assignmentStatement);
+      const rightExpr = me.parseExpr(assignmentStatement);
+      const right = me.astProvider.parenthesisExpression({
+        start: rightExpr.start,
+        end: rightExpr.end,
+        expression: rightExpr
+      });
 
       assignmentStatement.init = me.astProvider.binaryExpression({
         operator,
@@ -1026,7 +1031,7 @@ export default class Parser {
               end: me.previousToken.getEnd(),
               scope: me.currentScope
             });
-  
+
             me.currentScope.assignments.push(assign);
             parameters.push(assign);
           } else {
@@ -1105,7 +1110,7 @@ export default class Parser {
 
       return;
     }
-    
+
     me.popScope();
 
     pendingBlock.complete(me.previousToken);
@@ -1451,10 +1456,10 @@ export default class Parser {
 
           const right = me.is(Selectors.SRBracket)
             ? me.astProvider.emptyExpression({
-                start: me.previousToken.getStart(),
-                end: me.previousToken.getEnd(),
-                scope: me.currentScope
-              })
+              start: me.previousToken.getStart(),
+              end: me.previousToken.getEnd(),
+              scope: me.currentScope
+            })
             : me.parseExpr(null);
 
           base = me.astProvider.sliceExpression({
@@ -1474,10 +1479,10 @@ export default class Parser {
 
             const right = me.is(Selectors.SRBracket)
               ? me.astProvider.emptyExpression({
-                  start: me.previousToken.getStart(),
-                  end: me.previousToken.getEnd(),
-                  scope: me.currentScope
-                })
+                start: me.previousToken.getStart(),
+                end: me.previousToken.getEnd(),
+                scope: me.currentScope
+              })
               : me.parseExpr(null);
 
             base = me.astProvider.sliceExpression({
@@ -1801,10 +1806,10 @@ export default class Parser {
     const type = <TokenType>me.token.type;
     const base: ASTLiteral = me.astProvider.literal(
       <
-        | TokenType.StringLiteral
-        | TokenType.NumericLiteral
-        | TokenType.BooleanLiteral
-        | TokenType.NilLiteral
+      | TokenType.StringLiteral
+      | TokenType.NumericLiteral
+      | TokenType.BooleanLiteral
+      | TokenType.NilLiteral
       >type,
       {
         value: me.token.value,
@@ -1847,7 +1852,7 @@ export default class Parser {
     const start = me.token.getStart();
     const end = me.token.getEnd();
     const base = me.astProvider.invalidCodeExpression({ start, end });
-    
+
     me.next();
 
     return base;
