@@ -11,6 +11,7 @@ import {
   ASTCommentOptions,
   ASTType
 } from './ast/base';
+import { ASTBinaryExpression, ASTBinaryExpressionOptions } from './ast/binary';
 import {
   ASTCallExpression,
   ASTCallExpressionOptions,
@@ -19,9 +20,9 @@ import {
 } from './ast/call';
 import { ASTChunk, ASTChunkOptions } from './ast/chunk';
 import {
-  ASTEvaluationExpression,
-  ASTEvaluationExpressionOptions
-} from './ast/evaluation';
+  ASTComparisonGroupExpression,
+  ASTComparisonGroupExpressionOptions
+} from './ast/comparison-group';
 import {
   ASTForGenericStatement,
   ASTForGenericStatementOptions
@@ -45,6 +46,7 @@ import {
   ASTIfStatement,
   ASTIfStatementOptions
 } from './ast/if';
+import { ASTIsaExpression, ASTIsaExpressionOptions } from './ast/isa';
 import {
   ASTListConstructorExpression,
   ASTListConstructorExpressionOptions,
@@ -52,6 +54,10 @@ import {
   ASTListValueOptions
 } from './ast/list';
 import { ASTLiteral, ASTLiteralOptions } from './ast/literal';
+import {
+  ASTLogicalExpression,
+  ASTLogicalExpressionOptions
+} from './ast/logical';
 import {
   ASTMapConstructorExpression,
   ASTMapConstructorExpressionOptions,
@@ -209,10 +215,18 @@ export class ASTProvider {
     return new ASTIndexExpression(options);
   }
 
-  binaryExpression(
-    options: ASTEvaluationExpressionOptions
-  ): ASTEvaluationExpression {
-    return new ASTEvaluationExpression(options);
+  logicalExpression(
+    options: ASTLogicalExpressionOptions
+  ): ASTLogicalExpression {
+    return new ASTLogicalExpression(options);
+  }
+
+  isaExpression(options: ASTIsaExpressionOptions): ASTLogicalExpression {
+    return new ASTIsaExpression(options);
+  }
+
+  binaryExpression(options: ASTBinaryExpressionOptions): ASTBinaryExpression {
+    return new ASTBinaryExpression(options);
   }
 
   sliceExpression(options: ASTSliceExpressionOptions): ASTSliceExpression {
@@ -223,6 +237,10 @@ export class ASTProvider {
     options: ASTParenthesisExpressionOptions
   ): ASTParenthesisExpression {
     return new ASTParenthesisExpression(options);
+  }
+
+  comparisonGroupExpression(options: ASTComparisonGroupExpressionOptions) {
+    return new ASTComparisonGroupExpression(options);
   }
 }
 
@@ -241,6 +259,7 @@ export {
   ASTCommentOptions,
   ASTType
 } from './ast/base';
+export { ASTBinaryExpression, ASTBinaryExpressionOptions } from './ast/binary';
 export {
   ASTCallExpression,
   ASTCallExpressionOptions,
@@ -249,9 +268,9 @@ export {
 } from './ast/call';
 export { ASTChunk, ASTChunkOptions } from './ast/chunk';
 export {
-  ASTEvaluationExpression,
-  ASTEvaluationExpressionOptions
-} from './ast/evaluation';
+  ASTComparisonGroupExpression,
+  ASTComparisonGroupExpressionOptions
+} from './ast/comparison-group';
 export {
   ASTForGenericStatement,
   ASTForGenericStatementOptions
@@ -276,6 +295,7 @@ export {
   ASTIfStatement,
   ASTIfStatementOptions
 } from './ast/if';
+export { ASTIsaExpression, ASTIsaExpressionOptions } from './ast/isa';
 export {
   ASTListConstructorExpression,
   ASTListConstructorExpressionOptions,
@@ -283,6 +303,10 @@ export {
   ASTListValueOptions
 } from './ast/list';
 export { ASTLiteral, ASTLiteralOptions } from './ast/literal';
+export {
+  ASTLogicalExpression,
+  ASTLogicalExpressionOptions
+} from './ast/logical';
 export {
   ASTMapConstructorExpression,
   ASTMapConstructorExpressionOptions,

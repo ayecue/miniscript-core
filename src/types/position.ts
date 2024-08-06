@@ -1,6 +1,6 @@
 export class Position {
-  line: number;
-  character: number;
+  readonly line: number;
+  readonly character: number;
 
   constructor(line: number, character: number) {
     this.line = line;

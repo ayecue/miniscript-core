@@ -7,11 +7,18 @@ import { Literal } from './types/literals';
 import { Operator } from './types/operators';
 import { Position } from './types/position';
 import { Range } from './types/range';
+import Queue from './utils/queue';
 
 export interface LexerOptions {
   validator?: Validator;
   unsafe?: boolean;
   tabWidth?: number;
+}
+
+function defaultScanHandler(this: Lexer, afterSpace: boolean) {
+  const value = this.content[this.index];
+  this.index += value.length;
+  return this.createPunctuator(value, afterSpace);
 }
 
 export default class Lexer {
@@ -28,10 +35,8 @@ export default class Lexer {
   unsafe: boolean;
   errors: Error[];
 
-  backlog: Token[];
-  backlogPointer: number;
-
-  snapshot: Token[] | null;
+  backlog: Queue<Token>;
+  snapshot: Queue<Token>;
 
   constructor(content: string, options: LexerOptions = {}) {
     const me = this;
@@ -46,124 +51,112 @@ export default class Lexer {
     me.offset = 0;
     me.validator = options.validator || new Validator();
     me.unsafe = options.unsafe;
-    me.backlog = [];
-    me.backlogPointer = 0;
     me.errors = [];
-    me.snapshot = null;
+    me.backlog = new Queue();
+    me.snapshot = new Queue();
   }
+
+  private static scanHandlers: Record<string, (this: Lexer, afterSpace: boolean) => BaseToken<any> | null> = {
+    [CharacterCode.QUOTE]: function quoteHandler(this, afterSpace) {
+      return this.scanStringLiteral(afterSpace);
+    },
+    [CharacterCode.DOT]: function dotHandler(this, afterSpace) {
+      if (this.validator.isDecDigit(this.codeAt(1)))
+        return this.scanNumericLiteral(afterSpace);
+      this.index++;
+      return this.createPunctuator(Operator.Member, afterSpace);
+    },
+    [CharacterCode.EQUAL]: function equalHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1)) {
+        return this.scanPunctuator(Operator.Equal, afterSpace);
+      }
+      return this.scanPunctuator(Operator.Assign, afterSpace);
+    },
+    [CharacterCode.ARROW_LEFT]: function arrowLeftHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.LessThanOrEqual, afterSpace);
+      return this.scanPunctuator(Operator.LessThan, afterSpace);
+    },
+    [CharacterCode.ARROW_RIGHT]: function arrowRightHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.GreaterThanOrEqual, afterSpace);
+      return this.scanPunctuator(Operator.GreaterThan, afterSpace);
+    },
+    [CharacterCode.EXCLAMATION_MARK]: function exclamationMarkHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.NotEqual, afterSpace);
+      this.index++;
+      return null;
+    },
+    [CharacterCode.MINUS]: function minusHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.SubtractShorthand, afterSpace);
+      return this.scanPunctuator(Operator.Minus, afterSpace);
+    },
+    [CharacterCode.PLUS]: function plusHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.AddShorthand, afterSpace);
+      return this.scanPunctuator(Operator.Plus, afterSpace);
+    },
+    [CharacterCode.ASTERISK]: function asteriskHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.MultiplyShorthand, afterSpace);
+      return this.scanPunctuator(Operator.Asterik, afterSpace);
+    },
+    [CharacterCode.SLASH]: function slashHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.DivideShorthand, afterSpace);
+      return this.scanPunctuator(Operator.Slash, afterSpace);
+    },
+    [CharacterCode.COLON]: function colonHandler(this, afterSpace) {
+      this.index++;
+      return this.createSlice(afterSpace);
+    },
+    [CharacterCode.CARET]: function caretHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.PowerShorthand, afterSpace);
+      return this.scanPunctuator(Operator.Power, afterSpace);
+    },
+    [CharacterCode.PERCENT]: function percentHandler(this, afterSpace) {
+      if (CharacterCode.EQUAL === this.codeAt(1))
+        return this.scanPunctuator(Operator.ModuloShorthand, afterSpace);
+      return this.scanPunctuator(Operator.Modulo, afterSpace);
+    },
+    [CharacterCode.SEMICOLON]: function semicolonHandler(this, afterSpace) {
+      this.index++;
+      return this.createEOL(afterSpace);
+    },
+    [CharacterCode.COMMA]: defaultScanHandler,
+    [CharacterCode.CURLY_BRACKET_LEFT]: defaultScanHandler,
+    [CharacterCode.CURLY_BRACKET_RIGHT]: defaultScanHandler,
+    [CharacterCode.SQUARE_BRACKETS_LEFT]: defaultScanHandler,
+    [CharacterCode.SQUARE_BRACKETS_RIGHT]: defaultScanHandler,
+    [CharacterCode.PARENTHESIS_LEFT]: defaultScanHandler,
+    [CharacterCode.PARENTHESIS_RIGHT]: defaultScanHandler,
+    [CharacterCode.AT_SIGN]: defaultScanHandler
+  };
 
   scan(
     code: number,
-    nextCode: number | undefined,
-    lastCode: number | undefined,
     afterSpace: boolean
   ): BaseToken<any> | null {
-    const me = this;
-    const validator = me.validator;
+    const handler = Lexer.scanHandlers[code];
 
-    switch (code) {
-      case CharacterCode.QUOTE:
-        return me.scanStringLiteral(afterSpace);
-      case CharacterCode.DOT:
-        if (validator.isDecDigit(nextCode))
-          return me.scanNumericLiteral(afterSpace);
-        return me.scanPunctuator(Operator.Member, afterSpace);
-      case CharacterCode.EQUAL:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.Equal, afterSpace);
-        return me.scanPunctuator(Operator.Assign, afterSpace);
-      case CharacterCode.ARROW_LEFT:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.LessThanOrEqual, afterSpace);
-        return me.scanPunctuator(Operator.LessThan, afterSpace);
-      case CharacterCode.ARROW_RIGHT:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.GreaterThanOrEqual, afterSpace);
-        return me.scanPunctuator(Operator.GreaterThan, afterSpace);
-      case CharacterCode.EXCLAMATION_MARK:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.NotEqual, afterSpace);
-        me.nextIndex();
-        return null;
-      case CharacterCode.MINUS:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.SubtractShorthand, afterSpace);
-        return me.scanPunctuator(Operator.Minus, afterSpace);
-      case CharacterCode.PLUS:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.AddShorthand, afterSpace);
-        return me.scanPunctuator(Operator.Plus, afterSpace);
-      case CharacterCode.ASTERISK:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.MultiplyShorthand, afterSpace);
-        return me.scanPunctuator(Operator.Asterik, afterSpace);
-      case CharacterCode.SLASH:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.DivideShorthand, afterSpace);
-        return me.scanPunctuator(Operator.Slash, afterSpace);
-      case CharacterCode.COLON:
-        return me.scanSliceOperator(afterSpace);
-      case CharacterCode.CARET:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.PowerShorthand, afterSpace);
-        return me.scanPunctuator(Operator.Power, afterSpace);
-      case CharacterCode.PERCENT:
-        if (CharacterCode.EQUAL === nextCode)
-          return me.scanPunctuator(Operator.ModuloShorthand, afterSpace);
-        return me.scanPunctuator(Operator.Modulo, afterSpace);
-      case CharacterCode.COMMA:
-      case CharacterCode.CURLY_BRACKET_LEFT:
-      case CharacterCode.CURLY_BRACKET_RIGHT:
-      case CharacterCode.SQUARE_BRACKETS_LEFT:
-      case CharacterCode.SQUARE_BRACKETS_RIGHT:
-      case CharacterCode.PARENTHESIS_LEFT:
-      case CharacterCode.PARENTHESIS_RIGHT:
-      case CharacterCode.AT_SIGN:
-        return me.scanPunctuator(String.fromCharCode(code), afterSpace);
-      case CharacterCode.NUMBER_0:
-      case CharacterCode.NUMBER_1:
-      case CharacterCode.NUMBER_2:
-      case CharacterCode.NUMBER_3:
-      case CharacterCode.NUMBER_4:
-      case CharacterCode.NUMBER_5:
-      case CharacterCode.NUMBER_6:
-      case CharacterCode.NUMBER_7:
-      case CharacterCode.NUMBER_8:
-      case CharacterCode.NUMBER_9:
-        return me.scanNumericLiteral(afterSpace);
-      case CharacterCode.SEMICOLON:
-        me.nextIndex();
-        return me.createEOL(afterSpace);
-      default:
-        me.nextIndex();
-        return null;
-    }
+    if (handler) return handler.call(this, afterSpace);
+    if (this.validator.isDecDigit(code)) return this.scanNumericLiteral(afterSpace);
+
+    this.index++;
+    return null;
   }
 
-  isNotEOF(): boolean {
-    const me = this;
-    return me.index < me.length;
-  }
-
-  nextIndex(value: number = 1): number {
-    const me = this;
-    me.index = me.index + value;
-    return me.index;
+  isAtWhitespace(): boolean {
+    return this.validator.isWhitespace(this.codeAt())
   }
 
   codeAt(offset: number = 0): number {
-    const me = this;
-    return <CharacterCode>me.content.charCodeAt(me.index + offset);
-  }
-
-  nextLine(): number {
-    const me = this;
-    me.line = me.line + 1;
-    return me.line;
-  }
-
-  isStringEscaped(): boolean {
-    return CharacterCode.QUOTE === this.codeAt(1);
+    const index = this.index + offset;
+    if (index < this.length) return <CharacterCode>this.content.charCodeAt(index);
+    return 0;
   }
 
   createEOL(afterSpace: boolean): Token {
@@ -178,51 +171,173 @@ export default class Lexer {
       afterSpace
     });
 
-    me.snapshot?.push(token);
+    me.snapshot.enqueue(token);
 
     return token;
   }
 
+  createIdentifier(value: string, afterSpace: boolean) {
+    const me = this;
+    const token = new Token({
+      type: TokenType.Identifier,
+      value,
+      line: me.line,
+      lineStart: me.lineStart,
+      range: [me.tokenStart, me.index],
+      offset: me.offset,
+      afterSpace
+    });
+
+    me.snapshot.enqueue(token);
+
+    return token;
+  }
+
+  createEOF(afterSpace: boolean) {
+    const me = this;
+    const token = new Token({
+      type: TokenType.EOF,
+      value: Operator.EndOfFile,
+      line: me.line,
+      lineStart: me.lineStart,
+      range: [me.index, me.index],
+      offset: me.offset,
+      afterSpace
+    });
+
+    me.snapshot.enqueue(token);
+
+    return token;
+  }
+
+  createBoolean(value: string, afterSpace: boolean) {
+    const me = this;
+    const literalToken = new LiteralToken({
+      type: TokenType.BooleanLiteral,
+      value: value === Literal.True,
+      raw: value,
+      line: me.line,
+      lineStart: me.lineStart,
+      range: [me.tokenStart, me.index],
+      offset: me.offset,
+      afterSpace
+    });
+
+    me.snapshot.enqueue(literalToken as Token);
+
+    return literalToken;
+  }
+
+  createNull(afterSpace: boolean) {
+    const me = this;
+    const literalToken = new LiteralToken({
+      type: TokenType.NilLiteral,
+      value: null,
+      raw: Literal.Null,
+      line: me.line,
+      lineStart: me.lineStart,
+      range: [me.tokenStart, me.index],
+      offset: me.offset,
+      afterSpace
+    });
+
+    me.snapshot.enqueue(literalToken as Token);
+
+    return literalToken;
+  }
+
+  createSlice(afterSpace: boolean) {
+    const token = new Token({
+      type: TokenType.SliceOperator,
+      value: Operator.SliceSeperator,
+      line: this.line,
+      lineStart: this.lineStart,
+      range: [this.tokenStart, this.index],
+      offset: this.offset,
+      afterSpace
+    });
+
+    this.snapshot.enqueue(token);
+
+    return token;
+  }
+
+  createPunctuator(value: string, afterSpace: boolean) {
+    const token = new Token({
+      type: TokenType.Punctuator,
+      value,
+      line: this.line,
+      lineStart: this.lineStart,
+      range: [this.tokenStart, this.index],
+      offset: this.offset,
+      afterSpace
+    });
+
+    this.snapshot.enqueue(token);
+
+    return token;
+  }
+
+  createNumericLiteral(value: number, raw: string, afterSpace: boolean) {
+    const literalToken = new LiteralToken({
+      type: TokenType.NumericLiteral,
+      value: value,
+      raw: raw,
+      line: this.line,
+      lineStart: this.lineStart,
+      range: [this.tokenStart, this.index],
+      offset: this.offset,
+      afterSpace
+    });
+
+    this.snapshot.enqueue(literalToken as Token);
+
+    return literalToken;
+  }
+
   scanStringLiteral(afterSpace: boolean): LiteralToken {
     const me = this;
+    const validator = me.validator;
     const beginLine = me.line;
     const beginLineStart = me.lineStart;
-    const stringStart = me.index + 1;
     let tempOffset = 0;
     let endOffset = me.offset;
+    let closed = false;
 
-    while (true) {
-      me.nextIndex();
+    while (me.index < me.length) {
+      me.index++;
 
       const code = me.codeAt();
 
       if (me.validator.isEndOfLine(code)) {
-        if (me.isWinNewline()) me.nextIndex();
-        me.nextLine();
+        if (validator.isWinNewline(code, me.codeAt(1))) me.index++;
+        me.line++;
         tempOffset = me.index + 1 - me.offset;
         endOffset = me.index + 1;
       } else if (CharacterCode.QUOTE === code) {
-        if (me.isStringEscaped()) {
-          me.nextIndex();
-        } else {
+        if (CharacterCode.QUOTE !== me.codeAt(1)) {
+          closed = true;
           break;
         }
-      } else if (!me.isNotEOF()) {
-        return me.raise(
-          `Unexpected string end of file.`,
-          new Range(
-            new Position(beginLine, beginLineStart - endOffset + 1),
-            new Position(me.line, me.index - endOffset + 1)
-          )
-        );
+        me.index++;
       }
     }
 
-    me.nextIndex();
-    const string = me.content
-      .slice(stringStart, me.index - 1)
-      .replace(/""/g, Operator.Escape);
+    if (!closed) {
+      return me.raise(
+        `Unexpected string end of file.`,
+        new Range(
+          new Position(beginLine, beginLineStart - endOffset + 1),
+          new Position(me.line, me.index - endOffset + 1)
+        )
+      );
+    }
+
+    me.index++;
     const rawString = me.content.slice(me.tokenStart, me.index);
+    const string = rawString
+      .slice(1, -1)
+      .replace(/""/g, Operator.Escape);
 
     const literalToken = new LiteralToken({
       type: TokenType.StringLiteral,
@@ -238,7 +353,7 @@ export default class Lexer {
     });
 
     me.offset = endOffset;
-    me.snapshot?.push(literalToken as Token);
+    me.snapshot.enqueue(literalToken as Token);
 
     return literalToken;
   }
@@ -249,14 +364,9 @@ export default class Lexer {
     const beginLine = me.line;
     const beginLineStart = me.lineStart;
 
-    while (me.isNotEOF()) {
-      if (validator.isEndOfLine(me.codeAt())) break;
-      me.nextIndex();
-    }
+    for (; this.index < this.length && !validator.isEndOfLine(me.codeAt()); me.index++);
 
-    if (me.isWinNewline()) {
-      me.nextIndex();
-    }
+    if (validator.isWinNewline(me.codeAt(), me.codeAt(1))) me.index++;
 
     const value = me.content.slice(me.tokenStart + 2, me.index);
     const token = new Token({
@@ -269,23 +379,19 @@ export default class Lexer {
       afterSpace
     });
 
-    me.snapshot?.push(token);
+    me.snapshot.enqueue(token);
 
     return token;
   }
 
-  readDecLiteral(): {
-    value: number;
-    raw: string;
-  } {
-    const me = this;
-    const validator = me.validator;
+  scanNumericLiteral(afterSpace: boolean): Token {
+    const validator = this.validator;
     let previous;
     let current;
 
-    while (me.isNotEOF()) {
+    while (this.index < this.length) {
       previous = current;
-      current = me.codeAt();
+      current = this.codeAt();
 
       if (
         validator.isDecDigit(current) ||
@@ -295,57 +401,71 @@ export default class Lexer {
         ((CharacterCode.MINUS === current || CharacterCode.PLUS === current) && (CharacterCode.LETTER_E === previous ||
           CharacterCode.LETTER_e === previous))
       ) {
-        me.nextIndex();
+        this.index++;
       } else {
         break;
       }
     }
 
-    const raw = me.content.slice(me.tokenStart, me.index);
+    const raw = this.content.slice(this.tokenStart, this.index);
+    const value = Number(raw);
 
-    return {
-      value: Number(raw),
-      raw
-    };
-  }
-
-  scanNumericLiteral(afterSpace: boolean): LiteralToken {
-    const me = this;
-    const literal = me.readDecLiteral();
-
-    if (isNaN(literal.value)) {
-      return me.raise(
-        `Invalid numeric literal: ${literal.raw}`,
+    if (isNaN(value)) {
+      return this.raise(
+        `Invalid numeric literal: ${raw}`,
         new Range(
-          new Position(me.line, me.tokenStart - me.offset + 1),
-          new Position(me.line, me.index - me.offset + 1)
+          new Position(this.line, this.tokenStart - this.offset + 1),
+          new Position(this.line, this.index - this.offset + 1)
         )
       );
     }
 
-    const literalToken = new LiteralToken({
-      type: TokenType.NumericLiteral,
-      value: literal.value,
-      raw: literal.raw,
-      line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offset: me.offset,
-      afterSpace
-    });
-
-    me.snapshot?.push(literalToken as Token);
-
-    return literalToken;
+    return this.createNumericLiteral(value, raw, afterSpace) as Token;
   }
 
-  scanPunctuator(value: string, afterSpace: boolean): Token {
+  scanPunctuator(value: string, afterSpace: boolean) {
+    this.index += value.length;
+    return this.createPunctuator(value, afterSpace);
+  }
+
+  skipWhiteSpace() {
     const me = this;
 
-    me.index = me.index + value.length;
+    for (; me.index < me.length; me.index++) {
+      const code = me.content[me.index];
+      if (code === '\t') {
+        me.offset -= me.tabWidth - 1;
+      } else if (code !== ' ') {
+        return;
+      }
+    }
+  }
+
+  scanKeyword(keyword: string, afterSpace: boolean): Token {
+    const me = this;
+    const validator = me.validator;
+    let value = keyword;
+
+    switch (keyword) {
+      case Keyword.End: {
+        me.index++;
+
+        for (; validator.isIdentifierPart(me.codeAt()); me.index++);
+        value = me.content.slice(me.tokenStart, me.index);
+        break;
+      }
+      case Keyword.Else: {
+        const elseIfStatement = me.content.slice(me.tokenStart, me.index + 3);
+        if (elseIfStatement === Keyword.ElseIf) {
+          me.index += 3;
+          value = elseIfStatement;
+        }
+        break;
+      }
+    }
 
     const token = new Token({
-      type: TokenType.Punctuator,
+      type: TokenType.Keyword,
       value,
       line: me.line,
       lineStart: me.lineStart,
@@ -354,211 +474,77 @@ export default class Lexer {
       afterSpace
     });
 
-    me.snapshot?.push(token);
+    me.snapshot.enqueue(token);
 
     return token;
-  }
-
-  scanSliceOperator(afterSpace: boolean): Token {
-    const me = this;
-
-    me.index++;
-
-    const token = new Token({
-      type: TokenType.SliceOperator,
-      value: Operator.SliceSeperator,
-      line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offset: me.offset,
-      afterSpace
-    });
-
-    me.snapshot?.push(token);
-
-    return token;
-  }
-
-  isAtWhitespace() {
-    const me = this;
-    const current = this.content[this.index];
-    return !me.isNotEOF() || current === ' ' || current === '\t';
-  }
-
-  isWinNewline() {
-    const me = this;
-    const code = me.codeAt();
-    const nextCode = me.codeAt(1);
-
-    return (
-      (CharacterCode.RETURN_LINE === code &&
-        CharacterCode.NEW_LINE === nextCode) ||
-      (CharacterCode.NEW_LINE === code &&
-        CharacterCode.RETURN_LINE === nextCode)
-    );
-  }
-
-  skipWhiteSpace() {
-    const me = this;
-
-    while (me.isNotEOF()) {
-      const code = me.codeAt();
-      if (code === CharacterCode.WHITESPACE) {
-        me.nextIndex();
-      } else if (code === CharacterCode.TAB) {
-        me.offset -= me.tabWidth - 1;
-        me.nextIndex();
-      } else {
-        break;
-      }
-    }
   }
 
   scanIdentifierOrKeyword(afterSpace: boolean): BaseToken<any> {
     const me = this;
     const validator = me.validator;
 
-    me.nextIndex();
+    me.index++;
 
-    while (validator.isIdentifierPart(me.codeAt())) {
-      me.nextIndex();
-    }
+    for (; validator.isIdentifierPart(me.codeAt()); me.index++);
 
-    let value: any = me.content.slice(me.tokenStart, me.index);
+    const value: string = me.content.slice(me.tokenStart, me.index);
 
-    if (validator.isKeyword(value)) {
-      if (value === Keyword.End) {
-        me.nextIndex();
+    if (validator.isKeyword(value)) return me.scanKeyword(value, afterSpace);
 
-        while (validator.isIdentifierPart(me.codeAt())) {
-          me.nextIndex();
-        }
-        value = me.content.slice(me.tokenStart, me.index);
-      } else if (value === Keyword.Else) {
-        const elseIfStatement = me.content.slice(me.tokenStart, me.index + 3);
-        if (elseIfStatement === Keyword.ElseIf) {
-          me.nextIndex(3);
-          value = elseIfStatement;
-        }
+    switch (value) {
+      case Literal.True:
+      case Literal.False: {
+        return me.createBoolean(value, afterSpace);
       }
-
-      const token = new Token({
-        type: TokenType.Keyword,
-        value,
-        line: me.line,
-        lineStart: me.lineStart,
-        range: [me.tokenStart, me.index],
-        offset: me.offset,
-        afterSpace
-      });
-
-      me.snapshot?.push(token);
-
-      return token;
-    } else if (value === Literal.True || value === Literal.False) {
-      const literalToken = new LiteralToken({
-        type: TokenType.BooleanLiteral,
-        value: value === Literal.True,
-        raw: value,
-        line: me.line,
-        lineStart: me.lineStart,
-        range: [me.tokenStart, me.index],
-        offset: me.offset,
-        afterSpace
-      });
-
-      me.snapshot?.push(literalToken as Token);
-
-      return literalToken;
-    } else if (value === Literal.Null) {
-      const literalToken = new LiteralToken({
-        type: TokenType.NilLiteral,
-        value: null,
-        raw: value,
-        line: me.line,
-        lineStart: me.lineStart,
-        range: [me.tokenStart, me.index],
-        offset: me.offset,
-        afterSpace
-      });
-
-      me.snapshot?.push(literalToken as Token);
-
-      return literalToken;
+      case Literal.Null: {
+        return me.createNull(afterSpace);
+      }
     }
 
-    const token = new Token({
-      type: TokenType.Identifier,
-      value,
-      line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offset: me.offset,
-      afterSpace
-    });
-
-    me.snapshot?.push(token);
-
-    return token;
+    return me.createIdentifier(value, afterSpace);
   }
 
   next(): BaseToken<any> {
     const me = this;
 
-    if (me.backlog.length > me.backlogPointer) {
-      return this.backlog[me.backlogPointer++];
+    if (me.backlog.size) {
+      return me.backlog.dequeue();
     }
 
-    const validator = me.validator;
     const oldPosition = me.index;
     me.skipWhiteSpace();
-
     const afterSpace = oldPosition < me.index;
 
-    if (validator.isComment(me.codeAt(), me.codeAt(1))) {
+    const code = me.codeAt();
+
+    if (me.validator.isComment(code, me.codeAt(1))) {
       me.tokenStart = me.index;
       return me.scanComment(afterSpace);
     }
 
-    if (!me.isNotEOF()) {
-      const token = new Token({
-        type: TokenType.EOF,
-        value: Operator.EndOfFile,
-        line: me.line,
-        lineStart: me.lineStart,
-        range: [me.index, me.index],
-        offset: me.offset,
-        afterSpace
-      });
-
-      me.snapshot?.push(token);
-
-      return token;
+    if (this.index >= this.length) {
+      return me.createEOF(afterSpace);
     }
-
-    const code = me.codeAt();
-    const nextCode = me.codeAt(1);
-    const lastCode = me.codeAt(2);
 
     me.tokenStart = me.index;
 
-    if (validator.isEndOfLine(code)) {
-      if (me.isWinNewline()) me.nextIndex();
+    if (me.validator.isEndOfLine(code)) {
+      if (me.validator.isWinNewline(code, me.codeAt(1))) me.index++;
 
       const token = me.createEOL(afterSpace);
 
-      me.nextLine();
+      me.line++;
       me.offset = me.index + 1;
-      me.lineStart = me.nextIndex();
+      me.lineStart = ++me.index;
 
       return token;
     }
 
-    if (validator.isIdentifierStart(code))
+    if (me.validator.isIdentifierStart(code))
       return me.scanIdentifierOrKeyword(afterSpace);
 
     const beginLine = me.line;
-    const item = me.scan(code, nextCode, lastCode, afterSpace);
+    const item = me.scan(code, afterSpace);
 
     if (item) return item;
 
@@ -572,25 +558,11 @@ export default class Lexer {
   }
 
   recordSnapshot() {
-    const me = this;
-    me.snapshot = [];
-    return me;
+    this.snapshot.clear();
   }
 
   recoverFromSnapshot() {
-    const me = this;
-    me.backlog = me.snapshot;
-    me.backlogPointer = 0;
-    me.snapshot = null;
-    return me;
-  }
-
-  clearSnapshot() {
-    const me = this;
-    me.backlog = [];
-    me.backlogPointer = 0;
-    me.snapshot = null;
-    return me;
+    this.backlog.copyInto(this.snapshot);
   }
 
   raise(message: string, range: Range): Token {

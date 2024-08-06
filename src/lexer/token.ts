@@ -28,18 +28,23 @@ export class BaseTokenOptions<T> {
 }
 
 export class BaseToken<T> {
-  type: string;
-  value: T;
+  readonly type: string;
+  readonly value: T;
+  readonly line: number;
+  readonly lineStart: number;
+  readonly range: [number, number];
+  readonly afterSpace: boolean;
+
+  // used for literals
   raw: string;
-  line: number;
-  lineStart: number;
-  range: [number, number];
-  lineRange: [number, number];
-  afterSpace: boolean;
 
   // used for string literals
-  lastLine?: number;
-  lastLineStart?: number;
+  readonly lastLine?: number;
+  readonly lastLineStart?: number;
+
+  // position
+  readonly start: Position;
+  readonly end: Position;
 
   constructor(options: BaseTokenOptions<T>) {
     this.type = options.type;
@@ -52,23 +57,17 @@ export class BaseToken<T> {
     this.afterSpace = options.afterSpace;
 
     const offset = options.offset;
-    const [start, end] = this.range;
+    const range = options.range;
 
-    this.lineRange = [start - offset + 1, end - offset + 1];
-  }
-
-  getStart(): Position {
-    return new Position(this.line, this.lineRange[0]);
-  }
-
-  getEnd(): Position {
-    return new Position(this.lastLine || this.line, this.lineRange[1]);
+    this.start = new Position(this.line, range[0] - offset + 1);
+    this.end = new Position(this.lastLine || this.line, range[1] - offset + 1);
   }
 
   toString(): string {
     const startLine = this.line;
     const endLine = this.lastLine !== undefined ? this.lastLine : this.line;
-    const [columLeft, columRight] = this.lineRange;
+    const columLeft = this.start.character;
+    const columRight = this.end.character;
     const location = `${startLine}:${columLeft} - ${endLine}:${columRight}`;
 
     return `${this.type}[${location}: value = '${this.value}']`;
@@ -83,6 +82,8 @@ export interface TokenLiteralOptions
 }
 
 export class LiteralToken extends BaseToken<string | number | boolean> {
+  declare readonly raw: string;
+
   constructor(options: TokenLiteralOptions) {
     super(options);
     this.raw = options.raw;
@@ -91,7 +92,8 @@ export class LiteralToken extends BaseToken<string | number | boolean> {
   toString(): string {
     const startLine = this.line;
     const endLine = this.lastLine !== undefined ? this.lastLine : this.line;
-    const [columLeft, columRight] = this.lineRange;
+    const columLeft = this.start.character;
+    const columRight = this.end.character;
     const location = `${startLine}:${columLeft} - ${endLine}:${columRight}`;
 
     return `${this.type}[${location}: value = ${this.raw}]`;
