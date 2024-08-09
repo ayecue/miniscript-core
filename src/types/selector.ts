@@ -77,7 +77,7 @@ export function createSelector(options: createSelectorOptions): Selector {
   if (options.value === undefined) {
     selectorf = new Function(
       'token',
-      `if (token == null) return false;return token.type === "${options.type}";`
+      `if (token == null) return false;return token.type === '${options.type}';`
     ) as Selector;
     Object.defineProperty(selectorf, 'name', {
       value: `selector_${options.type}`,
@@ -86,7 +86,7 @@ export function createSelector(options: createSelectorOptions): Selector {
   } else {
     selectorf = new Function(
       'token',
-      `if (token == null) return false;return token.value === "${options.value}" && token.type === "${options.type}";`
+      `if (token == null) return false;return token.value === '${options.value}' && token.type === '${options.type}';`
     ) as Selector;
     Object.defineProperty(selectorf, 'name', {
       value: `selector_${options.type}_${options.value}`,
@@ -330,7 +330,7 @@ export function createSelectorGroup(
   );
   const casesWithValue = selectorsWithValue
     .map((selector) => {
-      return `case "${selector.data.value}": return token.type === "${selector.data.type}";`;
+      return `case '${selector.data.value}': return token.type === '${selector.data.type}';`;
     })
     .join('\n');
   const selectorsWithoutValue = selectors.filter(
@@ -338,7 +338,7 @@ export function createSelectorGroup(
   );
   const casesWithoutValue = selectorsWithoutValue
     .map((selector) => {
-      return `case "${selector.data.type}":`;
+      return `case '${selector.data.type}':`;
     })
     .join('\n');
   const groupf = new Function(
