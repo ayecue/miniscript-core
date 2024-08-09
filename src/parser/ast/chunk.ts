@@ -8,19 +8,19 @@ import {
 export interface ASTChunkOptions extends ASTBaseBlockWithScopeOptions {
   literals?: ASTBase[];
   scopes?: ASTBaseBlockWithScope[];
-  lines?: Map<number, ASTBase[]>;
+  lines?: Record<number, ASTBase[]>;
 }
 
 export class ASTChunk extends ASTBaseBlockWithScope {
   literals: ASTBase[];
   scopes: ASTBaseBlockWithScope[];
-  lines: Map<number, ASTBase[]>;
+  lines: Record<number, ASTBase[]>;
 
   constructor(options: ASTChunkOptions) {
     super(ASTType.Chunk, options);
     this.literals = options.literals || [];
     this.scopes = options.scopes || [];
-    this.lines = options.lines || new Map<number, ASTBase[]>();
+    this.lines = options.lines || {};
   }
 
   toString(): string {

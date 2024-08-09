@@ -39,21 +39,3 @@ export enum CharacterCode {
   LETTER_E = 69,
   LETTER_e = 101
 }
-
-export const NumberCodes: CharacterCode[] = [
-  CharacterCode.NUMBER_0,
-  CharacterCode.NUMBER_1,
-  CharacterCode.NUMBER_2,
-  CharacterCode.NUMBER_3,
-  CharacterCode.NUMBER_4,
-  CharacterCode.NUMBER_5,
-  CharacterCode.NUMBER_6,
-  CharacterCode.NUMBER_7,
-  CharacterCode.NUMBER_8,
-  CharacterCode.NUMBER_9
-];
-
-export const LetterCodes: CharacterCode[] = [
-  CharacterCode.LETTER_E,
-  CharacterCode.LETTER_e
-];

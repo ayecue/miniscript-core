@@ -2,49 +2,7 @@ import { Token, TokenType } from '../lexer/token';
 import { Keyword } from './keywords';
 import { Operator } from './operators';
 
-export class SelectorOptions {
-  type: TokenType;
-  value: string;
-}
-
-export class Selector {
-  type: TokenType;
-  value: string;
-
-  constructor({ type, value }: SelectorOptions) {
-    this.type = type;
-    this.value = value;
-  }
-
-  is(token: Token) {
-    if (token == null) return false;
-    return this.type === token.type && this.value === token.value;
-  }
-}
-
-export class SelectorOfType extends Selector {
-  constructor({ type }: Omit<SelectorOptions, 'value'>) {
-    super({ type, value: undefined });
-  }
-
-  is(token: Token) {
-    if (token == null) return false;
-    return this.type === token.type;
-  }
-}
-
-export class SelectorOfValue extends Selector {
-  constructor({ value }: Omit<SelectorOptions, 'type'>) {
-    super({ type: null, value });
-  }
-
-  is(token: Token) {
-    if (token == null) return false;
-    return this.value === token.value;
-  }
-}
-
-export enum SelectorTypes {
+export enum SelectorType {
   EndOfLine = 'EndOfLine',
   EndOfFile = 'EndOfFile',
   LParenthesis = 'LParenthesis',
@@ -100,216 +58,388 @@ export enum SelectorTypes {
   Comment = 'Comment'
 }
 
-export const Selectors: Record<SelectorTypes, Selector> = {
-  EndOfLine: new Selector({
+export class createSelectorOptions {
+  type: TokenType;
+  value?: string;
+}
+
+export interface Selector {
+  (token: Token): boolean;
+  data: {
+    type: TokenType;
+    value?: string;
+  };
+  name: string;
+}
+
+export function createSelector(options: createSelectorOptions): Selector {
+  let selectorf: Selector;
+  if (options.value === undefined) {
+    selectorf = new Function(
+      'token',
+      `if (token == null) return false;return token.type === "${options.type}";`
+    ) as Selector;
+    Object.defineProperty(selectorf, 'name', {
+      value: `selector_${options.type}`,
+      writable: false
+    });
+  } else {
+    selectorf = new Function(
+      'token',
+      `if (token == null) return false;return token.value === "${options.value}" && token.type === "${options.type}";`
+    ) as Selector;
+    Object.defineProperty(selectorf, 'name', {
+      value: `selector_${options.type}_${options.value}`,
+      writable: false
+    });
+  }
+  selectorf.data = options;
+  return selectorf;
+}
+
+export function getSelectorValue(value: Selector): string {
+  return value.data.value;
+}
+
+export const Selectors: Record<SelectorType, Selector> = {
+  EndOfLine: createSelector({
     type: TokenType.EOL,
     value: Operator.EndOfLine
   }),
-  EndOfFile: new Selector({
+  EndOfFile: createSelector({
     type: TokenType.EOF,
     value: Operator.EndOfFile
   }),
-  LParenthesis: new Selector({
+  LParenthesis: createSelector({
     type: TokenType.Punctuator,
     value: Operator.LParenthesis
   }),
-  RParenthesis: new Selector({
+  RParenthesis: createSelector({
     type: TokenType.Punctuator,
     value: Operator.RParenthesis
   }),
-  CLBracket: new Selector({
+  CLBracket: createSelector({
     type: TokenType.Punctuator,
     value: Operator.CLBracket
   }),
-  CRBracket: new Selector({
+  CRBracket: createSelector({
     type: TokenType.Punctuator,
     value: Operator.CRBracket
   }),
-  SLBracket: new Selector({
+  SLBracket: createSelector({
     type: TokenType.Punctuator,
     value: Operator.SLBracket
   }),
-  SRBracket: new Selector({
+  SRBracket: createSelector({
     type: TokenType.Punctuator,
     value: Operator.SRBracket
   }),
-  Assign: new Selector({
+  Assign: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Assign
   }),
-  AddShorthand: new Selector({
+  AddShorthand: createSelector({
     type: TokenType.Punctuator,
     value: Operator.AddShorthand
   }),
-  SubtractShorthand: new Selector({
+  SubtractShorthand: createSelector({
     type: TokenType.Punctuator,
     value: Operator.SubtractShorthand
   }),
-  MultiplyShorthand: new Selector({
+  MultiplyShorthand: createSelector({
     type: TokenType.Punctuator,
     value: Operator.MultiplyShorthand
   }),
-  DivideShorthand: new Selector({
+  DivideShorthand: createSelector({
     type: TokenType.Punctuator,
     value: Operator.DivideShorthand
   }),
-  PowerShorthand: new Selector({
+  PowerShorthand: createSelector({
     type: TokenType.Punctuator,
     value: Operator.PowerShorthand
   }),
-  ModuloShorthand: new Selector({
+  ModuloShorthand: createSelector({
     type: TokenType.Punctuator,
     value: Operator.ModuloShorthand
   }),
-  Seperator: new Selector({
+  Seperator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  Function: new Selector({
+  Function: createSelector({
     type: TokenType.Keyword,
     value: Keyword.Function
   }),
-  EndFunction: new Selector({
+  EndFunction: createSelector({
     type: TokenType.Keyword,
     value: Keyword.EndFunction
   }),
-  EndWhile: new Selector({
+  EndWhile: createSelector({
     type: TokenType.Keyword,
     value: Keyword.EndWhile
   }),
-  EndFor: new Selector({
+  EndFor: createSelector({
     type: TokenType.Keyword,
     value: Keyword.EndFor
   }),
-  EndIf: new Selector({
+  EndIf: createSelector({
     type: TokenType.Keyword,
     value: Keyword.EndIf
   }),
-  SliceSeperator: new Selector({
+  SliceSeperator: createSelector({
     type: TokenType.SliceOperator,
     value: Operator.SliceSeperator
   }),
-  MapKeyValueSeperator: new Selector({
+  MapKeyValueSeperator: createSelector({
     type: TokenType.SliceOperator,
     value: Operator.SliceSeperator
   }),
-  MapSeperator: new Selector({
+  MapSeperator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ListSeperator: new Selector({
+  ListSeperator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  CallSeperator: new Selector({
+  CallSeperator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ArgumentSeperator: new Selector({
+  ArgumentSeperator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ImportCodeSeperator: new Selector({
+  ImportCodeSeperator: createSelector({
     type: TokenType.SliceOperator,
     value: Operator.SliceSeperator
   }),
-  ElseIf: new Selector({
+  ElseIf: createSelector({
     type: TokenType.Keyword,
     value: Keyword.ElseIf
   }),
-  Then: new Selector({
+  Then: createSelector({
     type: TokenType.Keyword,
     value: Keyword.Then
   }),
-  Else: new Selector({
+  Else: createSelector({
     type: TokenType.Keyword,
     value: Keyword.Else
   }),
-  In: new Selector({
+  In: createSelector({
     type: TokenType.Keyword,
     value: Keyword.In
   }),
-  MemberSeperator: new Selector({
+  MemberSeperator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Member
   }),
-  NumberSeperator: new Selector({
+  NumberSeperator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Member
   }),
-  Reference: new Selector({
+  Reference: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Reference
   }),
-  Isa: new Selector({
+  Isa: createSelector({
     type: TokenType.Keyword,
     value: Operator.Isa
   }),
-  Or: new Selector({
+  Or: createSelector({
     type: TokenType.Keyword,
     value: Operator.Or
   }),
-  And: new Selector({
+  And: createSelector({
     type: TokenType.Keyword,
     value: Operator.And
   }),
-  Minus: new Selector({
+  Minus: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Minus
   }),
-  Plus: new Selector({
+  Plus: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Plus
   }),
-  Times: new Selector({
+  Times: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Asterik
   }),
-  Power: new Selector({
+  Power: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Power
   }),
-  Divide: new Selector({
+  Divide: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Slash
   }),
-  Mod: new Selector({
+  Mod: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Modulo
   }),
-  Equal: new Selector({
+  Equal: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Equal
   }),
-  NotEqual: new Selector({
+  NotEqual: createSelector({
     type: TokenType.Punctuator,
     value: Operator.NotEqual
   }),
-  Greater: new Selector({
+  Greater: createSelector({
     type: TokenType.Punctuator,
     value: Operator.GreaterThan
   }),
-  GreaterEqual: new Selector({
+  GreaterEqual: createSelector({
     type: TokenType.Punctuator,
     value: Operator.GreaterThanOrEqual
   }),
-  Lesser: new Selector({
+  Lesser: createSelector({
     type: TokenType.Punctuator,
     value: Operator.LessThan
   }),
-  LessEqual: new Selector({
+  LessEqual: createSelector({
     type: TokenType.Punctuator,
     value: Operator.LessThanOrEqual
   }),
-  New: new Selector({
+  New: createSelector({
     type: TokenType.Keyword,
     value: Keyword.New
   }),
-  Not: new Selector({
+  Not: createSelector({
     type: TokenType.Keyword,
     value: Keyword.Not
   }),
-  Comment: new SelectorOfType({
+  Comment: createSelector({
     type: TokenType.Comment
   })
+};
+
+export interface SelectorGroup {
+  (token: Token): boolean;
+  selectors: Selector[];
+  name: string;
+}
+
+export function createSelectorGroup(
+  name: string,
+  selectors: Selector[]
+): SelectorGroup {
+  const selectorsWithValue = selectors.filter(
+    (item) => item.data.value !== undefined
+  );
+  const casesWithValue = selectorsWithValue
+    .map((selector) => {
+      return `case "${selector.data.value}": return token.type === "${selector.data.type}";`;
+    })
+    .join('\n');
+  const selectorsWithoutValue = selectors.filter(
+    (item) => item.data.value === undefined
+  );
+  const casesWithoutValue = selectorsWithoutValue
+    .map((selector) => {
+      return `case "${selector.data.type}":`;
+    })
+    .join('\n');
+  const groupf = new Function(
+    'token',
+    `
+  ${
+    casesWithoutValue.length > 0
+      ? `switch(token.type) {
+    ${casesWithoutValue}
+      return true;
+  }`
+      : ''
+  }
+  ${
+    casesWithValue.length > 0
+      ? `switch(token.value) {
+    ${casesWithValue}
+  }`
+      : ''
+  }
+  return false;`
+  ) as SelectorGroup;
+  Object.defineProperty(groupf, 'name', {
+    value: `selector_group_${name}`,
+    writable: false
+  });
+  groupf.selectors = selectors;
+  return groupf;
+}
+
+export function getSelectorsFromGroup(group: SelectorGroup): Selector[] {
+  return group.selectors;
+}
+
+export enum SelectorGroupType {
+  BlockEndOfLine = 'BlockEndOfLine',
+  AssignmentEndOfExpr = 'AssignmentEndOfExpr',
+  AssignmentShorthand = 'AssignmentShorthand',
+  AssignmentCommandArgs = 'AssignmentCommandArgs',
+  ReturnStatementEnd = 'ReturnStatementEnd',
+  FunctionDeclarationArgEnd = 'FunctionDeclarationArgEnd',
+  ComparisonOperators = 'ComparisonOperators',
+  MultiDivOperators = 'MultiDivOperators',
+  CallArgsEnd = 'CallArgsEnd'
+}
+
+export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
+  BlockEndOfLine: createSelectorGroup(SelectorGroupType.AssignmentEndOfExpr, [
+    Selectors.EndOfLine,
+    Selectors.Comment
+  ]),
+  AssignmentEndOfExpr: createSelectorGroup(
+    SelectorGroupType.AssignmentEndOfExpr,
+    [
+      Selectors.EndOfFile,
+      Selectors.EndOfLine,
+      Selectors.Else,
+      Selectors.Comment
+    ]
+  ),
+  AssignmentShorthand: createSelectorGroup(
+    SelectorGroupType.AssignmentShorthand,
+    [
+      Selectors.AddShorthand,
+      Selectors.SubtractShorthand,
+      Selectors.MultiplyShorthand,
+      Selectors.DivideShorthand,
+      Selectors.PowerShorthand,
+      Selectors.ModuloShorthand
+    ]
+  ),
+  AssignmentCommandArgs: createSelectorGroup(
+    SelectorGroupType.AssignmentCommandArgs,
+    [Selectors.ArgumentSeperator, Selectors.EndOfLine, Selectors.EndOfFile]
+  ),
+  ReturnStatementEnd: createSelectorGroup(
+    SelectorGroupType.ReturnStatementEnd,
+    [Selectors.EndOfLine, Selectors.Else, Selectors.Comment]
+  ),
+  FunctionDeclarationArgEnd: createSelectorGroup(
+    SelectorGroupType.FunctionDeclarationArgEnd,
+    [Selectors.RParenthesis, Selectors.EndOfFile]
+  ),
+  ComparisonOperators: createSelectorGroup(
+    SelectorGroupType.ComparisonOperators,
+    [
+      Selectors.Equal,
+      Selectors.NotEqual,
+      Selectors.Greater,
+      Selectors.GreaterEqual,
+      Selectors.Lesser,
+      Selectors.LessEqual
+    ]
+  ),
+  MultiDivOperators: createSelectorGroup(SelectorGroupType.MultiDivOperators, [
+    Selectors.Times,
+    Selectors.Divide,
+    Selectors.Mod
+  ]),
+  CallArgsEnd: createSelectorGroup(SelectorGroupType.CallArgsEnd, [
+    Selectors.ArgumentSeperator,
+    Selectors.RParenthesis
+  ])
 };

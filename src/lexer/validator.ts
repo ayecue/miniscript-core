@@ -2,40 +2,9 @@ import { CharacterCode } from '../types/codes';
 import { Keyword } from '../types/keywords';
 
 export default class Validator {
-  getKeywords(index: number): string[] {
-    switch (index) {
-      case 2:
-        return [Keyword.If, Keyword.In, Keyword.Or];
-      case 3:
-        return [
-          Keyword.And,
-          Keyword.End,
-          Keyword.For,
-          Keyword.Not,
-          Keyword.New,
-          Keyword.Isa
-        ];
-      case 4:
-        return [Keyword.Else, Keyword.Then];
-      case 5:
-        return [Keyword.Break, Keyword.While];
-      case 6:
-        return [Keyword.Return, Keyword.Repeat];
-      case 8:
-        return [Keyword.Function, Keyword.Continue];
-      default:
-        return [];
-    }
-  }
+  isKeyword = Set.prototype.has.bind(new Set(Object.values(Keyword)));
 
-  isKeyword(value: string): boolean {
-    const length = value.length;
-    const keywords = this.getKeywords(length);
-
-    return keywords.indexOf(value) !== -1;
-  }
-
-  isWhiteSpace(code: number): boolean {
+  isWhitespace(code: number): boolean {
     return CharacterCode.WHITESPACE === code || CharacterCode.TAB === code;
   }
 
@@ -51,24 +20,32 @@ export default class Validator {
 
   isIdentifierStart(code: number): boolean {
     return (
-      (code >= 65 && code <= 90) ||
-      (code >= 97 && code <= 122) ||
-      code === 95 ||
-      code >= 128
+      ((code | 32) >= 97 && (code | 32) <= 122) || // a-z or A-Z
+      code >= 128 || // extended ASCII
+      code === 95 // _
     );
   }
 
   isIdentifierPart(code: number): boolean {
     return (
-      (code >= 65 && code <= 90) ||
-      (code >= 97 && code <= 122) ||
-      code === 95 ||
-      (code >= 48 && code <= 57) ||
-      code >= 128
+      ((code | 32) >= 97 && (code | 32) <= 122) || // a-z or A-Z
+      (code >= 48 && code <= 57) || // 0-9
+      code >= 128 || // extended ASCII
+      code === 95 // _
     );
   }
 
   isDecDigit(code: number): boolean {
     return code >= CharacterCode.NUMBER_0 && code <= CharacterCode.NUMBER_9;
+  }
+
+  isWinNewline(code: number, nextCode: number) {
+    switch (code) {
+      case CharacterCode.RETURN_LINE:
+        return CharacterCode.NEW_LINE === nextCode;
+      case CharacterCode.NEW_LINE:
+        return CharacterCode.RETURN_LINE === nextCode;
+    }
+    return false;
   }
 }

@@ -55,7 +55,7 @@ export function isPendingChunk(
 }
 
 export class PendingChunk extends PendingBlockBase implements PendingBlock {
-  block: ASTChunk;
+  declare block: ASTChunk;
 
   constructor(block: ASTChunk) {
     super(block, PendingBlockType.Chunk);
@@ -63,7 +63,7 @@ export class PendingChunk extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.getEnd();
+    this.block.end = endToken.end;
     super.complete(endToken);
   }
 }
@@ -75,7 +75,7 @@ export function isPendingFor(
 }
 
 export class PendingFor extends PendingBlockBase implements PendingBlock {
-  block: ASTForGenericStatement;
+  declare block: ASTForGenericStatement;
 
   constructor(block: ASTForGenericStatement) {
     super(block, PendingBlockType.For);
@@ -83,7 +83,7 @@ export class PendingFor extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.getEnd();
+    this.block.end = endToken.end;
     super.complete(endToken);
   }
 }
@@ -95,7 +95,7 @@ export function isPendingFunction(
 }
 
 export class PendingFunction extends PendingBlockBase implements PendingBlock {
-  block: ASTFunctionStatement;
+  declare block: ASTFunctionStatement;
 
   constructor(block: ASTFunctionStatement) {
     super(block, PendingBlockType.Function);
@@ -103,7 +103,7 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.getEnd();
+    this.block.end = endToken.end;
     super.complete(endToken);
   }
 }
@@ -117,7 +117,7 @@ export function isPendingIf(
 export type PendingClauseType = ASTType.ElseifClause | ASTType.ElseClause;
 
 export class PendingIf extends PendingBlockBase implements PendingBlock {
-  block: ASTIfStatement;
+  declare block: ASTIfStatement;
   currentClause: ASTIfClause | ASTElseClause;
   onCompleteCallback: PendingBlockCompleteCallback;
 
@@ -128,7 +128,7 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
 
   next(endToken: Token): void {
     this.currentClause.body = this.body;
-    this.currentClause.end = endToken.getEnd();
+    this.currentClause.end = endToken.end;
     this.block.clauses.push(this.currentClause);
     super.complete(endToken);
     this.body = [];
@@ -136,7 +136,7 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     if (this.body.length > 0) this.next(endToken);
-    this.block.end = endToken.getEnd();
+    this.block.end = endToken.end;
     super.complete(endToken);
   }
 }
@@ -148,7 +148,7 @@ export function isPendingWhile(
 }
 
 export class PendingWhile extends PendingBlockBase implements PendingBlock {
-  block: ASTWhileStatement;
+  declare block: ASTWhileStatement;
 
   constructor(block: ASTWhileStatement) {
     super(block, PendingBlockType.While);
@@ -156,7 +156,7 @@ export class PendingWhile extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.getEnd();
+    this.block.end = endToken.end;
     super.complete(endToken);
   }
 }

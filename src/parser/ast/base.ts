@@ -44,7 +44,8 @@ export enum ASTType {
   SliceExpression = 'SliceExpression',
   ImportCodeExpression = 'ImportCodeExpression',
   InvalidCodeExpression = 'InvalidCodeExpression',
-  ParenthesisExpression = 'ParenthesisExpression'
+  ParenthesisExpression = 'ParenthesisExpression',
+  ComparisonGroupExpression = 'ComparisonGroupExpression'
 }
 
 export interface ASTBaseOptions {
@@ -99,9 +100,8 @@ export class ASTBaseBlock extends ASTBase {
       .map((item) => `\t${item}`)
       .join('\n');
 
-    return `${this.type}[${this.start}-${this.end}][${
-      body.length > 0 ? `\n${body}\n` : ''
-    }]`;
+    return `${this.type}[${this.start}-${this.end}][${body.length > 0 ? `\n${body}\n` : ''
+      }]`;
   }
 
   clone(): ASTBaseBlock {
