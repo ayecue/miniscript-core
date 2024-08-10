@@ -49,3 +49,6 @@ if true then //x
 end if
 
 if x < 0 then return else print x
+if true and true then item = function()
+    print "hello"
+end function

@@ -708,6 +708,7 @@ export default class Parser {
   ): void {
     const me = this;
     const clauses: ASTClause[] = [];
+    const block = me.backpatches.peek();
     const ifStatement = me.astProvider.ifShortcutStatement({
       clauses,
       start,
@@ -745,7 +746,7 @@ export default class Parser {
     ifStatement.end = me.token.end;
 
     me.addItemToLines(ifStatement);
-    me.backpatches.peek().body.push(ifStatement);
+    block.body.push(ifStatement);
   }
 
   parseWhileStatement(): void {
@@ -804,6 +805,7 @@ export default class Parser {
 
   parseWhileShortcutStatement(condition: ASTBase, start: ASTPosition): void {
     const me = this;
+    const block = me.backpatches.peek();
     const item = me.parseShortcutStatement();
 
     const whileStatement = me.astProvider.whileStatement({
@@ -815,7 +817,7 @@ export default class Parser {
     });
 
     me.addItemToLines(whileStatement);
-    me.backpatches.peek().body.push(whileStatement);
+    block.body.push(whileStatement);
   }
 
   parseForStatement(): void {
@@ -914,6 +916,7 @@ export default class Parser {
     start: ASTPosition
   ): void {
     const me = this;
+    const block = me.backpatches.peek();
     const item = me.parseShortcutStatement();
 
     const forStatement = me.astProvider.forGenericStatement({
@@ -926,7 +929,7 @@ export default class Parser {
     });
 
     me.addItemToLines(forStatement);
-    me.backpatches.peek().body.push(forStatement);
+    block.body.push(forStatement);
   }
 
   parseExpr(base: ASTBase, asLval: boolean = false, statementStart: boolean = false): ASTBase {
