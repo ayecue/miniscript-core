@@ -52,7 +52,7 @@ export class ASTBooleanLiteral extends ASTLiteral {
   constructor(
     options: ASTLiteralOptions<boolean>
   ) {
-    super(TokenType.NumericLiteral, options);
+    super(TokenType.BooleanLiteral, options);
     this.value = options.value;
     this.raw = options.raw;
     this.negated = false;
@@ -111,7 +111,7 @@ export class ASTNilLiteral extends ASTLiteral {
   constructor(
     options: ASTLiteralOptions<null>
   ) {
-    super(ASTType.StringLiteral, options);
+    super(ASTType.NilLiteral, options);
     this.value = options.value;
     this.raw = options.raw;
   }
