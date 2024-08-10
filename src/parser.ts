@@ -4,6 +4,7 @@ import {
   ASTAssignmentStatement,
   ASTBase,
   ASTBaseBlockWithScope,
+  ASTBooleanLiteral,
   ASTChunk,
   ASTClause,
   ASTFunctionStatement,
@@ -11,6 +12,7 @@ import {
   ASTListValue,
   ASTLiteral,
   ASTMapKeyString,
+  ASTNumericLiteral,
   ASTProvider,
   ASTReturnStatement,
   ASTType,
@@ -966,7 +968,7 @@ export default class Parser {
         if (me.consume(Selectors.Assign)) {
           const defaultValue = me.parseExpr(null);
 
-          if (defaultValue instanceof ASTLiteral || (defaultValue instanceof ASTUnaryExpression && defaultValue.argument instanceof ASTLiteral)) {
+          if (defaultValue instanceof ASTLiteral) {
             const assign = me.astProvider.assignmentStatement({
               variable: parameter,
               init: defaultValue,
@@ -1281,6 +1283,11 @@ export default class Parser {
     me.skipNewlines();
 
     const val = me.parseNew();
+
+    if (val instanceof ASTNumericLiteral || val instanceof ASTBooleanLiteral) {
+      val.negated = true;
+      return val;
+    }
 
     return me.astProvider.unaryExpression({
       operator: Operator.Minus,

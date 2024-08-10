@@ -4266,7 +4266,23 @@ Keyword[51:10 - 51:14: value = 'then']
 Keyword[51:15 - 51:21: value = 'return']
 Keyword[51:22 - 51:26: value = 'else']
 Identifier[51:27 - 51:32: value = 'print']
-Identifier[51:33 - 51:34: value = 'x']"
+Identifier[51:33 - 51:34: value = 'x']
+EOL[51:34 - 51:34: value = ';']
+Keyword[52:1 - 52:3: value = 'if']
+BooleanLiteral[52:4 - 52:8: value = true]
+Keyword[52:9 - 52:12: value = 'and']
+BooleanLiteral[52:13 - 52:17: value = true]
+Keyword[52:18 - 52:22: value = 'then']
+Identifier[52:23 - 52:27: value = 'item']
+Punctuator[52:28 - 52:29: value = '=']
+Keyword[52:30 - 52:38: value = 'function']
+Punctuator[52:38 - 52:39: value = '(']
+Punctuator[52:39 - 52:40: value = ')']
+EOL[52:40 - 52:40: value = ';']
+Identifier[53:5 - 53:10: value = 'print']
+StringLiteral[53:11 - 53:18: value = \\"hello\\"]
+EOL[53:18 - 53:18: value = ';']
+Keyword[54:1 - 54:13: value = 'end function']"
 `;
 
 exports[`parse default scripts simple-object.ms 1`] = `

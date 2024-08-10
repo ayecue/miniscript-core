@@ -53,7 +53,13 @@ import {
   ASTListValue,
   ASTListValueOptions
 } from './ast/list';
-import { ASTLiteral, ASTLiteralOptions } from './ast/literal';
+import {
+  ASTBooleanLiteral,
+  ASTLiteralOptions,
+  ASTNilLiteral,
+  ASTNumericLiteral,
+  ASTStringLiteral
+} from './ast/literal';
 import {
   ASTLogicalExpression,
   ASTLogicalExpressionOptions
@@ -158,9 +164,18 @@ export class ASTProvider {
       | TokenType.NumericLiteral
       | TokenType.BooleanLiteral
       | TokenType.NilLiteral,
-    options: ASTLiteralOptions
-  ): ASTLiteral {
-    return new ASTLiteral(type, options);
+    options: ASTLiteralOptions<any>
+  ): ASTStringLiteral | ASTNilLiteral | ASTNumericLiteral | ASTBooleanLiteral {
+    switch (type) {
+      case TokenType.StringLiteral:
+        return new ASTStringLiteral(options);
+      case TokenType.NumericLiteral:
+        return new ASTNumericLiteral(options);
+      case TokenType.BooleanLiteral:
+        return new ASTBooleanLiteral(options);
+      case TokenType.NilLiteral:
+        return new ASTNilLiteral(options);
+    }
   }
 
   memberExpression(options: ASTMemberExpressionOptions): ASTMemberExpression {
@@ -302,7 +317,14 @@ export {
   ASTListValue,
   ASTListValueOptions
 } from './ast/list';
-export { ASTLiteral, ASTLiteralOptions } from './ast/literal';
+export {
+  ASTBooleanLiteral,
+  ASTLiteral,
+  ASTLiteralOptions,
+  ASTNilLiteral,
+  ASTNumericLiteral,
+  ASTStringLiteral
+} from './ast/literal';
 export {
   ASTLogicalExpression,
   ASTLogicalExpressionOptions
