@@ -344,21 +344,19 @@ export function createSelectorGroup(
   const groupf = new Function(
     'token',
     `
-  ${
-    casesWithoutValue.length > 0
+  ${casesWithoutValue.length > 0
       ? `switch(token.type) {
     ${casesWithoutValue}
       return true;
   }`
       : ''
-  }
-  ${
-    casesWithValue.length > 0
+    }
+  ${casesWithValue.length > 0
       ? `switch(token.value) {
     ${casesWithValue}
   }`
       : ''
-  }
+    }
   return false;`
   ) as SelectorGroup;
   Object.defineProperty(groupf, 'name', {
@@ -420,7 +418,7 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
   ),
   FunctionDeclarationArgEnd: createSelectorGroup(
     SelectorGroupType.FunctionDeclarationArgEnd,
-    [Selectors.RParenthesis, Selectors.EndOfFile]
+    [Selectors.RParenthesis, Selectors.EndOfFile, Selectors.EndOfLine]
   ),
   ComparisonOperators: createSelectorGroup(
     SelectorGroupType.ComparisonOperators,
