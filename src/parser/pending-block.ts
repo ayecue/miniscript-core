@@ -64,6 +64,7 @@ export class PendingChunk extends PendingBlockBase implements PendingBlock {
   complete(endToken: Token): void {
     this.block.body = this.body;
     this.block.end = endToken.end;
+    this.block.range = [this.block.range[0], endToken.range[1]];
     super.complete(endToken);
   }
 }
@@ -84,6 +85,7 @@ export class PendingFor extends PendingBlockBase implements PendingBlock {
   complete(endToken: Token): void {
     this.block.body = this.body;
     this.block.end = endToken.end;
+    this.block.range = [this.block.range[0], endToken.range[1]];
     super.complete(endToken);
   }
 }
@@ -104,6 +106,7 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
   complete(endToken: Token): void {
     this.block.body = this.body;
     this.block.end = endToken.end;
+    this.block.range = [this.block.range[0], endToken.range[1]];
     super.complete(endToken);
   }
 }
@@ -129,6 +132,7 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
   next(endToken: Token): void {
     this.currentClause.body = this.body;
     this.currentClause.end = endToken.end;
+    this.currentClause.range = [this.currentClause.range[0], endToken.range[1]];
     this.block.clauses.push(this.currentClause);
     super.complete(endToken);
     this.body = [];
@@ -137,6 +141,7 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
   complete(endToken: Token): void {
     if (this.body.length > 0) this.next(endToken);
     this.block.end = endToken.end;
+    this.block.range = [this.block.range[0], endToken.range[1]];
     super.complete(endToken);
   }
 }
@@ -157,6 +162,7 @@ export class PendingWhile extends PendingBlockBase implements PendingBlock {
   complete(endToken: Token): void {
     this.block.body = this.body;
     this.block.end = endToken.end;
+    this.block.range = [this.block.range[0], endToken.range[1]];
     super.complete(endToken);
   }
 }

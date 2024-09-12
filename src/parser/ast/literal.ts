@@ -35,6 +35,7 @@ export class ASTNumericLiteral extends ASTLiteral {
       raw: this.raw,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
 
@@ -68,6 +69,7 @@ export class ASTBooleanLiteral extends ASTLiteral {
       raw: this.raw,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
 
@@ -99,6 +101,7 @@ export class ASTStringLiteral extends ASTLiteral {
       raw: this.raw,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -126,6 +129,7 @@ export class ASTNilLiteral extends ASTLiteral {
       raw: this.raw,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

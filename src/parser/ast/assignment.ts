@@ -25,6 +25,7 @@ export class ASTAssignmentStatement extends ASTBase {
       init: this.init.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

@@ -46,6 +46,7 @@ export class ASTUnaryExpression extends ASTBase {
       operator: this.operator,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

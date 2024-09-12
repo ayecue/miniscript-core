@@ -51,6 +51,7 @@ export enum ASTType {
 export interface ASTBaseOptions {
   start: Position | null;
   end: Position | null;
+  range: [number, number];
   scope?: ASTBaseBlockWithScope;
 }
 
@@ -58,12 +59,14 @@ export class ASTBase {
   readonly type: string;
   start: Position | null;
   end: Position | null;
+  range: [number, number];
   scope?: ASTBaseBlockWithScope;
 
   constructor(type: string, options: ASTBaseOptions) {
     this.type = type;
     this.start = options.start;
     this.end = options.end;
+    this.range = options.range;
     this.scope = options.scope || null;
   }
 
@@ -75,6 +78,7 @@ export class ASTBase {
     return new ASTBase(this.type, {
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -109,6 +113,7 @@ export class ASTBaseBlock extends ASTBase {
       body: this.body.map((it) => it.clone()),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -141,6 +146,7 @@ export class ASTBaseBlockWithScope extends ASTBaseBlock {
       body: this.body.map((it) => it.clone()),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -171,6 +177,7 @@ export class ASTComment extends ASTBase {
       isMultiline: this.isMultiline,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

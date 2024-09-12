@@ -21,6 +21,7 @@ export class ASTListValue extends ASTBase {
       value: this.value.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -58,6 +59,7 @@ export class ASTListConstructorExpression extends ASTBase {
       fields: this.fields.map((it) => it.clone()),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

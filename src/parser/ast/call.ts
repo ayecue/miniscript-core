@@ -21,6 +21,7 @@ export class ASTCallStatement extends ASTBase {
       expression: this.expression,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -53,6 +54,7 @@ export class ASTCallExpression extends ASTBase {
       arguments: this.arguments.map((it) => it.clone()),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

@@ -36,6 +36,7 @@ export class ASTForGenericStatement extends ASTBaseBlock {
       iterator: this.iterator.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

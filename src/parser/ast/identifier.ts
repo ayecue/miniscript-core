@@ -21,6 +21,7 @@ export class ASTIdentifier extends ASTBase {
       name: this.name,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -55,6 +56,7 @@ export class ASTMemberExpression extends ASTBase {
       base: this.base,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -85,6 +87,7 @@ export class ASTIndexExpression extends ASTBase {
       index: this.index.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

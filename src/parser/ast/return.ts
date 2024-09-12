@@ -21,6 +21,7 @@ export class ASTReturnStatement extends ASTBase {
       argument: this.argument.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

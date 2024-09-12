@@ -44,6 +44,7 @@ export class ASTFunctionStatement extends ASTBaseBlockWithScope {
       assignment: this.assignment.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

@@ -43,6 +43,7 @@ export class ASTIfStatement extends ASTBase {
       clauses: this.clauses.map((it) => it.clone()),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -90,6 +91,7 @@ export class ASTIfClause extends ASTClause {
       condition: this.condition.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
@@ -122,6 +124,7 @@ export class ASTElseClause extends ASTClause {
     return new ASTElseClause(this.type as ASTType.ElseShortcutClause | ASTType.ElseClause, {
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

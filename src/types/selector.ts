@@ -344,19 +344,21 @@ export function createSelectorGroup(
   const groupf = new Function(
     'token',
     `
-  ${casesWithoutValue.length > 0
+  ${
+    casesWithoutValue.length > 0
       ? `switch(token.type) {
     ${casesWithoutValue}
       return true;
   }`
       : ''
-    }
-  ${casesWithValue.length > 0
+  }
+  ${
+    casesWithValue.length > 0
       ? `switch(token.value) {
     ${casesWithValue}
   }`
       : ''
-    }
+  }
   return false;`
   ) as SelectorGroup;
   Object.defineProperty(groupf, 'name', {

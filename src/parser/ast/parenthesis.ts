@@ -21,6 +21,7 @@ export class ASTParenthesisExpression extends ASTBase {
       expression: this.expression.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

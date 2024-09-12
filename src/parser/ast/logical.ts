@@ -29,6 +29,7 @@ export class ASTLogicalExpression extends ASTBase {
       right: this.right.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

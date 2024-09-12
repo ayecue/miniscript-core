@@ -32,6 +32,7 @@ export class ASTWhileStatement extends ASTBaseBlock {
       condition: this.condition.clone(),
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }

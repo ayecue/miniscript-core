@@ -31,6 +31,7 @@ export class ASTComparisonGroupExpression extends ASTBase {
       expressions: this.expressions,
       start: this.start,
       end: this.end,
+      range: this.range,
       scope: this.scope
     });
   }
