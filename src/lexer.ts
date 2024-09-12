@@ -167,7 +167,7 @@ export default class Lexer {
       line: me.line,
       lineStart: me.lineStart,
       range: [me.tokenStart, me.index],
-      offset: me.offset,
+      offsetRange: [me.offset, me.offset],
       afterSpace
     });
 
@@ -184,7 +184,7 @@ export default class Lexer {
       line: me.line,
       lineStart: me.lineStart,
       range: [me.tokenStart, me.index],
-      offset: me.offset,
+      offsetRange: [me.offset, me.offset],
       afterSpace
     });
 
@@ -201,7 +201,7 @@ export default class Lexer {
       line: me.line,
       lineStart: me.lineStart,
       range: [me.index, me.index],
-      offset: me.offset,
+      offsetRange: [me.offset, me.offset],
       afterSpace
     });
 
@@ -219,7 +219,7 @@ export default class Lexer {
       line: me.line,
       lineStart: me.lineStart,
       range: [me.tokenStart, me.index],
-      offset: me.offset,
+      offsetRange: [me.offset, me.offset],
       afterSpace
     });
 
@@ -237,7 +237,7 @@ export default class Lexer {
       line: me.line,
       lineStart: me.lineStart,
       range: [me.tokenStart, me.index],
-      offset: me.offset,
+      offsetRange: [me.offset, me.offset],
       afterSpace
     });
 
@@ -253,7 +253,7 @@ export default class Lexer {
       line: this.line,
       lineStart: this.lineStart,
       range: [this.tokenStart, this.index],
-      offset: this.offset,
+      offsetRange: [this.offset, this.offset],
       afterSpace
     });
 
@@ -269,7 +269,7 @@ export default class Lexer {
       line: this.line,
       lineStart: this.lineStart,
       range: [this.tokenStart, this.index],
-      offset: this.offset,
+      offsetRange: [this.offset, this.offset],
       afterSpace
     });
 
@@ -286,7 +286,7 @@ export default class Lexer {
       line: this.line,
       lineStart: this.lineStart,
       range: [this.tokenStart, this.index],
-      offset: this.offset,
+      offsetRange: [this.offset, this.offset],
       afterSpace
     });
 
@@ -300,7 +300,8 @@ export default class Lexer {
     const validator = me.validator;
     const beginLine = me.line;
     const beginLineStart = me.lineStart;
-    let tempOffset = 0;
+    const strStart = me.index;
+    const strStartOffset = me.offset;
     let endOffset = me.offset;
     let closed = false;
 
@@ -312,7 +313,6 @@ export default class Lexer {
       if (me.validator.isEndOfLine(code)) {
         if (validator.isWinNewline(code, me.codeAt(1))) me.index++;
         me.line++;
-        tempOffset = me.index + 1 - me.offset;
         endOffset = me.index + 1;
       } else if (CharacterCode.QUOTE === code) {
         if (CharacterCode.QUOTE !== me.codeAt(1)) {
@@ -327,8 +327,8 @@ export default class Lexer {
       return me.raise(
         `Unexpected string end of file.`,
         new Range(
-          new Position(beginLine, beginLineStart - endOffset + 1),
-          new Position(me.line, me.index - endOffset + 1)
+          new Position(beginLine, strStart - strStartOffset + 1),
+          new Position(me.line, me.index - endOffset + 2)
         )
       );
     }
@@ -345,8 +345,8 @@ export default class Lexer {
       raw: rawString,
       line: beginLine,
       lineStart: beginLineStart,
-      range: [me.tokenStart, me.index - tempOffset],
-      offset: me.offset,
+      range: [me.tokenStart, me.index],
+      offsetRange: [strStartOffset, endOffset],
       afterSpace,
       lastLine: me.line,
       lastLineStart: me.lineStart
@@ -375,7 +375,7 @@ export default class Lexer {
       line: beginLine,
       lineStart: beginLineStart,
       range: [me.tokenStart, me.index],
-      offset: me.offset,
+      offsetRange: [me.offset, me.offset],
       afterSpace
     });
 
@@ -470,7 +470,7 @@ export default class Lexer {
       line: me.line,
       lineStart: me.lineStart,
       range: [me.tokenStart, me.index],
-      offset: me.offset,
+      offsetRange: [me.offset, me.offset],
       afterSpace
     });
 
@@ -578,7 +578,7 @@ export default class Lexer {
         line: me.line,
         lineStart: me.lineStart,
         range: [me.tokenStart, me.index],
-        offset: me.offset
+        offsetRange: [me.offset, me.offset],
       });
     }
 

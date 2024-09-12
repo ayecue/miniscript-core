@@ -21,7 +21,7 @@ export class BaseTokenOptions<T> {
   line: number;
   lineStart: number;
   range: [number, number];
-  offset: number;
+  offsetRange: [number, number];
   afterSpace?: boolean;
   lastLine?: number;
   lastLineStart?: number;
@@ -56,11 +56,11 @@ export class BaseToken<T> {
     this.lastLineStart = options.lastLineStart;
     this.afterSpace = options.afterSpace;
 
-    const offset = options.offset;
+    const offsetRange = options.offsetRange;
     const range = options.range;
 
-    this.start = new Position(this.line, range[0] - offset + 1);
-    this.end = new Position(this.lastLine || this.line, range[1] - offset + 1);
+    this.start = new Position(this.line, range[0] - offsetRange[0] + 1);
+    this.end = new Position(this.lastLine || this.line, range[1] - offsetRange[1] + 1);
   }
 
   toString(): string {
