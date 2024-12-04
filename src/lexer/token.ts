@@ -60,7 +60,10 @@ export class BaseToken<T> {
     const range = options.range;
 
     this.start = new Position(this.line, range[0] - offsetRange[0] + 1);
-    this.end = new Position(this.lastLine || this.line, range[1] - offsetRange[1] + 1);
+    this.end = new Position(
+      this.lastLine || this.line,
+      range[1] - offsetRange[1] + 1
+    );
   }
 
   toString(): string {

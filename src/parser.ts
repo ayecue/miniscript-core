@@ -9,14 +9,14 @@ import {
   ASTClause,
   ASTFunctionStatement,
   ASTIdentifier,
+  ASTIdentifierKind,
   ASTListValue,
   ASTLiteral,
   ASTMapKeyString,
   ASTNumericLiteral,
   ASTProvider,
   ASTReturnStatement,
-  ASTType,
-  ASTUnaryExpression
+  ASTType
 } from './parser/ast';
 import Validator from './parser/validator';
 import { ParserException } from './types/errors';
@@ -859,7 +859,7 @@ export default class Parser {
     const me = this;
     const scope = me.currentScope;
     const startToken = me.previousToken;
-    const variable = me.parseIdentifier() as ASTIdentifier;
+    const variable = me.parseIdentifier(ASTIdentifierKind.ForInVariable) as ASTIdentifier;
     const variableAssign = me.astProvider.assignmentStatement({
       variable,
       init: me.astProvider.unknown({
@@ -875,6 +875,7 @@ export default class Parser {
     });
     const indexAssign = me.astProvider.assignmentStatement({
       variable: me.astProvider.identifier({
+        kind: ASTIdentifierKind.ForInIdxVariable,
         name: `__${variable.name}_idx`,
         start: variable.start,
         end: variable.end,
@@ -1003,7 +1004,7 @@ export default class Parser {
       me.requireToken(Selectors.LParenthesis, functionStartToken.start);
 
       while (!SelectorGroups.FunctionDeclarationArgEnd(me.token)) {
-        const parameter = me.parseIdentifier();
+        const parameter = me.parseIdentifier(ASTIdentifierKind.Argument);
         const parameterStartToken = parameter;
 
         if (me.consume(Selectors.Assign)) {
@@ -1445,9 +1446,8 @@ export default class Parser {
         me.next();
         me.skipNewlines();
 
-        const identifier = me.parseIdentifier();
-
-        base = me.astProvider.memberExpression({
+        const identifier = me.parseIdentifier(ASTIdentifierKind.Property);
+        const memberExpr = me.astProvider.memberExpression({
           base,
           indexer: Operator.Member,
           identifier,
@@ -1456,6 +1456,9 @@ export default class Parser {
           range: [startToken.range[0], me.previousToken.range[1]],
           scope: me.currentScope
         });
+
+        me.currentScope.namespaces.push(memberExpr);
+        base = memberExpr;
       } else if (Selectors.SLBracket(me.token) && !me.token.afterSpace) {
         me.next();
         me.skipNewlines();
@@ -1622,36 +1625,7 @@ export default class Parser {
         me.requireToken(Selectors.MapKeyValueSeperator);
         me.skipNewlines();
 
-        if (me.currentAssignment) {
-          const assign = me.astProvider.assignmentStatement({
-            variable: me.astProvider.indexExpression({
-              index: keyValueItem.key,
-              base: me.currentAssignment.variable,
-              start: keyValueItem.start,
-              end: me.token.end,
-              range: [keyValueItem.range[0], me.token.range[1]],
-              scope
-            }),
-            init: null,
-            start: keyValueItem.start,
-            end: null,
-            range: [keyValueItem.range[0], null]
-          });
-          const previousAssignment = me.currentAssignment;
-
-          me.currentAssignment = assign;
-          keyValueItem.value = me.parseExpr(keyValueItem);
-          me.currentAssignment = previousAssignment;
-
-          assign.init = keyValueItem.value;
-          assign.end = me.previousToken.end;
-          assign.range[1] = me.previousToken.range[1];
-
-          scope.assignments.push(assign);
-        } else {
-          keyValueItem.value = me.parseExpr(keyValueItem);
-        }
-
+        keyValueItem.value = me.parseExpr(keyValueItem);
         keyValueItem.end = me.previousToken.end;
         keyValueItem.range[1] = me.previousToken.range[1];
         fields.push(keyValueItem);
@@ -1715,50 +1689,7 @@ export default class Parser {
           scope
         });
 
-        if (me.currentAssignment) {
-          const assign = me.astProvider.assignmentStatement({
-            variable: me.astProvider.indexExpression({
-              index: me.astProvider.literal(TokenType.NumericLiteral, {
-                value: fields.length,
-                raw: `${fields.length}`,
-                start: startToken.start,
-                end: me.token.end,
-                range: [startToken.range[0], me.token.range[1]],
-                scope
-              }),
-              base: me.currentAssignment.variable,
-              start: null,
-              end: null,
-              range: [null, null],
-              scope
-            }),
-            init: null,
-            start: null,
-            range: [null, null],
-            end: null
-          });
-          const previousAssignment = me.currentAssignment;
-          const assignStartToken = me.token;
-
-          me.currentAssignment = previousAssignment;
-
-          listValue.value = me.parseExpr(listValue);
-
-          me.currentAssignment = previousAssignment;
-
-          assign.variable.start = assignStartToken.start;
-          assign.variable.end = me.previousToken.end;
-          assign.variable.range = [assignStartToken.range[0], me.previousToken.range[1]];
-          assign.init = listValue.value;
-          assign.start = listValue.start;
-          assign.end = me.previousToken.end;
-          assign.range = [listValue.range[0], me.previousToken.range[1]];
-
-          scope.assignments.push(assign);
-        } else {
-          listValue.value = me.parseExpr(listValue);
-        }
-
+        listValue.value = me.parseExpr(listValue);
         listValue.end = me.previousToken.end;
         listValue.range[1] = me.previousToken.range[1];
         fields.push(listValue);
@@ -1820,7 +1751,7 @@ export default class Parser {
     if (me.validator.isLiteral(<TokenType>me.token.type)) {
       return me.parseLiteral();
     } else if (me.isType(TokenType.Identifier)) {
-      return me.parseIdentifier();
+      return me.parseIdentifier(ASTIdentifierKind.Variable);
     }
 
     me.raise(
@@ -1862,24 +1793,28 @@ export default class Parser {
     return base;
   }
 
-  parseIdentifier(): ASTIdentifier | ASTBase {
+  parseIdentifier(kind: ASTIdentifierKind): ASTIdentifier | ASTBase {
     const me = this;
-    const identifierToken = me.token;
-    const identifier = me.requireType(TokenType.Identifier);
+    const identifierToken = me.requireType(TokenType.Identifier);
 
-    if (identifier === null) {
+    if (identifierToken === null) {
       return me.parseInvalidCode();
     }
 
-    me.currentScope.namespaces.add(identifier.value);
-
-    return me.astProvider.identifier({
-      name: identifier.value,
+    const identifier = me.astProvider.identifier({
+      kind: kind,
+      name: identifierToken.value,
       start: identifierToken.start,
       end: identifierToken.end,
       range: identifierToken.range,
       scope: me.currentScope
     });
+
+    if (kind !== ASTIdentifierKind.Property) {
+      me.currentScope.namespaces.push(identifier);
+    }
+
+    return identifier;
   }
 
   parseInvalidCode() {

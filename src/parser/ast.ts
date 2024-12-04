@@ -272,6 +272,7 @@ export {
   ASTBaseOptions,
   ASTComment,
   ASTCommentOptions,
+  ASTScopeNamespace,
   ASTType
 } from './ast/base';
 export { ASTBinaryExpression, ASTBinaryExpressionOptions } from './ast/binary';
@@ -296,6 +297,7 @@ export {
 } from './ast/function';
 export {
   ASTIdentifier,
+  ASTIdentifierKind,
   ASTIdentifierOptions,
   ASTIndexExpression,
   ASTIndexExpressionOptions,

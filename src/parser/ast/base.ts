@@ -1,4 +1,5 @@
 import { Position } from '../../types/position';
+import { ASTIdentifier, ASTMemberExpression } from './identifier';
 
 export enum ASTType {
   BreakStatement = 'BreakStatement',
@@ -119,21 +120,23 @@ export class ASTBaseBlock extends ASTBase {
   }
 }
 
+export type ASTScopeNamespace = ASTIdentifier | ASTMemberExpression;
+
 export interface ASTBaseBlockWithScopeOptions extends ASTBaseBlockOptions {
   assignments?: ASTBase[];
   returns?: ASTBase[];
-  namespaces?: Set<string>;
+  namespaces?: ASTScopeNamespace[];
   parent?: ASTBaseBlockWithScope;
 }
 
 export class ASTBaseBlockWithScope extends ASTBaseBlock {
   assignments: ASTBase[];
   returns: ASTBase[];
-  namespaces: Set<string>;
+  namespaces: ASTScopeNamespace[];
 
   constructor(type: string, options: ASTBaseBlockWithScopeOptions) {
     super(type, options);
-    this.namespaces = options.namespaces || new Set<string>();
+    this.namespaces = options.namespaces || [];
     this.assignments = options.assignments || [];
     this.returns = options.returns || [];
   }

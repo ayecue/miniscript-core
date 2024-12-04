@@ -1,15 +1,26 @@
 import { ASTBase, ASTBaseOptions, ASTType } from './base';
 
+export enum ASTIdentifierKind {
+  Variable = 'variable',
+  Argument = 'argument',
+  ForInVariable = 'for-in-variable',
+  ForInIdxVariable = 'for-in-idx-variable',
+  Property = 'property',
+}
+
 export interface ASTIdentifierOptions extends ASTBaseOptions {
   name: string;
+  kind: ASTIdentifierKind;
 }
 
 export class ASTIdentifier extends ASTBase {
   name: string;
+  kind: ASTIdentifierKind;
 
   constructor(options: ASTIdentifierOptions) {
     super(ASTType.Identifier, options);
     this.name = options.name;
+    this.kind = options.kind;
   }
 
   toString(): string {
@@ -19,6 +30,7 @@ export class ASTIdentifier extends ASTBase {
   clone(): ASTIdentifier {
     return new ASTIdentifier({
       name: this.name,
+      kind: this.kind,
       start: this.start,
       end: this.end,
       range: this.range,

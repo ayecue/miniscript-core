@@ -1,4 +1,4 @@
-const { Parser, Lexer, ASTBase } = require('../dist');
+const { Parser, Lexer, ASTType } = require('../dist');
 const fs = require('fs');
 const path = require('path');
 const testFolder = path.resolve(__dirname, 'scripts');
@@ -18,7 +18,15 @@ describe('parse', function () {
           const payload = parser.parseChunk();
 
           expect(payload.toString()).toMatchSnapshot();
-          expect(payload.namespaces.length).toMatchSnapshot();
+          expect(payload.namespaces.reduce((result, item) => {
+            let currentIdentifier = item;
+            if (item.type === ASTType.MemberExpression) {
+              currentIdentifier = item.identifier;
+            }
+            if (!result[currentIdentifier.kind]) result[currentIdentifier.kind] = 0;
+            result[currentIdentifier.kind]++;
+            return result;
+          }, {})).toMatchSnapshot();
           expect(payload.literals.length).toMatchSnapshot();
           expect(payload.assignments.length).toMatchSnapshot();
         });
