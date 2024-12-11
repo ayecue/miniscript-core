@@ -158,15 +158,18 @@ export class ASTBaseBlockWithScope extends ASTBaseBlock {
 export interface ASTCommentOptions extends ASTBaseOptions {
   value: string;
   isMultiline?: boolean;
+  isStatement: boolean;
 }
 
 export class ASTComment extends ASTBase {
   value: string;
   isMultiline: boolean;
+  isStatement: boolean;
 
   constructor(options: ASTCommentOptions) {
     super(ASTType.Comment, options);
     this.value = options.value;
+    this.isStatement = options.isStatement;
     this.isMultiline = options.isMultiline || false;
   }
 
@@ -178,6 +181,7 @@ export class ASTComment extends ASTBase {
     return new ASTComment({
       value: this.value,
       isMultiline: this.isMultiline,
+      isStatement: this.isStatement,
       start: this.start,
       end: this.end,
       range: this.range,
