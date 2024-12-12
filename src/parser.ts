@@ -27,6 +27,7 @@ import { Range } from './types/range';
 import { getSelectorsFromGroup, getSelectorValue, Selector, SelectorGroup, SelectorGroups, Selectors } from './types/selector';
 import { Stack } from './utils/stack';
 import { PendingBlock, PendingChunk, PendingClauseType, PendingFor, PendingFunction, PendingIf, PendingWhile, isPendingChunk, isPendingFor, isPendingFunction, isPendingIf, isPendingWhile } from './parser/pending-block';
+import { LineRegistry } from './parser/line-registry';
 
 export interface ParserOptions {
   validator?: Validator;
@@ -47,9 +48,9 @@ export default class Parser {
   // helper
   literals: ASTBase[];
   scopes: ASTBaseBlockWithScope[];
-  lines: Record<number, ASTBase[]>;
   backpatches: Stack<PendingBlock>;
   statementErrors: Error[];
+  lineRegistry: LineRegistry;
 
   // settings
   content: string;
@@ -73,7 +74,7 @@ export default class Parser {
       });
     me.token = null;
     me.previousToken = null;
-    me.lines = {}
+    me.lineRegistry = new LineRegistry();
     me.scopes = [];
     me.currentScope = null;
     me.currentAssignment = null;
@@ -169,16 +170,6 @@ export default class Parser {
     return null;
   }
 
-  addItemToLines(item: ASTBase) {
-    const lines = this.lines;
-    const endLine = item.end.line;
-
-    for (let line = item.start.line; line <= endLine; line++) {
-      const statements = lines[line];
-      statements ? statements.push(item) : (lines[line] = [item]);
-    }
-  }
-
   skipNewlines(): number {
     const me = this;
     let lines = 0;
@@ -194,7 +185,7 @@ export default class Parser {
           isStatement
         });
 
-        me.addItemToLines(comment);
+        me.lineRegistry.addItemToLines(comment);
         if (isStatement) {
           me.backpatches.peek().body.push(comment);
         }
@@ -272,7 +263,7 @@ export default class Parser {
 
     const start = me.token.start;
     const chunk = me.astProvider.chunk({ start, end: null, range: [me.token.range[0], null] });
-    const pending = new PendingChunk(chunk);
+    const pending = new PendingChunk(chunk, me.lineRegistry);
 
     me.backpatches.setDefault(pending);
     me.pushScope(chunk);
@@ -298,7 +289,7 @@ export default class Parser {
 
     chunk.literals = me.literals;
     chunk.scopes = me.scopes;
-    chunk.lines = me.lines;
+    chunk.lines = me.lineRegistry.lines;
 
     return chunk;
   }
@@ -314,7 +305,7 @@ export default class Parser {
     const pendingBlock = me.backpatches.peek();
     const item = me.parseAssignment();
 
-    if (item.end !== null) me.addItemToLines(item);
+    if (item.end !== null) me.lineRegistry.addItemToLines(item);
     pendingBlock.body.push(item);
   }
 
@@ -328,7 +319,7 @@ export default class Parser {
         me.next();
         const item = me.parseReturnStatement();
         if (item.end !== null) {
-          me.addItemToLines(item);
+          me.lineRegistry.addItemToLines(item);
         }
         pendingBlock.body.push(item);
         return;
@@ -387,7 +378,7 @@ export default class Parser {
           range: me.previousToken.range,
           scope: me.currentScope
         });
-        me.addItemToLines(item);
+        me.lineRegistry.addItemToLines(item);
         pendingBlock.body.push(item);
         return;
       }
@@ -400,7 +391,7 @@ export default class Parser {
           range: me.previousToken.range,
           scope: me.currentScope
         });
-        me.addItemToLines(item);
+        me.lineRegistry.addItemToLines(item);
         pendingBlock.body.push(item);
         return;
       }
@@ -491,14 +482,6 @@ export default class Parser {
       assignmentStatement.init = me.parseExpr(assignmentStatement);
       assignmentStatement.end = me.previousToken.end;
       assignmentStatement.range[1] = me.previousToken.range[1];
-
-      if (assignmentStatement.init.type === ASTType.FunctionDeclaration) {
-        const pendingBlock = me.backpatches.peek();
-        pendingBlock.onComplete = (it) => {
-          assignmentStatement.end = it.block.end;
-          assignmentStatement.range[1] = it.block.range[1];
-        }
-      }
 
       me.currentAssignment = previousAssignment;
 
@@ -631,15 +614,6 @@ export default class Parser {
 
       returnStatement.end = me.previousToken.end;
       returnStatement.range[1] = me.previousToken.range[1];
-
-      if (expression.type === ASTType.FunctionDeclaration) {
-        const pendingBlock = me.backpatches.peek();
-        pendingBlock.onComplete = (it) => {
-          returnStatement.end = it.block.end;
-          returnStatement.range[1] = it.block.range[1];
-        };
-      }
-
       returnStatement.argument = expression;
     }
 
@@ -653,7 +627,7 @@ export default class Parser {
     const startToken = me.previousToken;
     const ifCondition = me.parseExpr(null);
 
-    me.addItemToLines(ifCondition);
+    me.lineRegistry.addItemToLines(ifCondition);
     me.requireToken(Selectors.Then, startToken.start);
 
     if (!SelectorGroups.BlockEndOfLine(me.token)) {
@@ -677,7 +651,7 @@ export default class Parser {
       scope: me.currentScope
     });
 
-    const pendingBlock = new PendingIf(ifStatement, clause);
+    const pendingBlock = new PendingIf(ifStatement, clause, me.lineRegistry);
     me.backpatches.push(pendingBlock);
   }
 
@@ -727,8 +701,6 @@ export default class Parser {
 
     if (type === null) {
       pendingBlock.complete(me.previousToken);
-
-      me.addItemToLines(pendingBlock.block);
       me.backpatches.pop();
 
       me.backpatches.peek().body.push(pendingBlock.block);
@@ -782,7 +754,7 @@ export default class Parser {
     ifStatement.end = me.token.end;
     ifStatement.range[1] = me.token.range[1];
 
-    me.addItemToLines(ifStatement);
+    me.lineRegistry.addItemToLines(ifStatement);
     block.body.push(ifStatement);
   }
 
@@ -815,14 +787,8 @@ export default class Parser {
       scope: me.currentScope
     });
 
-    const pendingBlock = new PendingWhile(whileStatement);
+    const pendingBlock = new PendingWhile(whileStatement, me.lineRegistry);
     me.backpatches.push(pendingBlock);
-    pendingBlock.onComplete = (it) => {
-      me.addItemToLines(it.block);
-      me.backpatches.pop();
-
-      me.backpatches.peek().body.push(it.block);
-    };
   }
 
   finalizeWhileStatement() {
@@ -839,6 +805,8 @@ export default class Parser {
     }
 
     pendingBlock.complete(me.previousToken);
+    me.backpatches.pop();
+    me.backpatches.peek().body.push(pendingBlock.block);
   }
 
   parseWhileShortcutStatement(condition: ASTBase, startToken: Token): void {
@@ -855,7 +823,7 @@ export default class Parser {
       scope: me.currentScope
     });
 
-    me.addItemToLines(whileStatement);
+    me.lineRegistry.addItemToLines(whileStatement);
     block.body.push(whileStatement);
   }
 
@@ -931,7 +899,7 @@ export default class Parser {
       scope
     });
 
-    const pendingBlock = new PendingFor(forStatement);
+    const pendingBlock = new PendingFor(forStatement, me.lineRegistry);
     me.backpatches.push(pendingBlock);
   }
 
@@ -950,9 +918,7 @@ export default class Parser {
 
     pendingBlock.complete(me.previousToken);
 
-    me.addItemToLines(pendingBlock.block);
     me.backpatches.pop();
-
     me.backpatches.peek().body.push(pendingBlock.block);
   }
 
@@ -975,7 +941,7 @@ export default class Parser {
       scope: me.currentScope
     });
 
-    me.addItemToLines(forStatement);
+    me.lineRegistry.addItemToLines(forStatement);
     block.body.push(forStatement);
   }
 
@@ -1076,17 +1042,8 @@ export default class Parser {
 
     functionStatement.parameters = parameters;
 
-    const pendingBlock = new PendingFunction(functionStatement);
+    const pendingBlock = new PendingFunction(functionStatement, base, me.lineRegistry);
     me.backpatches.push(pendingBlock);
-    pendingBlock.onComplete = (it) => {
-      if (base !== null) {
-        base.end = it.block.end;
-        base.range[1] = it.block.range[1];
-        me.addItemToLines(base);
-      } else {
-        me.addItemToLines(it.block);
-      }
-    };
 
     return functionStatement;
   }
@@ -1107,7 +1064,6 @@ export default class Parser {
     me.popScope();
 
     pendingBlock.complete(me.previousToken);
-
     me.backpatches.pop();
   }
 

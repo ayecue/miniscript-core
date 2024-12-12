@@ -4,6 +4,7 @@ export { default as LexerValidator } from './lexer/validator';
 export { default as Parser, ParserOptions } from './parser';
 export * from './parser/ast';
 export { default as ParserValidatorm } from './parser/validator';
+export { LineRegistry } from './parser/line-registry';
 export * from './parser/pending-block';
 export * from './utils/stack';
 export * from './utils/queue';
