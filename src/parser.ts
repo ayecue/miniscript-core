@@ -186,9 +186,6 @@ export default class Parser {
         });
 
         me.lineRegistry.addItemToLines(comment);
-        if (isStatement) {
-          me.backpatches.peek().body.push(comment);
-        }
       } else if (Selectors.EndOfLine(me.token)) {
         lines++;
       } else {

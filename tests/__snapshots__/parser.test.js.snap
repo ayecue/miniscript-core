@@ -685,7 +685,6 @@ exports[`parse default scripts callexpr-with-nl.ms unsafe 1`] = `
 
 exports[`parse default scripts comments.ms 1`] = `
 "Chunk[1:1-3:20][
-	Comment[1:1-1:10][comment]
 	Identifier[2:1-2:11][myVariable]
 	AssignmentStatement[3:1-3:9][Identifier[3:1-3:5][test] = Literal[3:8-3:9][2]]
 ]"
@@ -703,7 +702,6 @@ exports[`parse default scripts comments.ms 4`] = `1`;
 
 exports[`parse default scripts comments.ms unsafe 1`] = `
 "Chunk[1:1-3:20][
-	Comment[1:1-1:10][comment]
 	Identifier[2:1-2:11][myVariable]
 	AssignmentStatement[3:1-3:9][Identifier[3:1-3:5][test] = Literal[3:8-3:9][2]]
 ]"
