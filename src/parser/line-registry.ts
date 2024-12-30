@@ -1,4 +1,4 @@
-import { ASTBase } from "./ast";
+import { ASTBase } from './ast';
 
 export class LineRegistry {
   private _lines: Record<number, ASTBase[]>;

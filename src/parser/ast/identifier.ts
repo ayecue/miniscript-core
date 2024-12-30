@@ -3,6 +3,7 @@ import { ASTBase, ASTBaseOptions, ASTType } from './base';
 export enum ASTIdentifierKind {
   Variable = 'variable',
   Argument = 'argument',
+  ForInVariable = 'for-in-variable',
   Property = 'property',
 }
 

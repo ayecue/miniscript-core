@@ -1,6 +1,4 @@
 import { Position } from '../../types/position';
-import { ASTAssignmentStatement } from './assignment';
-import { ASTForGenericStatement } from './for';
 import { ASTIdentifier, ASTMemberExpression } from './identifier';
 
 export enum ASTType {
@@ -123,17 +121,23 @@ export class ASTBaseBlock extends ASTBase {
 }
 
 export type ASTScopeNamespace = ASTIdentifier | ASTMemberExpression;
-export type ASTScopeDefiniton = ASTAssignmentStatement | ASTForGenericStatement;
+
+/**
+ * Contains items which in someway define variables available within the scope. Includes:
+ * - ASTAssignmentStatement
+ * - ASTForGenericStatement
+ */
+export type ASTScopeDefinition = ASTBase;
 
 export interface ASTBaseBlockWithScopeOptions extends ASTBaseBlockOptions {
-  definitions?: ASTScopeDefiniton[];
+  definitions?: ASTScopeDefinition[];
   returns?: ASTBase[];
   namespaces?: ASTScopeNamespace[];
   parent?: ASTBaseBlockWithScope;
 }
 
 export class ASTBaseBlockWithScope extends ASTBaseBlock {
-  definitions: ASTScopeDefiniton[];
+  definitions: ASTScopeDefinition[];
   returns: ASTBase[];
   namespaces: ASTScopeNamespace[];
 

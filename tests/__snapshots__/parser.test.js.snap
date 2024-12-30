@@ -768,7 +768,8 @@ exports[`parse default scripts eol.ms 1`] = `
 
 exports[`parse default scripts eol.ms 2`] = `
 Object {
-  "variable": 5,
+  "for-in-variable": 1,
+  "variable": 4,
 }
 `;
 
@@ -2245,7 +2246,8 @@ exports[`parse default scripts shorthand.ms 1`] = `
 
 exports[`parse default scripts shorthand.ms 2`] = `
 Object {
-  "variable": 35,
+  "for-in-variable": 3,
+  "variable": 32,
 }
 `;
 
@@ -2419,8 +2421,9 @@ exports[`parse default scripts slice.ms 1`] = `
 
 exports[`parse default scripts slice.ms 2`] = `
 Object {
+  "for-in-variable": 1,
   "property": 10,
-  "variable": 32,
+  "variable": 31,
 }
 `;
 

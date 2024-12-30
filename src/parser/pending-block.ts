@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import { Token } from '../lexer/token';
 import {
   ASTBase,
@@ -40,7 +39,11 @@ abstract class PendingBlockBase {
   type: PendingBlockType;
   onComplete: PendingBlockCompleteCallback;
 
-  constructor(block: ASTBase, type: PendingBlockType, lineRegistry: LineRegistry) {
+  constructor(
+    block: ASTBase,
+    type: PendingBlockType,
+    lineRegistry: LineRegistry
+  ) {
     this.lineRegistry = lineRegistry;
     this.block = block;
     this.body = [];
@@ -92,7 +95,11 @@ export class PendingFor extends PendingBlockBase implements PendingBlock {
     this.block.body = this.body;
     this.block.end = endToken.end;
     this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToRange(this.block.start.line + 1, endToken.end.line, this.block);
+    this.lineRegistry.addItemToRange(
+      this.block.start.line + 1,
+      endToken.end.line,
+      this.block
+    );
     super.complete(endToken);
   }
 }
@@ -108,7 +115,11 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
 
   private base: ASTBase | null;
 
-  constructor(block: ASTFunctionStatement, base: ASTBase | null, lineRegistry: LineRegistry) {
+  constructor(
+    block: ASTFunctionStatement,
+    base: ASTBase | null,
+    lineRegistry: LineRegistry
+  ) {
     super(block, PendingBlockType.Function, lineRegistry);
     this.base = base;
     this.lineRegistry.addItemToLine(this.block.start.line, this.block);
@@ -122,9 +133,17 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
     if (this.base !== null) {
       this.base.end = this.block.end;
       this.base.range[1] = this.block.range[1];
-      this.lineRegistry.addItemToRange(this.block.start.line + 1, this.base.end.line, this.base);
+      this.lineRegistry.addItemToRange(
+        this.block.start.line + 1,
+        this.base.end.line,
+        this.base
+      );
     } else {
-      this.lineRegistry.addItemToRange(this.block.start.line + 1, this.block.end.line, this.block);
+      this.lineRegistry.addItemToRange(
+        this.block.start.line + 1,
+        this.block.end.line,
+        this.block
+      );
     }
 
     super.complete(endToken);
@@ -144,7 +163,11 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
   currentClause: ASTIfClause | ASTElseClause;
   onCompleteCallback: PendingBlockCompleteCallback;
 
-  constructor(block: ASTIfStatement, current: ASTIfClause, lineRegistry: LineRegistry) {
+  constructor(
+    block: ASTIfStatement,
+    current: ASTIfClause,
+    lineRegistry: LineRegistry
+  ) {
     super(block, PendingBlockType.If, lineRegistry);
     this.lineRegistry.addItemToLine(this.block.start.line, this.block);
     this.currentClause = current;
@@ -153,9 +176,17 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
   private addCurrentClauseToLineRegistry(): void {
     if (this.currentClause.start.line === this.block.start.line) {
       // prevent double registering first line of block
-      this.lineRegistry.addItemToRange(this.currentClause.start.line + 1, this.currentClause.end.line, this.block);
+      this.lineRegistry.addItemToRange(
+        this.currentClause.start.line + 1,
+        this.currentClause.end.line,
+        this.block
+      );
     } else {
-      this.lineRegistry.addItemToRange(this.currentClause.start.line, this.currentClause.end.line, this.block);
+      this.lineRegistry.addItemToRange(
+        this.currentClause.start.line,
+        this.currentClause.end.line,
+        this.block
+      );
     }
   }
 
@@ -173,7 +204,11 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
     if (this.body.length > 0) this.next(endToken);
     this.block.end = endToken.end;
     this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToRange(this.currentClause.end.line + 1, this.block.end.line, this.block);
+    this.lineRegistry.addItemToRange(
+      this.currentClause.end.line + 1,
+      this.block.end.line,
+      this.block
+    );
     super.complete(endToken);
   }
 }
@@ -196,7 +231,11 @@ export class PendingWhile extends PendingBlockBase implements PendingBlock {
     this.block.body = this.body;
     this.block.end = endToken.end;
     this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToRange(this.block.start.line + 1, endToken.end.line, this.block);
+    this.lineRegistry.addItemToRange(
+      this.block.start.line + 1,
+      endToken.end.line,
+      this.block
+    );
     super.complete(endToken);
   }
 }

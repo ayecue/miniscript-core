@@ -828,7 +828,7 @@ export default class Parser {
     const me = this;
     const scope = me.currentScope;
     const startToken = me.previousToken;
-    const variable = me.parseIdentifier(ASTIdentifierKind.Variable) as ASTIdentifier;
+    const variable = me.parseIdentifier(ASTIdentifierKind.ForInVariable) as ASTIdentifier;
 
     me.requireToken(Selectors.In, startToken.start);
 
