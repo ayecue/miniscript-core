@@ -1,4 +1,6 @@
 import { Position } from '../../types/position';
+import { ASTAssignmentStatement } from './assignment';
+import { ASTForGenericStatement } from './for';
 import { ASTIdentifier, ASTMemberExpression } from './identifier';
 
 export enum ASTType {
@@ -121,30 +123,31 @@ export class ASTBaseBlock extends ASTBase {
 }
 
 export type ASTScopeNamespace = ASTIdentifier | ASTMemberExpression;
+export type ASTScopeDefiniton = ASTAssignmentStatement | ASTForGenericStatement;
 
 export interface ASTBaseBlockWithScopeOptions extends ASTBaseBlockOptions {
-  assignments?: ASTBase[];
+  definitions?: ASTScopeDefiniton[];
   returns?: ASTBase[];
   namespaces?: ASTScopeNamespace[];
   parent?: ASTBaseBlockWithScope;
 }
 
 export class ASTBaseBlockWithScope extends ASTBaseBlock {
-  assignments: ASTBase[];
+  definitions: ASTScopeDefiniton[];
   returns: ASTBase[];
   namespaces: ASTScopeNamespace[];
 
   constructor(type: string, options: ASTBaseBlockWithScopeOptions) {
     super(type, options);
     this.namespaces = options.namespaces || [];
-    this.assignments = options.assignments || [];
+    this.definitions = options.definitions || [];
     this.returns = options.returns || [];
   }
 
   clone(): ASTBaseBlockWithScope {
     return new ASTBaseBlockWithScope(this.type, {
       namespaces: this.namespaces,
-      assignments: this.assignments.map((it) => it.clone()),
+      definitions: this.definitions.map((it) => it.clone()),
       returns: this.returns.map((it) => it.clone()),
       body: this.body.map((it) => it.clone()),
       start: this.start,

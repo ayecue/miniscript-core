@@ -768,14 +768,13 @@ exports[`parse default scripts eol.ms 1`] = `
 
 exports[`parse default scripts eol.ms 2`] = `
 Object {
-  "for-in-variable": 1,
-  "variable": 4,
+  "variable": 5,
 }
 `;
 
 exports[`parse default scripts eol.ms 3`] = `6`;
 
-exports[`parse default scripts eol.ms 4`] = `2`;
+exports[`parse default scripts eol.ms 4`] = `1`;
 
 exports[`parse default scripts eol.ms unsafe 1`] = `
 "Chunk[1:1-13:9][
@@ -2246,14 +2245,13 @@ exports[`parse default scripts shorthand.ms 1`] = `
 
 exports[`parse default scripts shorthand.ms 2`] = `
 Object {
-  "for-in-variable": 3,
-  "variable": 32,
+  "variable": 35,
 }
 `;
 
 exports[`parse default scripts shorthand.ms 3`] = `28`;
 
-exports[`parse default scripts shorthand.ms 4`] = `12`;
+exports[`parse default scripts shorthand.ms 4`] = `9`;
 
 exports[`parse default scripts shorthand.ms unsafe 1`] = `
 "Chunk[1:1-54:13][
@@ -2421,15 +2419,14 @@ exports[`parse default scripts slice.ms 1`] = `
 
 exports[`parse default scripts slice.ms 2`] = `
 Object {
-  "for-in-variable": 1,
   "property": 10,
-  "variable": 31,
+  "variable": 32,
 }
 `;
 
 exports[`parse default scripts slice.ms 3`] = `21`;
 
-exports[`parse default scripts slice.ms 4`] = `6`;
+exports[`parse default scripts slice.ms 4`] = `5`;
 
 exports[`parse default scripts slice.ms unsafe 1`] = `
 "Chunk[1:1-27:21][

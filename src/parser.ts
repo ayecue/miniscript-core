@@ -482,7 +482,7 @@ export default class Parser {
 
       me.currentAssignment = previousAssignment;
 
-      scope.assignments.push(assignmentStatement);
+      scope.definitions.push(assignmentStatement);
 
       return assignmentStatement;
     } else if (
@@ -530,7 +530,7 @@ export default class Parser {
 
       me.currentAssignment = previousAssignment;
 
-      scope.assignments.push(assignmentStatement);
+      scope.definitions.push(assignmentStatement);
 
       return assignmentStatement;
     }
@@ -828,44 +828,7 @@ export default class Parser {
     const me = this;
     const scope = me.currentScope;
     const startToken = me.previousToken;
-    const variable = me.parseIdentifier(ASTIdentifierKind.ForInVariable) as ASTIdentifier;
-    const variableAssign = me.astProvider.assignmentStatement({
-      variable,
-      init: me.astProvider.unknown({
-        start: variable.start,
-        end: variable.end,
-        range: variable.range,
-        scope
-      }),
-      start: variable.start,
-      end: variable.end,
-      range: variable.range,
-      scope
-    });
-    const indexAssign = me.astProvider.assignmentStatement({
-      variable: me.astProvider.identifier({
-        kind: ASTIdentifierKind.ForInIdxVariable,
-        name: `__${variable.name}_idx`,
-        start: variable.start,
-        end: variable.end,
-        range: variable.range,
-        scope
-      }),
-      init: me.astProvider.literal(TokenType.NumericLiteral, {
-        value: 0,
-        raw: '0',
-        start: variable.start,
-        end: variable.end,
-        range: variable.range,
-        scope
-      }),
-      start: variable.start,
-      end: variable.end,
-      range: variable.range,
-      scope
-    });
-
-    scope.assignments.push(variableAssign, indexAssign);
+    const variable = me.parseIdentifier(ASTIdentifierKind.Variable) as ASTIdentifier;
 
     me.requireToken(Selectors.In, startToken.start);
 
@@ -896,6 +859,8 @@ export default class Parser {
       scope
     });
 
+    scope.definitions.push(forStatement);
+
     const pendingBlock = new PendingFor(forStatement, me.lineRegistry);
     me.backpatches.push(pendingBlock);
   }
@@ -920,11 +885,12 @@ export default class Parser {
   }
 
   parseForShortcutStatement(
-    variable: ASTBase,
+    variable: ASTIdentifier,
     iterator: ASTBase,
     startToken: Token
   ): void {
     const me = this;
+    const scope = me.currentScope;
     const block = me.backpatches.peek();
     const item = me.parseShortcutStatement();
 
@@ -938,6 +904,7 @@ export default class Parser {
       scope: me.currentScope
     });
 
+    scope.definitions.push(forStatement);
     me.lineRegistry.addItemToLines(forStatement);
     block.body.push(forStatement);
   }
@@ -987,7 +954,7 @@ export default class Parser {
               scope: me.currentScope
             });
 
-            me.currentScope.assignments.push(assign);
+            me.currentScope.definitions.push(assign);
             parameters.push(assign);
           } else {
             me.raise(
@@ -1019,7 +986,7 @@ export default class Parser {
             scope: me.currentScope
           });
 
-          me.currentScope.assignments.push(assign);
+          me.currentScope.definitions.push(assign);
           parameters.push(parameter);
         }
 

@@ -1,12 +1,13 @@
 import { ASTBase, ASTBaseBlock, ASTBaseBlockOptions, ASTType } from './base';
+import { ASTIdentifier } from './identifier';
 
 export interface ASTForGenericStatementOptions extends ASTBaseBlockOptions {
-  variable: ASTBase;
+  variable: ASTIdentifier;
   iterator: ASTBase;
 }
 
 export class ASTForGenericStatement extends ASTBaseBlock {
-  variable: ASTBase;
+  variable: ASTIdentifier;
   iterator: ASTBase;
 
   constructor(options: ASTForGenericStatementOptions) {
