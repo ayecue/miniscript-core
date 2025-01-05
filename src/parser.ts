@@ -1317,7 +1317,7 @@ export default class Parser {
     me.next();
     me.skipNewlines();
 
-    const val = me.parsePower();
+    const val = me.parsePower(true, statementStart);
 
     return me.astProvider.unaryExpression({
       operator: Operator.Reference,
@@ -1445,6 +1445,7 @@ export default class Parser {
             base = me.astProvider.indexExpression({
               base,
               index,
+              isStatementStart: statementStart,
               start: startToken.start,
               end: me.token.end,
               range: [startToken.range[0], me.token.range[1]],

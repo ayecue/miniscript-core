@@ -198,57 +198,57 @@ exports[`parse default scripts ascii.ms 1`] = `
 		ListValue[30:18-30:24][Literal[30:18-30:24][//  ]]
 		ListValue[30:26-30:32][Literal[30:26-30:32][||_ ]]
 	]]
-	AssignmentStatement[31:1-31:42][IndexExpression[31:1-31:9][Identifier[31:1-31:4][map][Literal[31:5-31:8][0]]] = ListConstructor[31:12-31:42][
+	AssignmentStatement[31:1-31:42][IndexExpression[31:1-31:9][isStatementStart][Identifier[31:1-31:4][map][Literal[31:5-31:8][0]]] = ListConstructor[31:12-31:42][
 		ListValue[31:13-31:21][Literal[31:13-31:21][||¯|| ]]
 		ListValue[31:23-31:31][Literal[31:23-31:31][||x|| ]]
 		ListValue[31:33-31:41][Literal[31:33-31:41][||_|| ]]
 	]]
-	AssignmentStatement[32:1-32:36][IndexExpression[32:1-32:9][Identifier[32:1-32:4][map][Literal[32:5-32:8][1]]] = ListConstructor[32:12-32:36][
+	AssignmentStatement[32:1-32:36][IndexExpression[32:1-32:9][isStatementStart][Identifier[32:1-32:4][map][Literal[32:5-32:8][1]]] = ListConstructor[32:12-32:36][
 		ListValue[32:13-32:19][Literal[32:13-32:19]['|| ]]
 		ListValue[32:21-32:27][Literal[32:21-32:27][ || ]]
 		ListValue[32:29-32:35][Literal[32:29-32:35][ || ]]
 	]]
-	AssignmentStatement[33:1-33:39][IndexExpression[33:1-33:9][Identifier[33:1-33:4][map][Literal[33:5-33:8][2]]] = ListConstructor[33:12-33:39][
+	AssignmentStatement[33:1-33:39][IndexExpression[33:1-33:9][isStatementStart][Identifier[33:1-33:4][map][Literal[33:5-33:8][2]]] = ListConstructor[33:12-33:39][
 		ListValue[33:13-33:20][Literal[33:13-33:20][¯¯|| ]]
 		ListValue[33:22-33:29][Literal[33:22-33:29][||¯  ]]
 		ListValue[33:31-33:38][Literal[33:31-33:38][||_  ]]
 	]]
-	AssignmentStatement[34:1-34:36][IndexExpression[34:1-34:9][Identifier[34:1-34:4][map][Literal[34:5-34:8][3]]] = ListConstructor[34:12-34:36][
+	AssignmentStatement[34:1-34:36][IndexExpression[34:1-34:9][isStatementStart][Identifier[34:1-34:4][map][Literal[34:5-34:8][3]]] = ListConstructor[34:12-34:36][
 		ListValue[34:13-34:19][Literal[34:13-34:19][¯|| ]]
 		ListValue[34:21-34:27][Literal[34:21-34:27][-|| ]]
 		ListValue[34:29-34:35][Literal[34:29-34:35][_|| ]]
 	]]
-	AssignmentStatement[35:1-35:39][IndexExpression[35:1-35:9][Identifier[35:1-35:4][map][Literal[35:5-35:8][4]]] = ListConstructor[35:12-35:39][
+	AssignmentStatement[35:1-35:39][IndexExpression[35:1-35:9][isStatementStart][Identifier[35:1-35:4][map][Literal[35:5-35:8][4]]] = ListConstructor[35:12-35:39][
 		ListValue[35:13-35:20][Literal[35:13-35:20][ /|| ]]
 		ListValue[35:22-35:29][Literal[35:22-35:29][/_|| ]]
 		ListValue[35:31-35:38][Literal[35:31-35:38][  || ]]
 	]]
-	AssignmentStatement[36:1-36:39][IndexExpression[36:1-36:9][Identifier[36:1-36:4][map][Literal[36:5-36:8][5]]] = ListConstructor[36:12-36:39][
+	AssignmentStatement[36:1-36:39][IndexExpression[36:1-36:9][isStatementStart][Identifier[36:1-36:4][map][Literal[36:5-36:8][5]]] = ListConstructor[36:12-36:39][
 		ListValue[36:13-36:20][Literal[36:13-36:20][||¯¯ ]]
 		ListValue[36:22-36:29][Literal[36:22-36:29][ ¯|| ]]
 		ListValue[36:31-36:38][Literal[36:31-36:38][ _|| ]]
 	]]
-	AssignmentStatement[37:1-37:42][IndexExpression[37:1-37:9][Identifier[37:1-37:4][map][Literal[37:5-37:8][6]]] = ListConstructor[37:12-37:42][
+	AssignmentStatement[37:1-37:42][IndexExpression[37:1-37:9][isStatementStart][Identifier[37:1-37:4][map][Literal[37:5-37:8][6]]] = ListConstructor[37:12-37:42][
 		ListValue[37:13-37:21][Literal[37:13-37:21][||¯¯  ]]
 		ListValue[37:23-37:31][Literal[37:23-37:31][||¯|| ]]
 		ListValue[37:33-37:41][Literal[37:33-37:41][||_|| ]]
 	]]
-	AssignmentStatement[38:1-38:39][IndexExpression[38:1-38:9][Identifier[38:1-38:4][map][Literal[38:5-38:8][7]]] = ListConstructor[38:12-38:39][
+	AssignmentStatement[38:1-38:39][IndexExpression[38:1-38:9][isStatementStart][Identifier[38:1-38:4][map][Literal[38:5-38:8][7]]] = ListConstructor[38:12-38:39][
 		ListValue[38:13-38:20][Literal[38:13-38:20][¯¯// ]]
 		ListValue[38:22-38:29][Literal[38:22-38:29][ //  ]]
 		ListValue[38:31-38:38][Literal[38:31-38:38][//   ]]
 	]]
-	AssignmentStatement[39:1-39:42][IndexExpression[39:1-39:9][Identifier[39:1-39:4][map][Literal[39:5-39:8][8]]] = ListConstructor[39:12-39:42][
+	AssignmentStatement[39:1-39:42][IndexExpression[39:1-39:9][isStatementStart][Identifier[39:1-39:4][map][Literal[39:5-39:8][8]]] = ListConstructor[39:12-39:42][
 		ListValue[39:13-39:21][Literal[39:13-39:21][||¯|| ]]
 		ListValue[39:23-39:31][Literal[39:23-39:31][||-|| ]]
 		ListValue[39:33-39:41][Literal[39:33-39:41][||_|| ]]
 	]]
-	AssignmentStatement[40:1-40:42][IndexExpression[40:1-40:9][Identifier[40:1-40:4][map][Literal[40:5-40:8][9]]] = ListConstructor[40:12-40:42][
+	AssignmentStatement[40:1-40:42][IndexExpression[40:1-40:9][isStatementStart][Identifier[40:1-40:4][map][Literal[40:5-40:8][9]]] = ListConstructor[40:12-40:42][
 		ListValue[40:13-40:21][Literal[40:13-40:21][||¯|| ]]
 		ListValue[40:23-40:31][Literal[40:23-40:31][  ¯|| ]]
 		ListValue[40:33-40:41][Literal[40:33-40:41][  //  ]]
 	]]
-	AssignmentStatement[41:1-41:30][IndexExpression[41:1-41:9][Identifier[41:1-41:4][map][Literal[41:5-41:8][ ]]] = ListConstructor[41:12-41:30][
+	AssignmentStatement[41:1-41:30][IndexExpression[41:1-41:9][isStatementStart][Identifier[41:1-41:4][map][Literal[41:5-41:8][ ]]] = ListConstructor[41:12-41:30][
 		ListValue[41:13-41:17][Literal[41:13-41:17][  ]]
 		ListValue[41:19-41:23][Literal[41:19-41:23][  ]]
 		ListValue[41:25-41:29][Literal[41:25-41:29][  ]]
@@ -265,42 +265,42 @@ exports[`parse default scripts ascii.ms 1`] = `
 			AssignmentStatement[50:5-50:22][Identifier[50:5-50:9][char] = MemberExpression[50:12-50:22][Identifier[50:12-50:16][char].Identifier[50:17-50:22][lower]]]
 			IfStatement[51:5-55:11][
 				IfClause[51:5-55:11][CallExpression[51:9-51:29][MemberExpression[51:9-51:23][Identifier[51:9-51:14][signs].Identifier[51:15-51:23][hasIndex]](Identifier[51:24-51:28][char])]
-					CallExpression[52:7-52:32][MemberExpression[52:7-52:16][IndexExpression[52:7-52:11][Identifier[52:7-52:8][r][Literal[52:9-52:10][0]]].Identifier[52:12-52:16][push]](IndexExpression[52:17-52:31][IndexExpression[52:17-52:28][Identifier[52:17-52:22][signs][Identifier[52:23-52:27][char]]][Literal[52:29-52:30][0]]])]
-					CallExpression[53:7-53:32][MemberExpression[53:7-53:16][IndexExpression[53:7-53:11][Identifier[53:7-53:8][r][Literal[53:9-53:10][1]]].Identifier[53:12-53:16][push]](IndexExpression[53:17-53:31][IndexExpression[53:17-53:28][Identifier[53:17-53:22][signs][Identifier[53:23-53:27][char]]][Literal[53:29-53:30][1]]])]
-					CallExpression[54:7-54:32][MemberExpression[54:7-54:16][IndexExpression[54:7-54:11][Identifier[54:7-54:8][r][Literal[54:9-54:10][2]]].Identifier[54:12-54:16][push]](IndexExpression[54:17-54:31][IndexExpression[54:17-54:28][Identifier[54:17-54:22][signs][Identifier[54:23-54:27][char]]][Literal[54:29-54:30][2]]])]
+					CallExpression[52:7-52:32][MemberExpression[52:7-52:16][IndexExpression[52:7-52:11][isStatementStart][Identifier[52:7-52:8][r][Literal[52:9-52:10][0]]].Identifier[52:12-52:16][push]](IndexExpression[52:17-52:31][IndexExpression[52:17-52:28][Identifier[52:17-52:22][signs][Identifier[52:23-52:27][char]]][Literal[52:29-52:30][0]]])]
+					CallExpression[53:7-53:32][MemberExpression[53:7-53:16][IndexExpression[53:7-53:11][isStatementStart][Identifier[53:7-53:8][r][Literal[53:9-53:10][1]]].Identifier[53:12-53:16][push]](IndexExpression[53:17-53:31][IndexExpression[53:17-53:28][Identifier[53:17-53:22][signs][Identifier[53:23-53:27][char]]][Literal[53:29-53:30][1]]])]
+					CallExpression[54:7-54:32][MemberExpression[54:7-54:16][IndexExpression[54:7-54:11][isStatementStart][Identifier[54:7-54:8][r][Literal[54:9-54:10][2]]].Identifier[54:12-54:16][push]](IndexExpression[54:17-54:31][IndexExpression[54:17-54:28][Identifier[54:17-54:22][signs][Identifier[54:23-54:27][char]]][Literal[54:29-54:30][2]]])]
 				]
 			]
 		]
 		IfStatement[58:3-66:9][
 			IfClause[58:3-62:10][BinaryExpression[58:7-58:33][CallExpression[58:7-58:21][Identifier[58:7-58:13][typeof](Identifier[58:14-58:20][colors])] == Literal[58:25-58:33][string]]
-				AssignmentStatement[59:5-59:61][IndexExpression[59:5-59:9][Identifier[59:5-59:6][r][Literal[59:7-59:8][0]]] = BinaryExpression[59:12-59:61][BinaryExpression[59:12-59:46][ListConstructor[59:12-59:40][
+				AssignmentStatement[59:5-59:61][IndexExpression[59:5-59:9][isStatementStart][Identifier[59:5-59:6][r][Literal[59:7-59:8][0]]] = BinaryExpression[59:12-59:61][BinaryExpression[59:12-59:46][ListConstructor[59:12-59:40][
 					ListValue[59:13-59:38][BinaryExpression[59:13-59:38][BinaryExpression[59:13-59:32][Literal[59:13-59:23][<color=#] + Identifier[59:26-59:32][colors]] + Literal[59:35-59:38][>]]]
 				] + IndexExpression[59:42-59:46][Identifier[59:42-59:43][r][Literal[59:44-59:45][0]]]] + ListConstructor[59:49-59:61][
 					ListValue[59:50-59:60][Literal[59:50-59:60][</color>]]
 				]]]
-				AssignmentStatement[60:5-60:61][IndexExpression[60:5-60:9][Identifier[60:5-60:6][r][Literal[60:7-60:8][1]]] = BinaryExpression[60:12-60:61][BinaryExpression[60:12-60:46][ListConstructor[60:12-60:40][
+				AssignmentStatement[60:5-60:61][IndexExpression[60:5-60:9][isStatementStart][Identifier[60:5-60:6][r][Literal[60:7-60:8][1]]] = BinaryExpression[60:12-60:61][BinaryExpression[60:12-60:46][ListConstructor[60:12-60:40][
 					ListValue[60:13-60:38][BinaryExpression[60:13-60:38][BinaryExpression[60:13-60:32][Literal[60:13-60:23][<color=#] + Identifier[60:26-60:32][colors]] + Literal[60:35-60:38][>]]]
 				] + IndexExpression[60:42-60:46][Identifier[60:42-60:43][r][Literal[60:44-60:45][1]]]] + ListConstructor[60:49-60:61][
 					ListValue[60:50-60:60][Literal[60:50-60:60][</color>]]
 				]]]
-				AssignmentStatement[61:5-61:61][IndexExpression[61:5-61:9][Identifier[61:5-61:6][r][Literal[61:7-61:8][2]]] = BinaryExpression[61:12-61:61][BinaryExpression[61:12-61:46][ListConstructor[61:12-61:40][
+				AssignmentStatement[61:5-61:61][IndexExpression[61:5-61:9][isStatementStart][Identifier[61:5-61:6][r][Literal[61:7-61:8][2]]] = BinaryExpression[61:12-61:61][BinaryExpression[61:12-61:46][ListConstructor[61:12-61:40][
 					ListValue[61:13-61:38][BinaryExpression[61:13-61:38][BinaryExpression[61:13-61:32][Literal[61:13-61:23][<color=#] + Identifier[61:26-61:32][colors]] + Literal[61:35-61:38][>]]]
 				] + IndexExpression[61:42-61:46][Identifier[61:42-61:43][r][Literal[61:44-61:45][2]]]] + ListConstructor[61:49-61:61][
 					ListValue[61:50-61:60][Literal[61:50-61:60][</color>]]
 				]]]
 			]
 			ElseifClause[62:11-66:9][BinaryExpression[62:12-62:36][CallExpression[62:12-62:26][Identifier[62:12-62:18][typeof](Identifier[62:19-62:25][colors])] == Literal[62:30-62:36][list]]
-				AssignmentStatement[63:5-63:64][IndexExpression[63:5-63:9][Identifier[63:5-63:6][r][Literal[63:7-63:8][0]]] = BinaryExpression[63:12-63:64][BinaryExpression[63:12-63:49][ListConstructor[63:12-63:43][
+				AssignmentStatement[63:5-63:64][IndexExpression[63:5-63:9][isStatementStart][Identifier[63:5-63:6][r][Literal[63:7-63:8][0]]] = BinaryExpression[63:12-63:64][BinaryExpression[63:12-63:49][ListConstructor[63:12-63:43][
 					ListValue[63:13-63:41][BinaryExpression[63:13-63:41][BinaryExpression[63:13-63:35][Literal[63:13-63:23][<color=#] + IndexExpression[63:26-63:35][Identifier[63:26-63:32][colors][Literal[63:33-63:34][0]]]] + Literal[63:38-63:41][>]]]
 				] + IndexExpression[63:45-63:49][Identifier[63:45-63:46][r][Literal[63:47-63:48][0]]]] + ListConstructor[63:52-63:64][
 					ListValue[63:53-63:63][Literal[63:53-63:63][</color>]]
 				]]]
-				AssignmentStatement[64:5-64:64][IndexExpression[64:5-64:9][Identifier[64:5-64:6][r][Literal[64:7-64:8][1]]] = BinaryExpression[64:12-64:64][BinaryExpression[64:12-64:49][ListConstructor[64:12-64:43][
+				AssignmentStatement[64:5-64:64][IndexExpression[64:5-64:9][isStatementStart][Identifier[64:5-64:6][r][Literal[64:7-64:8][1]]] = BinaryExpression[64:12-64:64][BinaryExpression[64:12-64:49][ListConstructor[64:12-64:43][
 					ListValue[64:13-64:41][BinaryExpression[64:13-64:41][BinaryExpression[64:13-64:35][Literal[64:13-64:23][<color=#] + IndexExpression[64:26-64:35][Identifier[64:26-64:32][colors][Literal[64:33-64:34][1]]]] + Literal[64:38-64:41][>]]]
 				] + IndexExpression[64:45-64:49][Identifier[64:45-64:46][r][Literal[64:47-64:48][1]]]] + ListConstructor[64:52-64:64][
 					ListValue[64:53-64:63][Literal[64:53-64:63][</color>]]
 				]]]
-				AssignmentStatement[65:5-65:64][IndexExpression[65:5-65:9][Identifier[65:5-65:6][r][Literal[65:7-65:8][2]]] = BinaryExpression[65:12-65:64][BinaryExpression[65:12-65:49][ListConstructor[65:12-65:43][
+				AssignmentStatement[65:5-65:64][IndexExpression[65:5-65:9][isStatementStart][Identifier[65:5-65:6][r][Literal[65:7-65:8][2]]] = BinaryExpression[65:12-65:64][BinaryExpression[65:12-65:49][ListConstructor[65:12-65:43][
 					ListValue[65:13-65:41][BinaryExpression[65:13-65:41][BinaryExpression[65:13-65:35][Literal[65:13-65:23][<color=#] + IndexExpression[65:26-65:35][Identifier[65:26-65:32][colors][Literal[65:33-65:34][2]]]] + Literal[65:38-65:41][>]]]
 				] + IndexExpression[65:45-65:49][Identifier[65:45-65:46][r][Literal[65:47-65:48][2]]]] + ListConstructor[65:52-65:64][
 					ListValue[65:53-65:63][Literal[65:53-65:63][</color>]]
@@ -462,57 +462,57 @@ exports[`parse default scripts ascii.ms unsafe 1`] = `
 		ListValue[30:18-30:24][Literal[30:18-30:24][//  ]]
 		ListValue[30:26-30:32][Literal[30:26-30:32][||_ ]]
 	]]
-	AssignmentStatement[31:1-31:42][IndexExpression[31:1-31:9][Identifier[31:1-31:4][map][Literal[31:5-31:8][0]]] = ListConstructor[31:12-31:42][
+	AssignmentStatement[31:1-31:42][IndexExpression[31:1-31:9][isStatementStart][Identifier[31:1-31:4][map][Literal[31:5-31:8][0]]] = ListConstructor[31:12-31:42][
 		ListValue[31:13-31:21][Literal[31:13-31:21][||¯|| ]]
 		ListValue[31:23-31:31][Literal[31:23-31:31][||x|| ]]
 		ListValue[31:33-31:41][Literal[31:33-31:41][||_|| ]]
 	]]
-	AssignmentStatement[32:1-32:36][IndexExpression[32:1-32:9][Identifier[32:1-32:4][map][Literal[32:5-32:8][1]]] = ListConstructor[32:12-32:36][
+	AssignmentStatement[32:1-32:36][IndexExpression[32:1-32:9][isStatementStart][Identifier[32:1-32:4][map][Literal[32:5-32:8][1]]] = ListConstructor[32:12-32:36][
 		ListValue[32:13-32:19][Literal[32:13-32:19]['|| ]]
 		ListValue[32:21-32:27][Literal[32:21-32:27][ || ]]
 		ListValue[32:29-32:35][Literal[32:29-32:35][ || ]]
 	]]
-	AssignmentStatement[33:1-33:39][IndexExpression[33:1-33:9][Identifier[33:1-33:4][map][Literal[33:5-33:8][2]]] = ListConstructor[33:12-33:39][
+	AssignmentStatement[33:1-33:39][IndexExpression[33:1-33:9][isStatementStart][Identifier[33:1-33:4][map][Literal[33:5-33:8][2]]] = ListConstructor[33:12-33:39][
 		ListValue[33:13-33:20][Literal[33:13-33:20][¯¯|| ]]
 		ListValue[33:22-33:29][Literal[33:22-33:29][||¯  ]]
 		ListValue[33:31-33:38][Literal[33:31-33:38][||_  ]]
 	]]
-	AssignmentStatement[34:1-34:36][IndexExpression[34:1-34:9][Identifier[34:1-34:4][map][Literal[34:5-34:8][3]]] = ListConstructor[34:12-34:36][
+	AssignmentStatement[34:1-34:36][IndexExpression[34:1-34:9][isStatementStart][Identifier[34:1-34:4][map][Literal[34:5-34:8][3]]] = ListConstructor[34:12-34:36][
 		ListValue[34:13-34:19][Literal[34:13-34:19][¯|| ]]
 		ListValue[34:21-34:27][Literal[34:21-34:27][-|| ]]
 		ListValue[34:29-34:35][Literal[34:29-34:35][_|| ]]
 	]]
-	AssignmentStatement[35:1-35:39][IndexExpression[35:1-35:9][Identifier[35:1-35:4][map][Literal[35:5-35:8][4]]] = ListConstructor[35:12-35:39][
+	AssignmentStatement[35:1-35:39][IndexExpression[35:1-35:9][isStatementStart][Identifier[35:1-35:4][map][Literal[35:5-35:8][4]]] = ListConstructor[35:12-35:39][
 		ListValue[35:13-35:20][Literal[35:13-35:20][ /|| ]]
 		ListValue[35:22-35:29][Literal[35:22-35:29][/_|| ]]
 		ListValue[35:31-35:38][Literal[35:31-35:38][  || ]]
 	]]
-	AssignmentStatement[36:1-36:39][IndexExpression[36:1-36:9][Identifier[36:1-36:4][map][Literal[36:5-36:8][5]]] = ListConstructor[36:12-36:39][
+	AssignmentStatement[36:1-36:39][IndexExpression[36:1-36:9][isStatementStart][Identifier[36:1-36:4][map][Literal[36:5-36:8][5]]] = ListConstructor[36:12-36:39][
 		ListValue[36:13-36:20][Literal[36:13-36:20][||¯¯ ]]
 		ListValue[36:22-36:29][Literal[36:22-36:29][ ¯|| ]]
 		ListValue[36:31-36:38][Literal[36:31-36:38][ _|| ]]
 	]]
-	AssignmentStatement[37:1-37:42][IndexExpression[37:1-37:9][Identifier[37:1-37:4][map][Literal[37:5-37:8][6]]] = ListConstructor[37:12-37:42][
+	AssignmentStatement[37:1-37:42][IndexExpression[37:1-37:9][isStatementStart][Identifier[37:1-37:4][map][Literal[37:5-37:8][6]]] = ListConstructor[37:12-37:42][
 		ListValue[37:13-37:21][Literal[37:13-37:21][||¯¯  ]]
 		ListValue[37:23-37:31][Literal[37:23-37:31][||¯|| ]]
 		ListValue[37:33-37:41][Literal[37:33-37:41][||_|| ]]
 	]]
-	AssignmentStatement[38:1-38:39][IndexExpression[38:1-38:9][Identifier[38:1-38:4][map][Literal[38:5-38:8][7]]] = ListConstructor[38:12-38:39][
+	AssignmentStatement[38:1-38:39][IndexExpression[38:1-38:9][isStatementStart][Identifier[38:1-38:4][map][Literal[38:5-38:8][7]]] = ListConstructor[38:12-38:39][
 		ListValue[38:13-38:20][Literal[38:13-38:20][¯¯// ]]
 		ListValue[38:22-38:29][Literal[38:22-38:29][ //  ]]
 		ListValue[38:31-38:38][Literal[38:31-38:38][//   ]]
 	]]
-	AssignmentStatement[39:1-39:42][IndexExpression[39:1-39:9][Identifier[39:1-39:4][map][Literal[39:5-39:8][8]]] = ListConstructor[39:12-39:42][
+	AssignmentStatement[39:1-39:42][IndexExpression[39:1-39:9][isStatementStart][Identifier[39:1-39:4][map][Literal[39:5-39:8][8]]] = ListConstructor[39:12-39:42][
 		ListValue[39:13-39:21][Literal[39:13-39:21][||¯|| ]]
 		ListValue[39:23-39:31][Literal[39:23-39:31][||-|| ]]
 		ListValue[39:33-39:41][Literal[39:33-39:41][||_|| ]]
 	]]
-	AssignmentStatement[40:1-40:42][IndexExpression[40:1-40:9][Identifier[40:1-40:4][map][Literal[40:5-40:8][9]]] = ListConstructor[40:12-40:42][
+	AssignmentStatement[40:1-40:42][IndexExpression[40:1-40:9][isStatementStart][Identifier[40:1-40:4][map][Literal[40:5-40:8][9]]] = ListConstructor[40:12-40:42][
 		ListValue[40:13-40:21][Literal[40:13-40:21][||¯|| ]]
 		ListValue[40:23-40:31][Literal[40:23-40:31][  ¯|| ]]
 		ListValue[40:33-40:41][Literal[40:33-40:41][  //  ]]
 	]]
-	AssignmentStatement[41:1-41:30][IndexExpression[41:1-41:9][Identifier[41:1-41:4][map][Literal[41:5-41:8][ ]]] = ListConstructor[41:12-41:30][
+	AssignmentStatement[41:1-41:30][IndexExpression[41:1-41:9][isStatementStart][Identifier[41:1-41:4][map][Literal[41:5-41:8][ ]]] = ListConstructor[41:12-41:30][
 		ListValue[41:13-41:17][Literal[41:13-41:17][  ]]
 		ListValue[41:19-41:23][Literal[41:19-41:23][  ]]
 		ListValue[41:25-41:29][Literal[41:25-41:29][  ]]
@@ -529,42 +529,42 @@ exports[`parse default scripts ascii.ms unsafe 1`] = `
 			AssignmentStatement[50:5-50:22][Identifier[50:5-50:9][char] = MemberExpression[50:12-50:22][Identifier[50:12-50:16][char].Identifier[50:17-50:22][lower]]]
 			IfStatement[51:5-55:11][
 				IfClause[51:5-55:11][CallExpression[51:9-51:29][MemberExpression[51:9-51:23][Identifier[51:9-51:14][signs].Identifier[51:15-51:23][hasIndex]](Identifier[51:24-51:28][char])]
-					CallExpression[52:7-52:32][MemberExpression[52:7-52:16][IndexExpression[52:7-52:11][Identifier[52:7-52:8][r][Literal[52:9-52:10][0]]].Identifier[52:12-52:16][push]](IndexExpression[52:17-52:31][IndexExpression[52:17-52:28][Identifier[52:17-52:22][signs][Identifier[52:23-52:27][char]]][Literal[52:29-52:30][0]]])]
-					CallExpression[53:7-53:32][MemberExpression[53:7-53:16][IndexExpression[53:7-53:11][Identifier[53:7-53:8][r][Literal[53:9-53:10][1]]].Identifier[53:12-53:16][push]](IndexExpression[53:17-53:31][IndexExpression[53:17-53:28][Identifier[53:17-53:22][signs][Identifier[53:23-53:27][char]]][Literal[53:29-53:30][1]]])]
-					CallExpression[54:7-54:32][MemberExpression[54:7-54:16][IndexExpression[54:7-54:11][Identifier[54:7-54:8][r][Literal[54:9-54:10][2]]].Identifier[54:12-54:16][push]](IndexExpression[54:17-54:31][IndexExpression[54:17-54:28][Identifier[54:17-54:22][signs][Identifier[54:23-54:27][char]]][Literal[54:29-54:30][2]]])]
+					CallExpression[52:7-52:32][MemberExpression[52:7-52:16][IndexExpression[52:7-52:11][isStatementStart][Identifier[52:7-52:8][r][Literal[52:9-52:10][0]]].Identifier[52:12-52:16][push]](IndexExpression[52:17-52:31][IndexExpression[52:17-52:28][Identifier[52:17-52:22][signs][Identifier[52:23-52:27][char]]][Literal[52:29-52:30][0]]])]
+					CallExpression[53:7-53:32][MemberExpression[53:7-53:16][IndexExpression[53:7-53:11][isStatementStart][Identifier[53:7-53:8][r][Literal[53:9-53:10][1]]].Identifier[53:12-53:16][push]](IndexExpression[53:17-53:31][IndexExpression[53:17-53:28][Identifier[53:17-53:22][signs][Identifier[53:23-53:27][char]]][Literal[53:29-53:30][1]]])]
+					CallExpression[54:7-54:32][MemberExpression[54:7-54:16][IndexExpression[54:7-54:11][isStatementStart][Identifier[54:7-54:8][r][Literal[54:9-54:10][2]]].Identifier[54:12-54:16][push]](IndexExpression[54:17-54:31][IndexExpression[54:17-54:28][Identifier[54:17-54:22][signs][Identifier[54:23-54:27][char]]][Literal[54:29-54:30][2]]])]
 				]
 			]
 		]
 		IfStatement[58:3-66:9][
 			IfClause[58:3-62:10][BinaryExpression[58:7-58:33][CallExpression[58:7-58:21][Identifier[58:7-58:13][typeof](Identifier[58:14-58:20][colors])] == Literal[58:25-58:33][string]]
-				AssignmentStatement[59:5-59:61][IndexExpression[59:5-59:9][Identifier[59:5-59:6][r][Literal[59:7-59:8][0]]] = BinaryExpression[59:12-59:61][BinaryExpression[59:12-59:46][ListConstructor[59:12-59:40][
+				AssignmentStatement[59:5-59:61][IndexExpression[59:5-59:9][isStatementStart][Identifier[59:5-59:6][r][Literal[59:7-59:8][0]]] = BinaryExpression[59:12-59:61][BinaryExpression[59:12-59:46][ListConstructor[59:12-59:40][
 					ListValue[59:13-59:38][BinaryExpression[59:13-59:38][BinaryExpression[59:13-59:32][Literal[59:13-59:23][<color=#] + Identifier[59:26-59:32][colors]] + Literal[59:35-59:38][>]]]
 				] + IndexExpression[59:42-59:46][Identifier[59:42-59:43][r][Literal[59:44-59:45][0]]]] + ListConstructor[59:49-59:61][
 					ListValue[59:50-59:60][Literal[59:50-59:60][</color>]]
 				]]]
-				AssignmentStatement[60:5-60:61][IndexExpression[60:5-60:9][Identifier[60:5-60:6][r][Literal[60:7-60:8][1]]] = BinaryExpression[60:12-60:61][BinaryExpression[60:12-60:46][ListConstructor[60:12-60:40][
+				AssignmentStatement[60:5-60:61][IndexExpression[60:5-60:9][isStatementStart][Identifier[60:5-60:6][r][Literal[60:7-60:8][1]]] = BinaryExpression[60:12-60:61][BinaryExpression[60:12-60:46][ListConstructor[60:12-60:40][
 					ListValue[60:13-60:38][BinaryExpression[60:13-60:38][BinaryExpression[60:13-60:32][Literal[60:13-60:23][<color=#] + Identifier[60:26-60:32][colors]] + Literal[60:35-60:38][>]]]
 				] + IndexExpression[60:42-60:46][Identifier[60:42-60:43][r][Literal[60:44-60:45][1]]]] + ListConstructor[60:49-60:61][
 					ListValue[60:50-60:60][Literal[60:50-60:60][</color>]]
 				]]]
-				AssignmentStatement[61:5-61:61][IndexExpression[61:5-61:9][Identifier[61:5-61:6][r][Literal[61:7-61:8][2]]] = BinaryExpression[61:12-61:61][BinaryExpression[61:12-61:46][ListConstructor[61:12-61:40][
+				AssignmentStatement[61:5-61:61][IndexExpression[61:5-61:9][isStatementStart][Identifier[61:5-61:6][r][Literal[61:7-61:8][2]]] = BinaryExpression[61:12-61:61][BinaryExpression[61:12-61:46][ListConstructor[61:12-61:40][
 					ListValue[61:13-61:38][BinaryExpression[61:13-61:38][BinaryExpression[61:13-61:32][Literal[61:13-61:23][<color=#] + Identifier[61:26-61:32][colors]] + Literal[61:35-61:38][>]]]
 				] + IndexExpression[61:42-61:46][Identifier[61:42-61:43][r][Literal[61:44-61:45][2]]]] + ListConstructor[61:49-61:61][
 					ListValue[61:50-61:60][Literal[61:50-61:60][</color>]]
 				]]]
 			]
 			ElseifClause[62:11-66:9][BinaryExpression[62:12-62:36][CallExpression[62:12-62:26][Identifier[62:12-62:18][typeof](Identifier[62:19-62:25][colors])] == Literal[62:30-62:36][list]]
-				AssignmentStatement[63:5-63:64][IndexExpression[63:5-63:9][Identifier[63:5-63:6][r][Literal[63:7-63:8][0]]] = BinaryExpression[63:12-63:64][BinaryExpression[63:12-63:49][ListConstructor[63:12-63:43][
+				AssignmentStatement[63:5-63:64][IndexExpression[63:5-63:9][isStatementStart][Identifier[63:5-63:6][r][Literal[63:7-63:8][0]]] = BinaryExpression[63:12-63:64][BinaryExpression[63:12-63:49][ListConstructor[63:12-63:43][
 					ListValue[63:13-63:41][BinaryExpression[63:13-63:41][BinaryExpression[63:13-63:35][Literal[63:13-63:23][<color=#] + IndexExpression[63:26-63:35][Identifier[63:26-63:32][colors][Literal[63:33-63:34][0]]]] + Literal[63:38-63:41][>]]]
 				] + IndexExpression[63:45-63:49][Identifier[63:45-63:46][r][Literal[63:47-63:48][0]]]] + ListConstructor[63:52-63:64][
 					ListValue[63:53-63:63][Literal[63:53-63:63][</color>]]
 				]]]
-				AssignmentStatement[64:5-64:64][IndexExpression[64:5-64:9][Identifier[64:5-64:6][r][Literal[64:7-64:8][1]]] = BinaryExpression[64:12-64:64][BinaryExpression[64:12-64:49][ListConstructor[64:12-64:43][
+				AssignmentStatement[64:5-64:64][IndexExpression[64:5-64:9][isStatementStart][Identifier[64:5-64:6][r][Literal[64:7-64:8][1]]] = BinaryExpression[64:12-64:64][BinaryExpression[64:12-64:49][ListConstructor[64:12-64:43][
 					ListValue[64:13-64:41][BinaryExpression[64:13-64:41][BinaryExpression[64:13-64:35][Literal[64:13-64:23][<color=#] + IndexExpression[64:26-64:35][Identifier[64:26-64:32][colors][Literal[64:33-64:34][1]]]] + Literal[64:38-64:41][>]]]
 				] + IndexExpression[64:45-64:49][Identifier[64:45-64:46][r][Literal[64:47-64:48][1]]]] + ListConstructor[64:52-64:64][
 					ListValue[64:53-64:63][Literal[64:53-64:63][</color>]]
 				]]]
-				AssignmentStatement[65:5-65:64][IndexExpression[65:5-65:9][Identifier[65:5-65:6][r][Literal[65:7-65:8][2]]] = BinaryExpression[65:12-65:64][BinaryExpression[65:12-65:49][ListConstructor[65:12-65:43][
+				AssignmentStatement[65:5-65:64][IndexExpression[65:5-65:9][isStatementStart][Identifier[65:5-65:6][r][Literal[65:7-65:8][2]]] = BinaryExpression[65:12-65:64][BinaryExpression[65:12-65:49][ListConstructor[65:12-65:43][
 					ListValue[65:13-65:41][BinaryExpression[65:13-65:41][BinaryExpression[65:13-65:35][Literal[65:13-65:23][<color=#] + IndexExpression[65:26-65:35][Identifier[65:26-65:32][colors][Literal[65:33-65:34][2]]]] + Literal[65:38-65:41][>]]]
 				] + IndexExpression[65:45-65:49][Identifier[65:45-65:46][r][Literal[65:47-65:48][2]]]] + ListConstructor[65:52-65:64][
 					ListValue[65:53-65:63][Literal[65:53-65:63][</color>]]
@@ -1363,10 +1363,10 @@ exports[`parse default scripts password-generator.ms 1`] = `
 		]
 		AssignmentStatement[20:3-20:27][Identifier[20:3-20:4][p] = IndexExpression[20:7-20:27][Identifier[20:7-20:24][currentCharBuffer][Identifier[20:25-20:26][i]]]]
 		AssignmentStatement[21:3-21:12][Identifier[21:3-21:4][p] = BinaryExpression[21:7-21:12][Identifier[21:7-21:8][p] + Literal[21:11-21:12][1]]]
-		AssignmentStatement[22:3-22:27][IndexExpression[22:3-22:23][Identifier[22:3-22:20][currentCharBuffer][Identifier[22:21-22:22][i]]] = Identifier[22:26-22:27][p]]
+		AssignmentStatement[22:3-22:27][IndexExpression[22:3-22:23][isStatementStart][Identifier[22:3-22:20][currentCharBuffer][Identifier[22:21-22:22][i]]] = Identifier[22:26-22:27][p]]
 		IfStatement[23:3-30:9][
 			IfClause[23:3-30:9][BinaryExpression[23:7-23:25][Identifier[23:7-23:8][p] == Identifier[23:12-23:25][maxBufferSize]]
-				AssignmentStatement[24:5-24:29][IndexExpression[24:5-24:25][Identifier[24:5-24:22][currentCharBuffer][Identifier[24:23-24:24][i]]] = Literal[24:28-24:29][0]]
+				AssignmentStatement[24:5-24:29][IndexExpression[24:5-24:25][isStatementStart][Identifier[24:5-24:22][currentCharBuffer][Identifier[24:23-24:24][i]]] = Literal[24:28-24:29][0]]
 				IfStatement[25:5-29:11][
 					IfClause[25:5-27:9][BinaryExpression[25:9-25:15][Identifier[25:9-25:10][i] == Literal[25:14-25:15][0]]
 						CallExpression[26:7-26:32][MemberExpression[26:7-26:29][Identifier[26:7-26:24][currentCharBuffer].Identifier[26:25-26:29][push]](Literal[26:30-26:31][0])]
@@ -1450,10 +1450,10 @@ exports[`parse default scripts password-generator.ms unsafe 1`] = `
 		]
 		AssignmentStatement[20:3-20:27][Identifier[20:3-20:4][p] = IndexExpression[20:7-20:27][Identifier[20:7-20:24][currentCharBuffer][Identifier[20:25-20:26][i]]]]
 		AssignmentStatement[21:3-21:12][Identifier[21:3-21:4][p] = BinaryExpression[21:7-21:12][Identifier[21:7-21:8][p] + Literal[21:11-21:12][1]]]
-		AssignmentStatement[22:3-22:27][IndexExpression[22:3-22:23][Identifier[22:3-22:20][currentCharBuffer][Identifier[22:21-22:22][i]]] = Identifier[22:26-22:27][p]]
+		AssignmentStatement[22:3-22:27][IndexExpression[22:3-22:23][isStatementStart][Identifier[22:3-22:20][currentCharBuffer][Identifier[22:21-22:22][i]]] = Identifier[22:26-22:27][p]]
 		IfStatement[23:3-30:9][
 			IfClause[23:3-30:9][BinaryExpression[23:7-23:25][Identifier[23:7-23:8][p] == Identifier[23:12-23:25][maxBufferSize]]
-				AssignmentStatement[24:5-24:29][IndexExpression[24:5-24:25][Identifier[24:5-24:22][currentCharBuffer][Identifier[24:23-24:24][i]]] = Literal[24:28-24:29][0]]
+				AssignmentStatement[24:5-24:29][IndexExpression[24:5-24:25][isStatementStart][Identifier[24:5-24:22][currentCharBuffer][Identifier[24:23-24:24][i]]] = Literal[24:28-24:29][0]]
 				IfStatement[25:5-29:11][
 					IfClause[25:5-27:9][BinaryExpression[25:9-25:15][Identifier[25:9-25:10][i] == Literal[25:14-25:15][0]]
 						CallExpression[26:7-26:32][MemberExpression[26:7-26:29][Identifier[26:7-26:24][currentCharBuffer].Identifier[26:25-26:29][push]](Literal[26:30-26:31][0])]
@@ -2033,7 +2033,7 @@ exports[`parse default scripts random.ms 1`] = `
 		]
 		AssignmentStatement[36:3-36:30][Identifier[36:3-36:10][seedVal] = CallExpression[36:13-36:30][MemberExpression[36:13-36:24][Identifier[36:13-36:15][me].Identifier[36:16-36:24][calcSeed]](Identifier[36:25-36:29][seed])]]
 		AssignmentStatement[38:3-38:50][Identifier[38:3-38:6][val] = CallExpression[38:9-38:50][Identifier[38:9-38:14][floor](BinaryExpression[38:15-38:49][BinaryExpression[38:16-38:42][CallExpression[38:16-38:28][Identifier[38:16-38:19][rnd](Identifier[38:20-38:27][seedVal])] * BinaryExpression[38:32-38:41][Identifier[38:32-38:35][max] - Identifier[38:38-38:41][min]]] + Identifier[38:46-38:49][min]])]]
-		AssignmentStatement[39:3-39:43][IndexExpression[39:3-39:13][Identifier[39:3-39:7][pool][Identifier[39:8-39:12][seed]]] = CallExpression[39:16-39:43][MemberExpression[39:16-39:29][Identifier[39:16-39:18][me].Identifier[39:19-39:29][createPool]](Identifier[39:30-39:37][seedVal], Identifier[39:39-39:42][val])]]
+		AssignmentStatement[39:3-39:43][IndexExpression[39:3-39:13][isStatementStart][Identifier[39:3-39:7][pool][Identifier[39:8-39:12][seed]]] = CallExpression[39:16-39:43][MemberExpression[39:16-39:29][Identifier[39:16-39:18][me].Identifier[39:19-39:29][createPool]](Identifier[39:30-39:37][seedVal], Identifier[39:39-39:42][val])]]
 		ReturnStatement[41:3-41:13][Identifier[41:10-41:13][val]]
 	]]
 	AssignmentStatement[44:1-55:13][MemberExpression[44:1-44:11][Identifier[44:1-44:7][Random].Identifier[44:8-44:11][seq]] = Function[44:14-55:13][Identifier[44:23-44:26][min], Identifier[44:28-44:31][max], Identifier[44:33-44:37][seed], Identifier[44:39-44:45][amount], Identifier[44:47-44:55][keepPool] =>
@@ -2121,7 +2121,7 @@ exports[`parse default scripts random.ms unsafe 1`] = `
 		]
 		AssignmentStatement[36:3-36:30][Identifier[36:3-36:10][seedVal] = CallExpression[36:13-36:30][MemberExpression[36:13-36:24][Identifier[36:13-36:15][me].Identifier[36:16-36:24][calcSeed]](Identifier[36:25-36:29][seed])]]
 		AssignmentStatement[38:3-38:50][Identifier[38:3-38:6][val] = CallExpression[38:9-38:50][Identifier[38:9-38:14][floor](BinaryExpression[38:15-38:49][BinaryExpression[38:16-38:42][CallExpression[38:16-38:28][Identifier[38:16-38:19][rnd](Identifier[38:20-38:27][seedVal])] * BinaryExpression[38:32-38:41][Identifier[38:32-38:35][max] - Identifier[38:38-38:41][min]]] + Identifier[38:46-38:49][min]])]]
-		AssignmentStatement[39:3-39:43][IndexExpression[39:3-39:13][Identifier[39:3-39:7][pool][Identifier[39:8-39:12][seed]]] = CallExpression[39:16-39:43][MemberExpression[39:16-39:29][Identifier[39:16-39:18][me].Identifier[39:19-39:29][createPool]](Identifier[39:30-39:37][seedVal], Identifier[39:39-39:42][val])]]
+		AssignmentStatement[39:3-39:43][IndexExpression[39:3-39:13][isStatementStart][Identifier[39:3-39:7][pool][Identifier[39:8-39:12][seed]]] = CallExpression[39:16-39:43][MemberExpression[39:16-39:29][Identifier[39:16-39:18][me].Identifier[39:19-39:29][createPool]](Identifier[39:30-39:37][seedVal], Identifier[39:39-39:42][val])]]
 		ReturnStatement[41:3-41:13][Identifier[41:10-41:13][val]]
 	]]
 	AssignmentStatement[44:1-55:13][MemberExpression[44:1-44:11][Identifier[44:1-44:7][Random].Identifier[44:8-44:11][seq]] = Function[44:14-55:13][Identifier[44:23-44:26][min], Identifier[44:28-44:31][max], Identifier[44:33-44:37][seed], Identifier[44:39-44:45][amount], Identifier[44:47-44:55][keepPool] =>
@@ -2402,10 +2402,10 @@ exports[`parse default scripts slice.ms 1`] = `
 	For[19:1-21:8][Identifier[19:5-19:6][i] in CallExpression[19:10-19:26][Identifier[19:10-19:15][range](Literal[19:16-19:17][0], BinaryExpression[19:18-19:25][MemberExpression[19:18-19:23][Identifier[19:18-19:19][s].Identifier[19:20-19:23][len]] - Literal[19:24-19:25][4]])]
 		IfStatement[20:3-20:79][
 			IfShortcutClause[20:3-20:57][CallExpression[20:6-20:26][MemberExpression[20:6-20:16][Identifier[20:6-20:7][f].Identifier[20:8-20:16][hasIndex]](SliceExpression[20:17-20:25][Identifier[20:17-20:18][s][Identifier[20:19-20:20][i]:BinaryExpression[20:21-20:24][Identifier[20:21-20:22][i] + Literal[20:23-20:24][3]]]])]
-				AssignmentStatement[20:32-20:52][IndexExpression[20:32-20:50][IndexExpression[20:32-20:43][Identifier[20:32-20:33][f][SliceExpression[20:34-20:42][Identifier[20:34-20:35][s][Identifier[20:36-20:37][i]:BinaryExpression[20:38-20:41][Identifier[20:38-20:39][i] + Literal[20:40-20:41][3]]]]]][MemberExpression[20:44-20:49][Identifier[20:44-20:45][s].Identifier[20:46-20:49][len]]]] = Literal[20:51-20:52][1]]
+				AssignmentStatement[20:32-20:52][IndexExpression[20:32-20:50][isStatementStart][IndexExpression[20:32-20:43][isStatementStart][Identifier[20:32-20:33][f][SliceExpression[20:34-20:42][Identifier[20:34-20:35][s][Identifier[20:36-20:37][i]:BinaryExpression[20:38-20:41][Identifier[20:38-20:39][i] + Literal[20:40-20:41][3]]]]]][MemberExpression[20:44-20:49][Identifier[20:44-20:45][s].Identifier[20:46-20:49][len]]]] = Literal[20:51-20:52][1]]
 			]
 			ElseShortcutClause[20:58-20:79][
-				AssignmentStatement[20:58-20:79][IndexExpression[20:58-20:69][Identifier[20:58-20:59][f][SliceExpression[20:60-20:68][Identifier[20:60-20:61][s][Identifier[20:62-20:63][i]:BinaryExpression[20:64-20:67][Identifier[20:64-20:65][i] + Literal[20:66-20:67][3]]]]]] = MapConstructor[20:70-20:79][
+				AssignmentStatement[20:58-20:79][IndexExpression[20:58-20:69][isStatementStart][Identifier[20:58-20:59][f][SliceExpression[20:60-20:68][Identifier[20:60-20:61][s][Identifier[20:62-20:63][i]:BinaryExpression[20:64-20:67][Identifier[20:64-20:65][i] + Literal[20:66-20:67][3]]]]]] = MapConstructor[20:70-20:79][
 					MapKeyString[20:71-20:78][MemberExpression[20:71-20:76][Identifier[20:71-20:72][s].Identifier[20:73-20:76][len]]: Literal[20:77-20:78][1]]
 				]]
 			}]
@@ -2449,10 +2449,10 @@ exports[`parse default scripts slice.ms unsafe 1`] = `
 	For[19:1-21:8][Identifier[19:5-19:6][i] in CallExpression[19:10-19:26][Identifier[19:10-19:15][range](Literal[19:16-19:17][0], BinaryExpression[19:18-19:25][MemberExpression[19:18-19:23][Identifier[19:18-19:19][s].Identifier[19:20-19:23][len]] - Literal[19:24-19:25][4]])]
 		IfStatement[20:3-20:79][
 			IfShortcutClause[20:3-20:57][CallExpression[20:6-20:26][MemberExpression[20:6-20:16][Identifier[20:6-20:7][f].Identifier[20:8-20:16][hasIndex]](SliceExpression[20:17-20:25][Identifier[20:17-20:18][s][Identifier[20:19-20:20][i]:BinaryExpression[20:21-20:24][Identifier[20:21-20:22][i] + Literal[20:23-20:24][3]]]])]
-				AssignmentStatement[20:32-20:52][IndexExpression[20:32-20:50][IndexExpression[20:32-20:43][Identifier[20:32-20:33][f][SliceExpression[20:34-20:42][Identifier[20:34-20:35][s][Identifier[20:36-20:37][i]:BinaryExpression[20:38-20:41][Identifier[20:38-20:39][i] + Literal[20:40-20:41][3]]]]]][MemberExpression[20:44-20:49][Identifier[20:44-20:45][s].Identifier[20:46-20:49][len]]]] = Literal[20:51-20:52][1]]
+				AssignmentStatement[20:32-20:52][IndexExpression[20:32-20:50][isStatementStart][IndexExpression[20:32-20:43][isStatementStart][Identifier[20:32-20:33][f][SliceExpression[20:34-20:42][Identifier[20:34-20:35][s][Identifier[20:36-20:37][i]:BinaryExpression[20:38-20:41][Identifier[20:38-20:39][i] + Literal[20:40-20:41][3]]]]]][MemberExpression[20:44-20:49][Identifier[20:44-20:45][s].Identifier[20:46-20:49][len]]]] = Literal[20:51-20:52][1]]
 			]
 			ElseShortcutClause[20:58-20:79][
-				AssignmentStatement[20:58-20:79][IndexExpression[20:58-20:69][Identifier[20:58-20:59][f][SliceExpression[20:60-20:68][Identifier[20:60-20:61][s][Identifier[20:62-20:63][i]:BinaryExpression[20:64-20:67][Identifier[20:64-20:65][i] + Literal[20:66-20:67][3]]]]]] = MapConstructor[20:70-20:79][
+				AssignmentStatement[20:58-20:79][IndexExpression[20:58-20:69][isStatementStart][Identifier[20:58-20:59][f][SliceExpression[20:60-20:68][Identifier[20:60-20:61][s][Identifier[20:62-20:63][i]:BinaryExpression[20:64-20:67][Identifier[20:64-20:65][i] + Literal[20:66-20:67][3]]]]]] = MapConstructor[20:70-20:79][
 					MapKeyString[20:71-20:78][MemberExpression[20:71-20:76][Identifier[20:71-20:72][s].Identifier[20:73-20:76][len]]: Literal[20:77-20:78][1]]
 				]]
 			}]
