@@ -76,26 +76,30 @@ export class ASTMemberExpression extends ASTBase {
 export interface ASTIndexExpressionOptions extends ASTBaseOptions {
   base: ASTBase;
   index: ASTBase;
+  isStatementStart: boolean;
 }
 
 export class ASTIndexExpression extends ASTBase {
   base: ASTBase;
   index: ASTBase;
+  isStatementStart: boolean;
 
   constructor(options: ASTIndexExpressionOptions) {
     super(ASTType.IndexExpression, options);
     this.base = options.base;
     this.index = options.index;
+    this.isStatementStart = options.isStatementStart;
   }
 
   toString(): string {
-    return `IndexExpression[${this.start}-${this.end}][${this.base}[${this.index}]]`;
+    return `IndexExpression[${this.start}-${this.end}]${this.isStatementStart ? '[isStatementStart]' : ''}[${this.base}[${this.index}]]`;
   }
 
   clone(): ASTIndexExpression {
     return new ASTIndexExpression({
       base: this.base.clone(),
       index: this.index.clone(),
+      isStatementStart: this.isStatementStart,
       start: this.start,
       end: this.end,
       range: this.range,
