@@ -176,7 +176,7 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
     }
 
     this.lineRegistry.addItemToLine(
-      this.currentClause.end.line,
+      this.currentClause.start.line,
       this.block
     );
   }
