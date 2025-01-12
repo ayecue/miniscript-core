@@ -908,14 +908,16 @@ exports[`parse default scripts invalid code 1`] = `Array []`;
 
 exports[`parse default scripts invalid code 2`] = `
 Array [
-  [Error: got Identifier[4:9 - 4:14: value = 'print'] where any of ",", ")" is required],
-  [Error: got Punctuator[4:16 - 4:17: value = ')'] where number, string, or identifier is required],
-  [Error: got Identifier[8:23 - 8:25: value = 'wa'] where any of ",", ";", "<eof>" is required],
-  [Error: got Punctuator[11:13 - 11:14: value = '+'] where number, string, or identifier is required],
-  [Error: got Keyword[13:13 - 13:16: value = 'not'] where number, string, or identifier is required],
-  [Error: unexpected keyword Keyword[17:9 - 17:17: value = 'function'] at start of line],
-  [Error: unexpected keyword Keyword[18:9 - 18:17: value = 'end func'] at start of line],
-  [Error: got Identifier[28:20 - 28:25: value = 'print'] where "then" is required],
+  [Error: 'break' without open loop block],
+  [Error: 'continue' without open loop block],
+  [Error: got Identifier[6:9 - 6:14: value = 'print'] where any of ",", ")" is required],
+  [Error: got Punctuator[6:16 - 6:17: value = ')'] where number, string, or identifier is required],
+  [Error: got Identifier[10:23 - 10:25: value = 'wa'] where any of ",", ";", "<eof>" is required],
+  [Error: got Punctuator[13:13 - 13:14: value = '+'] where number, string, or identifier is required],
+  [Error: got Keyword[15:13 - 15:16: value = 'not'] where number, string, or identifier is required],
+  [Error: unexpected keyword Keyword[19:9 - 19:17: value = 'function'] at start of line],
+  [Error: unexpected keyword Keyword[20:9 - 20:17: value = 'end func'] at start of line],
+  [Error: got Identifier[30:20 - 30:25: value = 'print'] where "then" is required],
 ]
 `;
 

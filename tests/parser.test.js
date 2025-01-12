@@ -51,6 +51,8 @@ describe('parse', function () {
 
     test('invalid code', () => {
       const content = `
+        break
+        continue
 				print(" ad"
 
 				print())

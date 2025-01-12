@@ -95,10 +95,7 @@ export class PendingFor extends PendingBlockBase implements PendingBlock {
     this.block.body = this.body;
     this.block.end = endToken.end;
     this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToLine(
-      endToken.end.line,
-      this.block
-    );
+    this.lineRegistry.addItemToLine(endToken.end.line, this.block);
     super.complete(endToken);
   }
 }
@@ -132,15 +129,9 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
     if (this.base !== null) {
       this.base.end = this.block.end;
       this.base.range[1] = this.block.range[1];
-      this.lineRegistry.addItemToLine(
-        this.base.end.line,
-        this.base
-      );
+      this.lineRegistry.addItemToLine(this.base.end.line, this.base);
     } else {
-      this.lineRegistry.addItemToLine(
-        this.block.end.line,
-        this.block
-      );
+      this.lineRegistry.addItemToLine(this.block.end.line, this.block);
     }
 
     super.complete(endToken);
@@ -175,10 +166,7 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
       return;
     }
 
-    this.lineRegistry.addItemToLine(
-      this.currentClause.start.line,
-      this.block
-    );
+    this.lineRegistry.addItemToLine(this.currentClause.start.line, this.block);
   }
 
   next(endToken: Token): void {
@@ -195,10 +183,7 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
     if (this.body.length > 0) this.next(endToken);
     this.block.end = endToken.end;
     this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToLine(
-      this.block.end.line,
-      this.block
-    );
+    this.lineRegistry.addItemToLine(this.block.end.line, this.block);
     super.complete(endToken);
   }
 }
@@ -221,10 +206,7 @@ export class PendingWhile extends PendingBlockBase implements PendingBlock {
     this.block.body = this.body;
     this.block.end = endToken.end;
     this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToLine(
-      endToken.end.line,
-      this.block
-    );
+    this.lineRegistry.addItemToLine(endToken.end.line, this.block);
     super.complete(endToken);
   }
 }

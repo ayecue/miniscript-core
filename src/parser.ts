@@ -7,6 +7,7 @@ import {
   ASTBooleanLiteral,
   ASTChunk,
   ASTClause,
+  ASTForGenericStatement,
   ASTFunctionStatement,
   ASTIdentifier,
   ASTIdentifierKind,
@@ -16,7 +17,8 @@ import {
   ASTNumericLiteral,
   ASTProvider,
   ASTReturnStatement,
-  ASTType
+  ASTType,
+  ASTWhileStatement
 } from './parser/ast';
 import Validator from './parser/validator';
 import { ParserException } from './types/errors';
@@ -44,6 +46,7 @@ export default class Parser {
   currentScope: ASTBaseBlockWithScope;
   outerScopes: ASTBaseBlockWithScope[];
   currentAssignment: ASTAssignmentStatement;
+  iteratorStack: (ASTForGenericStatement | ASTWhileStatement)[];
 
   // helper
   literals: ASTBase[];
@@ -79,6 +82,7 @@ export default class Parser {
     me.currentScope = null;
     me.currentAssignment = null;
     me.outerScopes = [];
+    me.iteratorStack = [];
     me.literals = [];
     me.validator = options.validator || new Validator();
     me.astProvider = options.astProvider || new ASTProvider();
@@ -306,6 +310,56 @@ export default class Parser {
     pendingBlock.body.push(item);
   }
 
+  parseContinueStatement() {
+    const me = this;
+    const pendingBlock = me.backpatches.peek();
+
+    if (me.iteratorStack.length === 0) {
+      me.raise(
+        `'continue' without open loop block`,
+        new Range(
+          me.previousToken.start,
+          me.previousToken.end
+        )
+      );
+    }
+
+    const item = me.astProvider.continueStatement({
+      start: me.previousToken.start,
+      end: me.previousToken.end,
+      range: me.previousToken.range,
+      scope: me.currentScope
+    });
+
+    me.lineRegistry.addItemToLines(item);
+    pendingBlock.body.push(item);
+  }
+
+  parseBreakStatement() {
+    const me = this;
+    const pendingBlock = me.backpatches.peek();
+
+    if (me.iteratorStack.length === 0) {
+      me.raise(
+        `'break' without open loop block`,
+        new Range(
+          me.previousToken.start,
+          me.previousToken.end
+        )
+      );
+    }
+
+    const item = me.astProvider.breakStatement({
+      start: me.previousToken.start,
+      end: me.previousToken.end,
+      range: me.previousToken.range,
+      scope: me.currentScope
+    });
+
+    me.lineRegistry.addItemToLines(item);
+    pendingBlock.body.push(item);
+  }
+
   parseKeyword() {
     const me = this;
     const value = me.token.value;
@@ -367,29 +421,13 @@ export default class Parser {
         return;
       }
       case Keyword.Continue: {
-        const pendingBlock = me.backpatches.peek();
         me.next();
-        const item = me.astProvider.continueStatement({
-          start: me.previousToken.start,
-          end: me.previousToken.end,
-          range: me.previousToken.range,
-          scope: me.currentScope
-        });
-        me.lineRegistry.addItemToLines(item);
-        pendingBlock.body.push(item);
+        me.parseContinueStatement();
         return;
       }
       case Keyword.Break: {
-        const pendingBlock = me.backpatches.peek();
         me.next();
-        const item = me.astProvider.breakStatement({
-          start: me.previousToken.start,
-          end: me.previousToken.end,
-          range: me.previousToken.range,
-          scope: me.currentScope
-        });
-        me.lineRegistry.addItemToLines(item);
-        pendingBlock.body.push(item);
+        me.parseBreakStatement();
         return;
       }
     }
@@ -786,6 +824,7 @@ export default class Parser {
 
     const pendingBlock = new PendingWhile(whileStatement, me.lineRegistry);
     me.backpatches.push(pendingBlock);
+    me.iteratorStack.push(whileStatement);
   }
 
   finalizeWhileStatement() {
@@ -802,6 +841,7 @@ export default class Parser {
     }
 
     pendingBlock.complete(me.previousToken);
+    me.iteratorStack.pop();
     me.backpatches.pop();
     me.backpatches.peek().body.push(pendingBlock.block);
   }
@@ -863,6 +903,7 @@ export default class Parser {
 
     const pendingBlock = new PendingFor(forStatement, me.lineRegistry);
     me.backpatches.push(pendingBlock);
+    me.iteratorStack.push(forStatement);
   }
 
   finalizeForStatement() {
@@ -879,7 +920,7 @@ export default class Parser {
     }
 
     pendingBlock.complete(me.previousToken);
-
+    me.iteratorStack.pop();
     me.backpatches.pop();
     me.backpatches.peek().body.push(pendingBlock.block);
   }
