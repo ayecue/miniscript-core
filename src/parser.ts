@@ -325,6 +325,7 @@ export default class Parser {
     }
 
     const item = me.astProvider.continueStatement({
+      iterator: me.iteratorStack[me.iteratorStack.length - 1],
       start: me.previousToken.start,
       end: me.previousToken.end,
       range: me.previousToken.range,
@@ -350,6 +351,7 @@ export default class Parser {
     }
 
     const item = me.astProvider.breakStatement({
+      iterator: me.iteratorStack[me.iteratorStack.length - 1],
       start: me.previousToken.start,
       end: me.previousToken.end,
       range: me.previousToken.range,
@@ -441,6 +443,50 @@ export default class Parser {
     );
   }
 
+  parseShortcutContinueStatement() {
+    const me = this;
+
+    if (me.iteratorStack.length === 0) {
+      me.raise(
+        `'continue' without open loop block`,
+        new Range(
+          me.previousToken.start,
+          me.previousToken.end
+        )
+      );
+    }
+
+    return me.astProvider.continueStatement({
+      iterator: me.iteratorStack[me.iteratorStack.length - 1],
+      start: me.previousToken.start,
+      end: me.previousToken.end,
+      range: me.previousToken.range,
+      scope: me.currentScope
+    });
+  }
+
+  parseShortcutBreakStatement() {
+    const me = this;
+
+    if (me.iteratorStack.length === 0) {
+      me.raise(
+        `'break' without open loop block`,
+        new Range(
+          me.previousToken.start,
+          me.previousToken.end
+        )
+      );
+    }
+
+    return me.astProvider.breakStatement({
+      iterator: me.iteratorStack[me.iteratorStack.length - 1],
+      start: me.previousToken.start,
+      end: me.previousToken.end,
+      range: me.previousToken.range,
+      scope: me.currentScope
+    });
+  }
+
   parseShortcutStatement(): ASTBase {
     const me = this;
 
@@ -454,21 +500,11 @@ export default class Parser {
         }
         case Keyword.Continue: {
           me.next();
-          return me.astProvider.continueStatement({
-            start: me.previousToken.start,
-            end: me.previousToken.end,
-            range: me.previousToken.range,
-            scope: me.currentScope
-          });
+          return me.parseShortcutContinueStatement();
         }
         case Keyword.Break: {
           me.next();
-          return me.astProvider.breakStatement({
-            start: me.previousToken.start,
-            end: me.previousToken.end,
-            range: me.previousToken.range,
-            scope: me.currentScope
-          });
+          return me.parseShortcutBreakStatement();
         }
         default: {
           me.raise(

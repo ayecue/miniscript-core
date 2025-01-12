@@ -1,5 +1,11 @@
 import { TokenType } from '../lexer/token';
 import {
+  ASTBreakStatement,
+  ASTBreakStatementOptions,
+  ASTContinueStatement,
+  ASTContinueStatementOptions
+} from './ast';
+import {
   ASTAssignmentStatement,
   ASTAssignmentStatementOptions
 } from './ast/assignment';
@@ -80,14 +86,6 @@ import { ASTUnaryExpression, ASTUnaryExpressionOptions } from './ast/unary';
 import { ASTWhileStatement, ASTWhileStatementOptions } from './ast/while';
 
 export class ASTProvider {
-  breakStatement(options: ASTBaseOptions): ASTBase {
-    return new ASTBase(ASTType.BreakStatement, options);
-  }
-
-  continueStatement(options: ASTBaseOptions): ASTBase {
-    return new ASTBase(ASTType.ContinueStatement, options);
-  }
-
   returnStatement(options: ASTReturnStatementOptions): ASTReturnStatement {
     return new ASTReturnStatement(options);
   }
@@ -257,6 +255,14 @@ export class ASTProvider {
   comparisonGroupExpression(options: ASTComparisonGroupExpressionOptions) {
     return new ASTComparisonGroupExpression(options);
   }
+
+  breakStatement(options: ASTBreakStatementOptions) {
+    return new ASTBreakStatement(options);
+  }
+
+  continueStatement(options: ASTContinueStatementOptions) {
+    return new ASTContinueStatement(options);
+  }
 }
 
 export {
@@ -277,6 +283,7 @@ export {
   ASTType
 } from './ast/base';
 export { ASTBinaryExpression, ASTBinaryExpressionOptions } from './ast/binary';
+export { ASTBreakStatement, ASTBreakStatementOptions } from './ast/break';
 export {
   ASTCallExpression,
   ASTCallExpressionOptions,
@@ -288,6 +295,10 @@ export {
   ASTComparisonGroupExpression,
   ASTComparisonGroupExpressionOptions
 } from './ast/comparison-group';
+export {
+  ASTContinueStatement,
+  ASTContinueStatementOptions
+} from './ast/continue';
 export {
   ASTForGenericStatement,
   ASTForGenericStatementOptions
