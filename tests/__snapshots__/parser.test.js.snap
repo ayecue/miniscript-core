@@ -1704,7 +1704,7 @@ exports[`parse default scripts pseudo-crypto.ms 1`] = `
 					AssignmentStatement[186:7-186:72][Identifier[186:7-186:24][expectedHashIndex] = BinaryExpression[186:27-186:72][BinaryExpression[186:27-186:68][BinaryExpression[186:28-186:54][CallExpression[186:28-186:50][Identifier[186:28-186:33][floor](BinaryExpression[186:34-186:49][Identifier[186:34-186:45][hashPointer] / Literal[186:48-186:49][3]])] * Literal[186:53-186:54][3]] % Identifier[186:58-186:68][hashLength]] - Literal[186:71-186:72][1]]]
 					IfStatement[187:7-187:59][
 						IfShortcutClause[187:7-187:59][NegationExpression[187:11-187:47][not CallExpression[187:15-187:47][MemberExpression[187:15-187:28][Identifier[187:15-187:19][hash].Identifier[187:20-187:28][hasIndex]](Identifier[187:29-187:46][expectedHashIndex])]]
-							BreakStatement[187:54-187:59][]
+							BreakStatement[187:54-187:59]
 						]
 					]
 					AssignmentStatement[188:7-188:34][Identifier[188:7-188:8][m] = IndexExpression[188:11-188:34][Identifier[188:11-188:15][hash][Identifier[188:16-188:33][expectedHashIndex]]]]
@@ -1716,7 +1716,7 @@ exports[`parse default scripts pseudo-crypto.ms 1`] = `
 							AssignmentStatement[193:9-193:33][Identifier[193:9-193:17][charCode] = BinaryExpression[193:20-193:33][Identifier[193:20-193:29][operation] - Identifier[193:32-193:33][m]]]
 							IfStatement[194:9-194:50][
 								IfShortcutClause[194:9-194:50][BinaryExpression[194:13-194:38][Identifier[194:13-194:21][charCode] > MemberExpression[194:24-194:38][Identifier[194:24-194:26][me].Identifier[194:27-194:38][maxCharCode]]]
-									BreakStatement[194:45-194:50][]
+									BreakStatement[194:45-194:50]
 								]
 							]
 							CallExpression[195:9-195:36][MemberExpression[195:9-195:20][Identifier[195:9-195:15][output].Identifier[195:16-195:20][push]](CallExpression[195:21-195:35][Identifier[195:21-195:25][char](Identifier[195:26-195:34][charCode])])]
@@ -1951,7 +1951,7 @@ exports[`parse default scripts pseudo-crypto.ms unsafe 1`] = `
 					AssignmentStatement[186:7-186:72][Identifier[186:7-186:24][expectedHashIndex] = BinaryExpression[186:27-186:72][BinaryExpression[186:27-186:68][BinaryExpression[186:28-186:54][CallExpression[186:28-186:50][Identifier[186:28-186:33][floor](BinaryExpression[186:34-186:49][Identifier[186:34-186:45][hashPointer] / Literal[186:48-186:49][3]])] * Literal[186:53-186:54][3]] % Identifier[186:58-186:68][hashLength]] - Literal[186:71-186:72][1]]]
 					IfStatement[187:7-187:59][
 						IfShortcutClause[187:7-187:59][NegationExpression[187:11-187:47][not CallExpression[187:15-187:47][MemberExpression[187:15-187:28][Identifier[187:15-187:19][hash].Identifier[187:20-187:28][hasIndex]](Identifier[187:29-187:46][expectedHashIndex])]]
-							BreakStatement[187:54-187:59][]
+							BreakStatement[187:54-187:59]
 						]
 					]
 					AssignmentStatement[188:7-188:34][Identifier[188:7-188:8][m] = IndexExpression[188:11-188:34][Identifier[188:11-188:15][hash][Identifier[188:16-188:33][expectedHashIndex]]]]
@@ -1963,7 +1963,7 @@ exports[`parse default scripts pseudo-crypto.ms unsafe 1`] = `
 							AssignmentStatement[193:9-193:33][Identifier[193:9-193:17][charCode] = BinaryExpression[193:20-193:33][Identifier[193:20-193:29][operation] - Identifier[193:32-193:33][m]]]
 							IfStatement[194:9-194:50][
 								IfShortcutClause[194:9-194:50][BinaryExpression[194:13-194:38][Identifier[194:13-194:21][charCode] > MemberExpression[194:24-194:38][Identifier[194:24-194:26][me].Identifier[194:27-194:38][maxCharCode]]]
-									BreakStatement[194:45-194:50][]
+									BreakStatement[194:45-194:50]
 								]
 							]
 							CallExpression[195:9-195:36][MemberExpression[195:9-195:20][Identifier[195:9-195:15][output].Identifier[195:16-195:20][push]](CallExpression[195:21-195:35][Identifier[195:21-195:25][char](Identifier[195:26-195:34][charCode])])]
