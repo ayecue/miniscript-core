@@ -4,6 +4,7 @@ import { ASTBase, ASTBaseOptions, ASTType } from './base';
 export abstract class ASTLiteral extends ASTBase {
   abstract value: number | string | boolean | null;
   abstract raw: string;
+  abstract clone(): ASTLiteral;
 }
 
 export interface ASTLiteralOptions<T> extends ASTBaseOptions {

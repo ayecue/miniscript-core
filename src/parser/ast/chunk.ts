@@ -2,23 +2,28 @@ import {
   ASTBase,
   ASTBaseBlockWithScope,
   ASTBaseBlockWithScopeOptions,
+  ASTComment,
   ASTType
 } from './base';
+import { ASTLiteral } from './literal';
 
 export interface ASTChunkOptions extends ASTBaseBlockWithScopeOptions {
-  literals?: ASTBase[];
+  literals?: ASTLiteral[];
+  comments?: ASTComment[];
   scopes?: ASTBaseBlockWithScope[];
   lines?: Record<number, ASTBase[]>;
 }
 
 export class ASTChunk extends ASTBaseBlockWithScope {
-  literals: ASTBase[];
+  literals: ASTLiteral[];
+  comments: ASTComment[];
   scopes: ASTBaseBlockWithScope[];
   lines: Record<number, ASTBase[]>;
 
   constructor(options: ASTChunkOptions) {
     super(ASTType.Chunk, options);
     this.literals = options.literals || [];
+    this.comments = options.comments || [];
     this.scopes = options.scopes || [];
     this.lines = options.lines || {};
   }
@@ -41,6 +46,7 @@ export class ASTChunk extends ASTBaseBlockWithScope {
   clone(): ASTChunk {
     return new ASTChunk({
       literals: this.literals.map((it) => it.clone()),
+      comments: this.comments.map((it) => it.clone()),
       scopes: this.scopes.map((it) => it.clone()),
       lines: this.lines,
       start: this.start,

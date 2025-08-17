@@ -7,6 +7,7 @@ import {
   ASTBooleanLiteral,
   ASTChunk,
   ASTClause,
+  ASTComment,
   ASTForGenericStatement,
   ASTFunctionStatement,
   ASTIdentifier,
@@ -48,8 +49,9 @@ export default class Parser {
   currentAssignment: ASTAssignmentStatement;
   iteratorStack: (ASTForGenericStatement | ASTWhileStatement)[];
 
-  // helper
-  literals: ASTBase[];
+  // helpers
+  literals: ASTLiteral[];
+  comments: ASTComment[];
   scopes: ASTBaseBlockWithScope[];
   backpatches: Stack<PendingBlock>;
   statementErrors: Error[];
@@ -84,6 +86,7 @@ export default class Parser {
     me.outerScopes = [];
     me.iteratorStack = [];
     me.literals = [];
+    me.comments = [];
     me.validator = options.validator || new Validator();
     me.astProvider = options.astProvider || new ASTProvider();
     me.unsafe = options.unsafe || false;
@@ -189,6 +192,7 @@ export default class Parser {
           isStatement
         });
 
+        me.comments.push(comment);
         me.lineRegistry.addItemToLines(comment);
       } else if (Selectors.EndOfLine(me.token)) {
         lines++;
@@ -289,6 +293,7 @@ export default class Parser {
     pending.complete(me.token);
 
     chunk.literals = me.literals;
+    chunk.comments = me.comments;
     chunk.scopes = me.scopes;
     chunk.lines = me.lineRegistry.lines;
 
