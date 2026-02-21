@@ -1,10 +1,8 @@
-import { Position } from './position';
-
 export class Range {
-  start: Position;
-  end: Position;
+  start: [number, number];
+  end: [number, number];
 
-  constructor(start: Position, end: Position) {
+  constructor(start: [number, number], end: [number, number]) {
     this.start = start;
     this.end = end;
   }

@@ -1,104 +1,125 @@
-import { Position } from '../types/position';
+import { resolveSelector } from '../utils/selector-registry';
 
 export enum TokenType {
-  EOF = 'EOF',
-  StringLiteral = 'StringLiteral',
-  Keyword = 'Keyword',
-  Identifier = 'Identifier',
-  NumericLiteral = 'NumericLiteral',
-  Punctuator = 'Punctuator',
-  BooleanLiteral = 'BooleanLiteral',
-  NilLiteral = 'NilLiteral',
-  EOL = 'EOL',
-  SliceOperator = 'SliceOperator',
-  Comment = 'Comment',
-  Invalid = 'Invalid'
+  EOF = 1000,
+  EOL = 1010,
+  StringLiteral = 2000,
+  NumericLiteral = 2010,
+  BooleanLiteral = 2020,
+  NilLiteral = 2030,
+  Keyword = 3000,
+  Identifier = 3010,
+  Punctuator = 4000,
+  SliceOperator = 4010,
+  Comment = 5000,
+  Invalid = 9000,
 }
 
-export class BaseTokenOptions<T> {
-  type: string;
+export interface BaseTokenOptions<T> extends CallArgs {
+  type: number;
   value: T;
   line: number;
-  lineStart: number;
-  range: [number, number];
-  offsetRange: [number, number];
-  afterSpace?: boolean;
+  rangeStart: number;
+  rangeEnd: number;
+  offsetStart: number;
+  offsetEnd: number;
+  afterSpace: boolean;
   lastLine?: number;
-  lastLineStart?: number;
 }
 
 export class BaseToken<T> {
-  readonly type: string;
+  readonly type: number;
   readonly value: T;
   readonly line: number;
-  readonly lineStart: number;
-  readonly range: [number, number];
+  readonly rangeStart: number;
+  readonly rangeEnd: number;
   readonly afterSpace: boolean;
 
-  // used for literals
-  raw: string;
+  // selector bitmask fields
+  readonly selectorId: number;
+  readonly groupBits: number;
 
   // used for string literals
   readonly lastLine?: number;
-  readonly lastLineStart?: number;
+  readonly endLine: number;
 
-  // position
-  readonly start: Position;
-  readonly end: Position;
+  readonly startChar: number;
+  readonly endChar: number;
 
   constructor(options: BaseTokenOptions<T>) {
     this.type = options.type;
     this.value = options.value;
     this.line = options.line;
-    this.lineStart = options.lineStart;
-    this.range = options.range;
+    this.rangeStart = options.rangeStart;
+    this.rangeEnd = options.rangeEnd;
     this.lastLine = options.lastLine;
-    this.lastLineStart = options.lastLineStart;
+    this.endLine = options.lastLine || options.line;
     this.afterSpace = options.afterSpace;
+    this.startChar = options.rangeStart - options.offsetStart + 1;
+    this.endChar = options.rangeEnd - options.offsetEnd + 1;
 
-    const offsetRange = options.offsetRange;
-    const range = options.range;
-
-    this.start = new Position(this.line, range[0] - offsetRange[0] + 1);
-    this.end = new Position(
-      this.lastLine || this.line,
-      range[1] - offsetRange[1] + 1
-    );
+    const sel = resolveSelector(this.type, this.value);
+    this.selectorId = sel.selectorId;
+    this.groupBits = sel.groupBits;
   }
 
   toString(): string {
     const startLine = this.line;
     const endLine = this.lastLine !== undefined ? this.lastLine : this.line;
-    const columLeft = this.start.character;
-    const columRight = this.end.character;
+    const columLeft = this.startChar;
+    const columRight = this.endChar;
     const location = `${startLine}:${columLeft} - ${endLine}:${columRight}`;
 
-    return `${this.type}[${location}: value = '${this.value}']`;
+    return `${TokenType[this.type]}[${location}: value = '${this.value}']`;
   }
 }
 
-export class Token extends BaseToken<string> {}
+export interface TokenOptions extends CallArgs {
+  type: number;
+  value: string;
+  line: number;
+  rangeStart: number;
+  rangeEnd: number;
+  offsetStart: number;
+  offsetEnd: number;
+  afterSpace: boolean;
+  lastLine?: number;
+}
 
-export interface TokenLiteralOptions
-  extends BaseTokenOptions<string | number | boolean> {
+export class Token extends BaseToken<string> {
+  constructor(options: TokenOptions) {
+    super({ type: options.type, value: options.value, line: options.line, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, offsetStart: options.offsetStart, offsetEnd: options.offsetEnd, afterSpace: options.afterSpace, lastLine: options.lastLine });
+  }
+}
+
+export interface LiteralTokenOptions extends CallArgs {
+  type: number;
+  value: string | number | boolean;
   raw: string;
+  line: number;
+  rangeStart: number;
+  rangeEnd: number;
+  offsetStart: number;
+  offsetEnd: number;
+  afterSpace: boolean;
+  lastLine?: number;
 }
 
 export class LiteralToken extends BaseToken<string | number | boolean> {
-  declare readonly raw: string;
+  readonly raw: string;
 
-  constructor(options: TokenLiteralOptions) {
-    super(options);
+  constructor(options: LiteralTokenOptions) {
+    super({ type: options.type, value: options.value, line: options.line, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, offsetStart: options.offsetStart, offsetEnd: options.offsetEnd, afterSpace: options.afterSpace, lastLine: options.lastLine });
     this.raw = options.raw;
   }
 
   toString(): string {
     const startLine = this.line;
     const endLine = this.lastLine !== undefined ? this.lastLine : this.line;
-    const columLeft = this.start.character;
-    const columRight = this.end.character;
+    const columLeft = this.startChar;
+    const columRight = this.endChar;
     const location = `${startLine}:${columLeft} - ${endLine}:${columRight}`;
 
-    return `${this.type}[${location}: value = ${this.raw}]`;
+    return `${TokenType[this.type]}[${location}: value = ${this.raw}]`;
   }
 }

@@ -19,13 +19,13 @@ export class ASTIfStatement extends ASTBase {
     type: ASTType.IfShortcutStatement | ASTType.IfStatement,
     options: ASTIfStatementOptions
   ) {
-    super(type, options);
+    super(type, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.clauses = options.clauses || [];
   }
 
   toString(): string {
     if (this.clauses.length === 0) {
-      return `IfStatement[${this.start}-${this.end}][]`;
+      return `IfStatement[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][]`;
     }
 
     const clauses = this.clauses
@@ -35,15 +35,18 @@ export class ASTIfStatement extends ASTBase {
       .map((item) => `\t${item}`)
       .join('\n');
 
-    return `IfStatement[${this.start}-${this.end}][\n${clauses}\n]`;
+    return `IfStatement[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][\n${clauses}\n]`;
   }
 
   clone(): ASTIfStatement {
     return new ASTIfStatement(this.type as ASTType.IfShortcutStatement | ASTType.IfStatement, {
       clauses: this.clauses.map((it) => it.clone()),
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
@@ -64,13 +67,13 @@ export class ASTIfClause extends ASTClause {
       | ASTType.ElseifClause,
     options: ASTIfClauseOptions
   ) {
-    super(type, options);
+    super(type, { body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.condition = options.condition;
   }
 
   toString(): string {
     if (this.body.length === 0) {
-      return `${this.type}[${this.start}-${this.end}][${this.condition}]`;
+      return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.condition}]`;
     }
 
     const body = this.body
@@ -80,7 +83,7 @@ export class ASTIfClause extends ASTClause {
       .map((item) => `\t${item}`)
       .join('\n');
 
-    return `${this.type}[${this.start}-${this.end}][${this.condition}\n${body}\n]`;
+    return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.condition}\n${body}\n]`;
   }
 
   clone(): ASTIfClause {
@@ -89,9 +92,12 @@ export class ASTIfClause extends ASTClause {
       | ASTType.IfClause
       | ASTType.ElseifClause, {
       condition: this.condition.clone(),
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
@@ -102,7 +108,7 @@ export class ASTElseClause extends ASTClause {
     type: ASTType.ElseShortcutClause | ASTType.ElseClause,
     options: ASTBaseBlockOptions
   ) {
-    super(type, options);
+    super(type, { body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   toString(): string {
@@ -117,14 +123,17 @@ export class ASTElseClause extends ASTClause {
       .map((item) => `\t${item}`)
       .join('\n');
 
-    return `${this.type}[${this.start}-${this.end}][\n${body}\n}]`;
+    return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][\n${body}\n}]`;
   }
 
   clone(): ASTElseClause {
     return new ASTElseClause(this.type as ASTType.ElseShortcutClause | ASTType.ElseClause, {
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

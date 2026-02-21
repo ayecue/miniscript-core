@@ -1,12 +1,12 @@
 {
   "name": "miniscript-core",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Core lexer/parser for MiniScript",
   "main": "dist/index",
   "typings": "dist/index",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "npm run clean && tsc -p .",
+    "build": "npm run clean && tspc -p .",
     "watch": "tsc -w -p .",
     "clean": "rm -rf dist",
     "test": "jest ./tests",

@@ -71,8 +71,8 @@ export class PendingChunk extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.end;
-    this.block.range = [this.block.range[0], endToken.range[1]];
+    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.rangeEnd = endToken.rangeEnd;
     super.complete(endToken);
   }
 }
@@ -88,14 +88,13 @@ export class PendingFor extends PendingBlockBase implements PendingBlock {
 
   constructor(block: ASTForGenericStatement, lineRegistry: LineRegistry) {
     super(block, PendingBlockType.For, lineRegistry);
-    this.lineRegistry.addItemToLine(this.block.start.line, this.block);
   }
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.end;
-    this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToLine(endToken.end.line, this.block);
+    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.rangeEnd = endToken.rangeEnd;
+    this.lineRegistry.register(this.block);
     super.complete(endToken);
   }
 }
@@ -118,22 +117,21 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
   ) {
     super(block, PendingBlockType.Function, lineRegistry);
     this.base = base;
-    this.lineRegistry.addItemToLine(this.block.start.line, this.block);
   }
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.end;
-    this.block.range = [this.block.range[0], endToken.range[1]];
+    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.rangeEnd = endToken.rangeEnd;
 
     if (this.base !== null) {
-      this.base.end = this.block.end;
-      this.base.range[1] = this.block.range[1];
-      this.lineRegistry.addItemToLine(this.base.end.line, this.base);
-    } else {
-      this.lineRegistry.addItemToLine(this.block.end.line, this.block);
+      this.base.endLine = this.block.endLine;
+      this.base.endChar = this.block.endChar;
+      this.base.rangeEnd = this.block.rangeEnd;
+      this.lineRegistry.register(this.base);
     }
 
+    this.lineRegistry.register(this.block);
     super.complete(endToken);
   }
 }
@@ -157,23 +155,13 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
     lineRegistry: LineRegistry
   ) {
     super(block, PendingBlockType.If, lineRegistry);
-    this.lineRegistry.addItemToLine(this.block.start.line, this.block);
     this.currentClause = current;
-  }
-
-  private addCurrentClauseToLineRegistry(): void {
-    if (this.currentClause.start.line === this.block.start.line) {
-      return;
-    }
-
-    this.lineRegistry.addItemToLine(this.currentClause.start.line, this.block);
   }
 
   next(endToken: Token): void {
     this.currentClause.body = this.body;
-    this.currentClause.end = endToken.end;
-    this.currentClause.range = [this.currentClause.range[0], endToken.range[1]];
-    this.addCurrentClauseToLineRegistry();
+    this.currentClause.endLine = endToken.endLine; this.currentClause.endChar = endToken.endChar;
+    this.currentClause.rangeEnd = endToken.rangeEnd;
     this.block.clauses.push(this.currentClause);
     super.complete(endToken);
     this.body = [];
@@ -181,9 +169,9 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     if (this.body.length > 0) this.next(endToken);
-    this.block.end = endToken.end;
-    this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToLine(this.block.end.line, this.block);
+    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.rangeEnd = endToken.rangeEnd;
+    this.lineRegistry.register(this.block);
     super.complete(endToken);
   }
 }
@@ -199,14 +187,13 @@ export class PendingWhile extends PendingBlockBase implements PendingBlock {
 
   constructor(block: ASTWhileStatement, lineRegistry: LineRegistry) {
     super(block, PendingBlockType.While, lineRegistry);
-    this.lineRegistry.addItemToLine(this.block.start.line, this.block);
   }
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.end = endToken.end;
-    this.block.range = [this.block.range[0], endToken.range[1]];
-    this.lineRegistry.addItemToLine(endToken.end.line, this.block);
+    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.rangeEnd = endToken.rangeEnd;
+    this.lineRegistry.register(this.block);
     super.complete(endToken);
   }
 }

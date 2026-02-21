@@ -13,8 +13,6 @@ import {
   ASTBase,
   ASTBaseBlockOptions,
   ASTBaseOptions,
-  ASTComment,
-  ASTCommentOptions,
   ASTType
 } from './ast/base';
 import { ASTBinaryExpression, ASTBinaryExpressionOptions } from './ast/binary';
@@ -87,73 +85,73 @@ import { ASTWhileStatement, ASTWhileStatementOptions } from './ast/while';
 
 export class ASTProvider {
   returnStatement(options: ASTReturnStatementOptions): ASTReturnStatement {
-    return new ASTReturnStatement(options);
+    return new ASTReturnStatement({ argument: options.argument, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   ifShortcutStatement(options: ASTIfStatementOptions): ASTIfStatement {
-    return new ASTIfStatement(ASTType.IfShortcutStatement, options);
+    return new ASTIfStatement(ASTType.IfShortcutStatement, { clauses: options.clauses, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   ifShortcutClause(options: ASTIfClauseOptions): ASTIfClause {
-    return new ASTIfClause(ASTType.IfShortcutClause, options);
+    return new ASTIfClause(ASTType.IfShortcutClause, { condition: options.condition, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   elseifShortcutClause(options: ASTIfClauseOptions): ASTIfClause {
-    return new ASTIfClause(ASTType.ElseifShortcutClause, options);
+    return new ASTIfClause(ASTType.ElseifShortcutClause, { condition: options.condition, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   elseShortcutClause(options: ASTBaseBlockOptions): ASTElseClause {
-    return new ASTElseClause(ASTType.ElseShortcutClause, options);
+    return new ASTElseClause(ASTType.ElseShortcutClause, { body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   ifStatement(options: ASTIfStatementOptions): ASTIfStatement {
-    return new ASTIfStatement(ASTType.IfStatement, options);
+    return new ASTIfStatement(ASTType.IfStatement, { clauses: options.clauses, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   ifClause(options: ASTIfClauseOptions): ASTIfClause {
-    return new ASTIfClause(ASTType.IfClause, options);
+    return new ASTIfClause(ASTType.IfClause, { condition: options.condition, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   elseifClause(options: ASTIfClauseOptions): ASTIfClause {
-    return new ASTIfClause(ASTType.ElseifClause, options);
+    return new ASTIfClause(ASTType.ElseifClause, { condition: options.condition, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   elseClause(options: ASTBaseBlockOptions): ASTElseClause {
-    return new ASTElseClause(ASTType.ElseClause, options);
+    return new ASTElseClause(ASTType.ElseClause, { body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   whileStatement(options: ASTWhileStatementOptions): ASTWhileStatement {
-    return new ASTWhileStatement(options);
+    return new ASTWhileStatement({ condition: options.condition, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   assignmentStatement(
     options: ASTAssignmentStatementOptions
   ): ASTAssignmentStatement {
-    return new ASTAssignmentStatement(options);
+    return new ASTAssignmentStatement({ variable: options.variable, init: options.init, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   callStatement(options: ASTCallStatementOptions): ASTCallStatement {
-    return new ASTCallStatement(options);
+    return new ASTCallStatement({ expression: options.expression, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   functionStatement(
     options: ASTFunctionStatementOptions
   ): ASTFunctionStatement {
-    return new ASTFunctionStatement(options);
+    return new ASTFunctionStatement({ parameters: options.parameters, assignment: options.assignment, definitions: options.definitions, returns: options.returns, namespaces: options.namespaces, parent: options.parent, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   forGenericStatement(
     options: ASTForGenericStatementOptions
   ): ASTForGenericStatement {
-    return new ASTForGenericStatement(options);
+    return new ASTForGenericStatement({ variable: options.variable, iterator: options.iterator, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   chunk(options: ASTChunkOptions): ASTChunk {
-    return new ASTChunk(options);
+    return new ASTChunk({ literals: options.literals, comments: options.comments, scopes: options.scopes, registry: options.registry, definitions: options.definitions, returns: options.returns, namespaces: options.namespaces, parent: options.parent, body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   identifier(options: ASTIdentifierOptions): ASTIdentifier {
-    return new ASTIdentifier(options);
+    return new ASTIdentifier({ name: options.name, kind: options.kind, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   literal(
@@ -166,102 +164,98 @@ export class ASTProvider {
   ): ASTStringLiteral | ASTNilLiteral | ASTNumericLiteral | ASTBooleanLiteral {
     switch (type) {
       case TokenType.StringLiteral:
-        return new ASTStringLiteral(options);
+        return new ASTStringLiteral({ value: options.value, raw: options.raw, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
       case TokenType.NumericLiteral:
-        return new ASTNumericLiteral(options);
+        return new ASTNumericLiteral({ value: options.value, raw: options.raw, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
       case TokenType.BooleanLiteral:
-        return new ASTBooleanLiteral(options);
+        return new ASTBooleanLiteral({ value: options.value, raw: options.raw, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
       case TokenType.NilLiteral:
-        return new ASTNilLiteral(options);
+        return new ASTNilLiteral({ value: options.value, raw: options.raw, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     }
   }
 
   memberExpression(options: ASTMemberExpressionOptions): ASTMemberExpression {
-    return new ASTMemberExpression(options);
+    return new ASTMemberExpression({ indexer: options.indexer, identifier: options.identifier, base: options.base, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   callExpression(options: ASTCallExpressionOptions): ASTCallExpression {
-    return new ASTCallExpression(options);
-  }
-
-  comment(options: ASTCommentOptions): ASTComment {
-    return new ASTComment(options);
+    return new ASTCallExpression({ base: options.base, arguments: options.arguments, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   unaryExpression(options: ASTUnaryExpressionOptions): ASTUnaryExpression {
-    return new ASTUnaryExpression(options);
+    return new ASTUnaryExpression({ argument: options.argument, operator: options.operator, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   mapKeyString(options: ASTMapKeyStringOptions): ASTMapKeyString {
-    return new ASTMapKeyString(options);
+    return new ASTMapKeyString({ key: options.key, value: options.value, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   mapConstructorExpression(
     options: ASTMapConstructorExpressionOptions
   ): ASTMapConstructorExpression {
-    return new ASTMapConstructorExpression(options);
+    return new ASTMapConstructorExpression({ fields: options.fields, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   listValue(options: ASTListValueOptions): ASTListValue {
-    return new ASTListValue(options);
+    return new ASTListValue({ value: options.value, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   listConstructorExpression(
     options: ASTListConstructorExpressionOptions
   ): ASTListConstructorExpression {
-    return new ASTListConstructorExpression(options);
+    return new ASTListConstructorExpression({ fields: options.fields, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   unknown(options: ASTBaseOptions): ASTBase {
-    return new ASTBase(ASTType.Unknown, options);
+    return new ASTBase(ASTType.Unknown, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   emptyExpression(options: ASTBaseOptions): ASTBase {
-    return new ASTBase(ASTType.EmptyExpression, options);
+    return new ASTBase(ASTType.EmptyExpression, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   invalidCodeExpression(options: ASTBaseOptions): ASTBase {
-    return new ASTBase(ASTType.InvalidCodeExpression, options);
+    return new ASTBase(ASTType.InvalidCodeExpression, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   indexExpression(options: ASTIndexExpressionOptions): ASTIndexExpression {
-    return new ASTIndexExpression(options);
+    return new ASTIndexExpression({ base: options.base, index: options.index, isStatementStart: options.isStatementStart, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   logicalExpression(
     options: ASTLogicalExpressionOptions
   ): ASTLogicalExpression {
-    return new ASTLogicalExpression(options);
+    return new ASTLogicalExpression({ operator: options.operator, left: options.left, right: options.right, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   isaExpression(options: ASTIsaExpressionOptions): ASTLogicalExpression {
-    return new ASTIsaExpression(options);
+    return new ASTIsaExpression({ operator: options.operator, left: options.left, right: options.right, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   binaryExpression(options: ASTBinaryExpressionOptions): ASTBinaryExpression {
-    return new ASTBinaryExpression(options);
+    return new ASTBinaryExpression({ operator: options.operator, left: options.left, right: options.right, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   sliceExpression(options: ASTSliceExpressionOptions): ASTSliceExpression {
-    return new ASTSliceExpression(options);
+    return new ASTSliceExpression({ base: options.base, left: options.left, right: options.right, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   parenthesisExpression(
     options: ASTParenthesisExpressionOptions
   ): ASTParenthesisExpression {
-    return new ASTParenthesisExpression(options);
+    return new ASTParenthesisExpression({ expression: options.expression, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   comparisonGroupExpression(options: ASTComparisonGroupExpressionOptions) {
-    return new ASTComparisonGroupExpression(options);
+    return new ASTComparisonGroupExpression({ operators: options.operators, expressions: options.expressions, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   breakStatement(options: ASTBreakStatementOptions) {
-    return new ASTBreakStatement(options);
+    return new ASTBreakStatement({ iterator: options.iterator, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 
   continueStatement(options: ASTContinueStatementOptions) {
-    return new ASTContinueStatement(options);
+    return new ASTContinueStatement({ iterator: options.iterator, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
   }
 }
 
@@ -276,8 +270,6 @@ export {
   ASTBaseBlockWithScope,
   ASTBaseBlockWithScopeOptions,
   ASTBaseOptions,
-  ASTComment,
-  ASTCommentOptions,
   ASTScopeDefinition,
   ASTScopeNamespace,
   ASTType

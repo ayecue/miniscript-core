@@ -1,6 +1,7 @@
 import { Token, TokenType } from '../lexer/token';
 import { Keyword } from './keywords';
 import { Operator } from './operators';
+import { registerSelector, registerSelectorGroup } from '../utils/selector-registry';
 
 export enum SelectorType {
   EndOfLine = 'EndOfLine',
@@ -69,31 +70,27 @@ export interface Selector {
     type: TokenType;
     value?: string;
   };
+  selectorId: number;
   name: string;
 }
 
 export function createSelector(options: createSelectorOptions): Selector {
-  let selectorf: Selector;
-  if (options.value === undefined) {
-    selectorf = new Function(
-      'token',
-      `if (token == null) return false;return token.type === '${options.type}';`
-    ) as Selector;
-    Object.defineProperty(selectorf, 'name', {
-      value: `selector_${options.type}`,
-      writable: false
-    });
-  } else {
-    selectorf = new Function(
-      'token',
-      `if (token == null) return false;return token.value === '${options.value}' && token.type === '${options.type}';`
-    ) as Selector;
-    Object.defineProperty(selectorf, 'name', {
-      value: `selector_${options.type}_${options.value}`,
-      writable: false
-    });
-  }
+  const entry = registerSelector(options.type, options.value);
+  const id = entry.selectorId;
+
+  const selectorf = function (token: Token): boolean {
+    return token != null && token.selectorId === id;
+  } as Selector;
+
+  Object.defineProperty(selectorf, 'name', {
+    value: options.value !== undefined
+      ? `selector_${TokenType[options.type]}_${options.value}`
+      : `selector_${TokenType[options.type]}`,
+    writable: false
+  });
+
   selectorf.data = options;
+  selectorf.selectorId = id;
   return selectorf;
 }
 
@@ -318,6 +315,7 @@ export const Selectors: Record<SelectorType, Selector> = {
 export interface SelectorGroup {
   (token: Token): boolean;
   selectors: Selector[];
+  groupBit: number;
   name: string;
 }
 
@@ -325,47 +323,20 @@ export function createSelectorGroup(
   name: string,
   selectors: Selector[]
 ): SelectorGroup {
-  const selectorsWithValue = selectors.filter(
-    (item) => item.data.value !== undefined
-  );
-  const casesWithValue = selectorsWithValue
-    .map((selector) => {
-      return `case '${selector.data.value}': return token.type === '${selector.data.type}';`;
-    })
-    .join('\n');
-  const selectorsWithoutValue = selectors.filter(
-    (item) => item.data.value === undefined
-  );
-  const casesWithoutValue = selectorsWithoutValue
-    .map((selector) => {
-      return `case '${selector.data.type}':`;
-    })
-    .join('\n');
-  const groupf = new Function(
-    'token',
-    `
-  ${
-    casesWithoutValue.length > 0
-      ? `switch(token.type) {
-    ${casesWithoutValue}
-      return true;
-  }`
-      : ''
-  }
-  ${
-    casesWithValue.length > 0
-      ? `switch(token.value) {
-    ${casesWithValue}
-  }`
-      : ''
-  }
-  return false;`
-  ) as SelectorGroup;
+  const entries = selectors.map((s) => registerSelector(s.data.type, s.data.value));
+  const bit = registerSelectorGroup(entries);
+
+  const groupf = function (token: Token): boolean {
+    return token != null && (token.groupBits & bit) !== 0;
+  } as SelectorGroup;
+
   Object.defineProperty(groupf, 'name', {
     value: `selector_group_${name}`,
     writable: false
   });
+
   groupf.selectors = selectors;
+  groupf.groupBit = bit;
   return groupf;
 }
 
@@ -443,3 +414,5 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
     Selectors.RParenthesis
   ])
 };
+
+

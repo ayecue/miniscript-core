@@ -17,22 +17,25 @@ export class ASTIdentifier extends ASTBase {
   kind: ASTIdentifierKind;
 
   constructor(options: ASTIdentifierOptions) {
-    super(ASTType.Identifier, options);
+    super(ASTType.Identifier, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.name = options.name;
     this.kind = options.kind;
   }
 
   toString(): string {
-    return `Identifier[${this.start}-${this.end}][${this.name}]`;
+    return `Identifier[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.name}]`;
   }
 
   clone(): ASTIdentifier {
     return new ASTIdentifier({
       name: this.name,
       kind: this.kind,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
@@ -50,14 +53,14 @@ export class ASTMemberExpression extends ASTBase {
   base: ASTBase;
 
   constructor(options: ASTMemberExpressionOptions) {
-    super(ASTType.MemberExpression, options);
+    super(ASTType.MemberExpression, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.indexer = options.indexer;
     this.identifier = options.identifier;
     this.base = options.base;
   }
 
   toString(): string {
-    return `MemberExpression[${this.start}-${this.end}][${this.base}.${this.identifier}]`;
+    return `MemberExpression[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.base}.${this.identifier}]`;
   }
 
   clone(): ASTMemberExpression {
@@ -65,9 +68,12 @@ export class ASTMemberExpression extends ASTBase {
       indexer: this.indexer,
       identifier: this.identifier.clone(),
       base: this.base,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
@@ -85,14 +91,14 @@ export class ASTIndexExpression extends ASTBase {
   isStatementStart: boolean;
 
   constructor(options: ASTIndexExpressionOptions) {
-    super(ASTType.IndexExpression, options);
+    super(ASTType.IndexExpression, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.base = options.base;
     this.index = options.index;
     this.isStatementStart = options.isStatementStart;
   }
 
   toString(): string {
-    return `IndexExpression[${this.start}-${this.end}]${this.isStatementStart ? '[isStatementStart]' : ''}[${this.base}[${this.index}]]`;
+    return `IndexExpression[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}]${this.isStatementStart ? '[isStatementStart]' : ''}[${this.base}[${this.index}]]`;
   }
 
   clone(): ASTIndexExpression {
@@ -100,9 +106,12 @@ export class ASTIndexExpression extends ASTBase {
       base: this.base.clone(),
       index: this.index.clone(),
       isStatementStart: this.isStatementStart,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

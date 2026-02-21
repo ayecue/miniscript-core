@@ -8,7 +8,7 @@ export class ASTParenthesisExpression extends ASTBase {
   expression: ASTBase;
 
   constructor(options: ASTParenthesisExpressionOptions) {
-    super(ASTType.ParenthesisExpression, options);
+    super(ASTType.ParenthesisExpression, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.expression = options.expression;
   }
 
@@ -19,9 +19,12 @@ export class ASTParenthesisExpression extends ASTBase {
   clone(): ASTParenthesisExpression {
     return new ASTParenthesisExpression({
       expression: this.expression.clone(),
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
