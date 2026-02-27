@@ -1,7 +1,7 @@
 import { BaseToken, LiteralToken, Token, TokenType } from './lexer/token';
 import Validator from './lexer/validator';
 import { CharacterCode } from './types/codes';
-import { LexerException } from './types/errors';
+import { ErrorCode, LexerException } from './types/errors';
 import { Keyword } from './types/keywords';
 import { Literal } from './types/literals';
 import { Operator } from './types/operators';
@@ -305,11 +305,13 @@ export default class Lexer {
 
     if (!closed) {
       return me.raise(
-        `Unexpected string end of file.`,
+        `Unterminated string literal`,
         new Range(
           [beginLine, strStart - strStartOffset + 1],
           [me.line, me.index - endOffset + 2]
-        )
+        ),
+        ErrorCode.UnexpectedStringEOF,
+        `Add a closing quote to terminate the string`
       );
     }
 
@@ -390,11 +392,12 @@ export default class Lexer {
 
     if (isNaN(value)) {
       return this.raise(
-        `Invalid numeric literal: ${raw}`,
+        `Invalid numeric literal '${raw}'`,
         new Range(
           [this.line, this.tokenStart - this.offset + 1],
           [this.line, this.index - this.offset + 1]
-        )
+        ),
+        ErrorCode.InvalidNumericLiteral
       );
     }
 
@@ -529,11 +532,12 @@ export default class Lexer {
     if (item) return item;
 
     return me.raise(
-      `Invalid character ${code} (Code: ${String.fromCharCode(code)})`,
+      `Invalid character '${String.fromCharCode(code)}'`,
       new Range(
         [beginLine, me.tokenStart - me.offset + 1],
         [me.line, me.index - me.offset + 1]
-      )
+      ),
+      ErrorCode.InvalidCharacter
     );
   }
 
@@ -551,9 +555,9 @@ export default class Lexer {
     this.offset = this._savedOffset;
   }
 
-  raise(message: string, range: Range): Token {
+  raise(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string): Token {
     const me = this;
-    const err = new LexerException(message, range);
+    const err = new LexerException(message, range, code, hint);
 
     me.errors.push(err);
 

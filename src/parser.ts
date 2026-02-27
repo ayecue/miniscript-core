@@ -21,7 +21,7 @@ import {
   ASTWhileStatement
 } from './parser/ast';
 import Validator from './parser/validator';
-import { ParserException } from './types/errors';
+import { ErrorCode, ParserException } from './types/errors';
 import { Keyword } from './types/keywords';
 import { Operator } from './types/operators';
 import { Range } from './types/range';
@@ -39,6 +39,42 @@ export interface ParserOptions {
   unsafe?: boolean;
   tabWidth?: number;
   preserve?: boolean;
+}
+
+function describeToken(token: Token): string {
+  switch (token.type) {
+    case TokenType.EOF: return 'end of file';
+    case TokenType.EOL: return 'end of line';
+    default: return `'${token.value}'`;
+  }
+}
+
+function describeBlockType(type: string): string {
+  switch (type) {
+    case ASTType.IfStatement:
+    case ASTType.IfShortcutStatement:
+      return 'if';
+    case ASTType.WhileStatement: return 'while';
+    case ASTType.ForGenericStatement: return 'for';
+    case ASTType.FunctionDeclaration: return 'function';
+    default: return type;
+  }
+}
+
+interface ParserSnapshot {
+  literalsLength: number;
+  scopesLength: number;
+  outerScopesLength: number;
+  commentsLength: number;
+  iteratorStackLength: number;
+  lineRegistryItemsLength: number;
+  currentScope: ASTBaseBlockWithScope;
+  currentScopeNamespacesLength: number;
+  currentScopeDefinitionsLength: number;
+  currentScopeReturnsLength: number;
+  currentAssignment: ASTAssignmentStatement;
+  backpatchesLength: number;
+  pendingBodyLength: number;
 }
 
 export default class Parser {
@@ -136,13 +172,14 @@ export default class Parser {
 
     if (this.token.type !== type) {
       this.raise(
-        `got ${token} where ${TokenType[type]} is required`,
+        `Expected ${TokenType[type]}, got ${describeToken(token)}`,
         new Range(
           fromLine == null || fromChar == null
             ? [token.line, token.startChar]
             : [fromLine, fromChar],
           [token.endLine, token.endChar]
-        )
+        ),
+        ErrorCode.ExpectedToken
       );
       return null;
     }
@@ -156,13 +193,14 @@ export default class Parser {
 
     if (!selector(token)) {
       this.raise(
-        `got ${token} where "${getSelectorValue(selector)}" is required`,
+        `Expected '${getSelectorValue(selector)}', got ${describeToken(token)}`,
         new Range(
           fromLine == null || fromChar == null
             ? [token.line, token.startChar]
             : [fromLine, fromChar],
           [token.endLine, token.endChar]
-        )
+        ),
+        ErrorCode.ExpectedToken
       );
       return null;
     }
@@ -180,15 +218,16 @@ export default class Parser {
     }
 
     this.raise(
-      `got ${token} where any of ${getSelectorsFromGroup(selectorGroup)
-        .map((selector: Selector) => `"${getSelectorValue(selector)}"`)
-        .join(', ')} is required`,
+      `Expected one of ${getSelectorsFromGroup(selectorGroup)
+        .map((selector: Selector) => `'${getSelectorValue(selector)}'`)
+        .join(', ')}, got ${describeToken(token)}`,
       new Range(
         fromLine == null || fromChar == null
           ? [token.line, token.startChar]
           : [fromLine, fromChar],
         [token.endLine, token.endChar]
-      )
+      ),
+      ErrorCode.ExpectedToken
     );
 
     return null;
@@ -254,7 +293,7 @@ export default class Parser {
     me.currentScope = me.outerScopes.pop();
   }
 
-  tryToRecover() {
+  tryToRecover(snapshot: ParserSnapshot) {
     const me = this;
     const firstPointOfFailure = me.statementErrors[0];
 
@@ -264,10 +303,27 @@ export default class Parser {
       throw firstPointOfFailure;
     }
 
+    // Roll back parser state to before the failed statement
+    me.literals.length = snapshot.literalsLength;
+    me.scopes.length = snapshot.scopesLength;
+    me.outerScopes.length = snapshot.outerScopesLength;
+    me.comments.length = snapshot.commentsLength;
+    me.iteratorStack.length = snapshot.iteratorStackLength;
+    me.lineRegistry.items.length = snapshot.lineRegistryItemsLength;
+
+    me.currentScope = snapshot.currentScope;
+    me.currentScope.namespaces.length = snapshot.currentScopeNamespacesLength;
+    me.currentScope.definitions.length = snapshot.currentScopeDefinitionsLength;
+    me.currentScope.returns.length = snapshot.currentScopeReturnsLength;
+
+    me.currentAssignment = snapshot.currentAssignment;
+
+    me.backpatches.truncate(snapshot.backpatchesLength);
+    me.backpatches.peek().body.length = snapshot.pendingBodyLength;
+
+    // Rewind lexer and skip to end of line
     me.lexer.recoverFromSnapshot();
-
     me.next();
-
     for (; me.token.type !== TokenType.EOL && me.token.type !== TokenType.EOF; me.next());
   }
 
@@ -276,10 +332,16 @@ export default class Parser {
     let last = me.backpatches.pop();
 
     while (!isPendingChunk(last)) {
-      const exception = me.raise(`found open block ${last.block.type}`, new Range(
-        [last.block.startLine, last.block.startChar],
-        [last.block.startLine, last.block.startChar]
-      ));
+      const blockName = describeBlockType(last.block.type);
+      const exception = new ParserException(
+        `Unclosed '${blockName}' block`,
+        new Range(
+          [last.block.startLine, last.block.startChar],
+          [last.block.startLine, last.block.startChar]
+        ),
+        ErrorCode.UnclosedBlock,
+        `Add 'end ${blockName}' to close this block`
+      );
 
       last.complete(me.previousToken);
 
@@ -312,10 +374,26 @@ export default class Parser {
       me.lexer.recordSnapshot();
       me.statementErrors = [];
 
+      const snapshot: ParserSnapshot = {
+        literalsLength: me.literals.length,
+        scopesLength: me.scopes.length,
+        outerScopesLength: me.outerScopes.length,
+        commentsLength: me.comments.length,
+        iteratorStackLength: me.iteratorStack.length,
+        lineRegistryItemsLength: me.lineRegistry.items.length,
+        currentScope: me.currentScope,
+        currentScopeNamespacesLength: me.currentScope.namespaces.length,
+        currentScopeDefinitionsLength: me.currentScope.definitions.length,
+        currentScopeReturnsLength: me.currentScope.returns.length,
+        currentAssignment: me.currentAssignment,
+        backpatchesLength: me.backpatches.length,
+        pendingBodyLength: me.backpatches.peek().body.length,
+      };
+
       me.parseStatement();
 
       if (me.statementErrors.length > 0) {
-        me.tryToRecover();
+        me.tryToRecover(snapshot);
       }
     }
 
@@ -352,11 +430,13 @@ export default class Parser {
 
     if (me.iteratorStack.length === 0) {
       me.raise(
-        `'continue' without open loop block`,
+        `'continue' used outside of loop`,
         new Range(
           [me.previousToken.line, me.previousToken.startChar],
           [me.previousToken.endLine, me.previousToken.endChar]
-        )
+        ),
+        ErrorCode.ContinueOutsideLoop,
+        `'continue' can only be used inside 'while' or 'for' loops`
       );
     }
 
@@ -379,11 +459,13 @@ export default class Parser {
 
     if (me.iteratorStack.length === 0) {
       me.raise(
-        `'break' without open loop block`,
+        `'break' used outside of loop`,
         new Range(
           [me.previousToken.line, me.previousToken.startChar],
           [me.previousToken.endLine, me.previousToken.endChar]
-        )
+        ),
+        ErrorCode.BreakOutsideLoop,
+        `'break' can only be used inside 'while' or 'for' loops`
       );
     }
 
@@ -480,11 +562,12 @@ export default class Parser {
     }
 
     me.raise(
-      `unexpected keyword ${me.token} at start of line`,
+      `Unexpected keyword '${me.token.value}'`,
       new Range(
         [me.token.line, me.token.startChar],
         [me.token.endLine, me.token.endChar]
-      )
+      ),
+      ErrorCode.UnexpectedKeyword
     );
   }
 
@@ -493,11 +576,13 @@ export default class Parser {
 
     if (me.iteratorStack.length === 0) {
       me.raise(
-        `'continue' without open loop block`,
+        `'continue' used outside of loop`,
         new Range(
           [me.previousToken.line, me.previousToken.startChar],
           [me.previousToken.endLine, me.previousToken.endChar]
-        )
+        ),
+        ErrorCode.ContinueOutsideLoop,
+        `'continue' can only be used inside 'while' or 'for' loops`
       );
     }
 
@@ -515,11 +600,13 @@ export default class Parser {
 
     if (me.iteratorStack.length === 0) {
       me.raise(
-        `'break' without open loop block`,
+        `'break' used outside of loop`,
         new Range(
           [me.previousToken.line, me.previousToken.startChar],
           [me.previousToken.endLine, me.previousToken.endChar]
-        )
+        ),
+        ErrorCode.BreakOutsideLoop,
+        `'break' can only be used inside 'while' or 'for' loops`
       );
     }
 
@@ -553,11 +640,12 @@ export default class Parser {
         }
         default: {
           me.raise(
-            `unexpected keyword ${me.token} in shorthand statement`,
+            `Unexpected keyword '${me.token.value}' in shorthand statement`,
             new Range(
               [me.token.line, me.token.startChar],
               [me.token.endLine, me.token.endChar]
-            )
+            ),
+            ErrorCode.UnexpectedKeyword
           );
 
           return me.parseInvalidCode();
@@ -779,10 +867,10 @@ export default class Parser {
     const pendingBlock = me.backpatches.peek();
 
     if (!isPendingIf(pendingBlock)) {
-      me.raise('no matching open if block', new Range(
+      me.raise(`'${me.previousToken.value}' without matching 'if'`, new Range(
         [me.token.line, me.token.startChar],
         [me.token.endLine, me.token.endChar]
-      ));
+      ), ErrorCode.NoMatchingBlock);
 
       return;
     }
@@ -885,11 +973,12 @@ export default class Parser {
 
     if (!condition) {
       me.raise(
-        `while requires a condition`,
+        `'while' requires a condition`,
         new Range(
           [startToken.line, startToken.startChar],
           [me.token.endLine, me.token.endChar]
-        )
+        ),
+        ErrorCode.ExpectedCondition
       );
 
       return;
@@ -919,10 +1008,10 @@ export default class Parser {
     const pendingBlock = me.backpatches.peek();
 
     if (!isPendingWhile(pendingBlock)) {
-      me.raise('no matching open while block', new Range(
+      me.raise(`'end while' without matching 'while'`, new Range(
         [me.token.line, me.token.startChar],
         [me.token.endLine, me.token.endChar]
-      ));
+      ), ErrorCode.NoMatchingBlock);
 
       return;
     }
@@ -964,11 +1053,12 @@ export default class Parser {
 
     if (!iterator) {
       me.raise(
-        `sequence expression expected for 'for' loop`,
+        `Expected iterator expression after 'in'`,
         new Range(
           [startToken.line, startToken.startChar],
           [me.token.endLine, me.token.endChar]
-        )
+        ),
+        ErrorCode.ExpectedExpression
       );
 
       return;
@@ -1001,10 +1091,10 @@ export default class Parser {
     const pendingBlock = me.backpatches.peek();
 
     if (!isPendingFor(pendingBlock)) {
-      me.raise('no matching open for block', new Range(
+      me.raise(`'end for' without matching 'for'`, new Range(
         [me.token.line, me.token.startChar],
         [me.token.endLine, me.token.endChar]
-      ));
+      ), ErrorCode.NoMatchingBlock);
 
       return;
     }
@@ -1090,11 +1180,13 @@ export default class Parser {
             parameters.push(assign);
           } else {
             me.raise(
-              `parameter default value must be a literal value`,
+              `Parameter default value must be a literal`,
               new Range(
                 [parameterStartToken.startLine, parameterStartToken.startChar],
                 [me.token.endLine, me.token.endChar]
-              )
+              ),
+              ErrorCode.InvalidDefaultValue,
+              `Only numbers, strings, booleans, and null are allowed as defaults`
             );
 
             parameters.push(me.astProvider.invalidCodeExpression({
@@ -1125,10 +1217,10 @@ export default class Parser {
         if (Selectors.RParenthesis(me.token)) break;
         me.requireToken(Selectors.ArgumentSeperator, functionStartToken.line, functionStartToken.startChar);
         if (Selectors.RParenthesis(me.token)) {
-          me.raise('expected argument instead received right parenthesis', new Range(
+          me.raise('Trailing comma in parameter list', new Range(
             [me.previousToken.endLine, me.previousToken.endChar],
             [me.previousToken.endLine, me.previousToken.endChar]
-          ));
+          ), ErrorCode.TrailingCommaInParams, `Remove the trailing comma before ')'`);
           break;
         }
       }
@@ -1149,10 +1241,10 @@ export default class Parser {
     const pendingBlock = me.backpatches.peek();
 
     if (!isPendingFunction(pendingBlock)) {
-      me.raise('no matching open function block', new Range(
+      me.raise(`'end function' without matching 'function'`, new Range(
         [me.token.line, me.token.startChar],
         [me.token.endLine, me.token.endChar]
-      ));
+      ), ErrorCode.NoMatchingBlock);
 
       return;
     }
@@ -1813,11 +1905,12 @@ export default class Parser {
     }
 
     me.raise(
-      `got ${me.token} where number, string, or identifier is required`,
+      `Expected literal or identifier, got ${describeToken(me.token)}`,
       new Range(
         [me.token.line, me.token.startChar],
         [me.token.endLine, me.token.endChar]
-      )
+      ),
+      ErrorCode.ExpectedExpression
     );
 
     return me.parseInvalidCode();
@@ -1889,9 +1982,9 @@ export default class Parser {
     return base;
   }
 
-  raise(message: string, range: Range): ParserException {
+  raise(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string): ParserException {
     const me = this;
-    const err = new ParserException(message, range);
+    const err = new ParserException(message, range, code, hint);
 
     me.statementErrors.push(err);
 

@@ -908,16 +908,16 @@ exports[`parse default scripts invalid code 1`] = `Array []`;
 
 exports[`parse default scripts invalid code 2`] = `
 Array [
-  [Error: 'break' without open loop block],
-  [Error: 'continue' without open loop block],
-  [Error: got Identifier[6:9 - 6:14: value = 'print'] where any of ",", ")" is required],
-  [Error: got Punctuator[6:16 - 6:17: value = ')'] where number, string, or identifier is required],
-  [Error: got Identifier[10:23 - 10:25: value = 'wa'] where any of ",", ";", "<eof>" is required],
-  [Error: got Punctuator[13:13 - 13:14: value = '+'] where number, string, or identifier is required],
-  [Error: got Keyword[15:13 - 15:16: value = 'not'] where number, string, or identifier is required],
-  [Error: unexpected keyword Keyword[19:9 - 19:17: value = 'function'] at start of line],
-  [Error: unexpected keyword Keyword[20:9 - 20:17: value = 'end func'] at start of line],
-  [Error: got Identifier[30:20 - 30:25: value = 'print'] where "then" is required],
+  [Error: 'break' used outside of loop],
+  [Error: 'continue' used outside of loop],
+  [Error: Expected one of ',', ')', got 'print'],
+  [Error: Expected literal or identifier, got ')'],
+  [Error: Expected one of ',', ';', '<eof>', got 'wa'],
+  [Error: Expected literal or identifier, got '+'],
+  [Error: Expected literal or identifier, got 'not'],
+  [Error: Unexpected keyword 'function'],
+  [Error: Unexpected keyword 'end func'],
+  [Error: Expected 'then', got 'print'],
 ]
 `;
 
@@ -1301,8 +1301,8 @@ exports[`parse default scripts open block 1`] = `Array []`;
 
 exports[`parse default scripts open block 2`] = `
 Array [
-  [Error: unexpected keyword Keyword[40:9 - 40:17: value = 'end whil'] at start of line],
-  [Error: found open block WhileStatement],
+  [Error: Unexpected keyword 'end whil'],
+  [Error: Unclosed 'while' block],
 ]
 `;
 
@@ -2511,7 +2511,7 @@ exports[`parse default scripts using repeat keyword 1`] = `Array []`;
 
 exports[`parse default scripts using repeat keyword 2`] = `
 Array [
-  [Error: unexpected keyword Keyword[2:9 - 2:15: value = 'repeat'] at start of line],
-  [Error: no matching open function block],
+  [Error: Unexpected keyword 'repeat'],
+  [Error: 'end function' without matching 'function'],
 ]
 `;

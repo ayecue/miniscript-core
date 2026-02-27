@@ -3,6 +3,10 @@ export class Stack<T> {
   private _last: T = null;
   private _default: T = null;
 
+  get length(): number {
+    return this._items.length;
+  }
+
   setDefault(item: T) {
     this._default = item;
   }
@@ -28,5 +32,10 @@ export class Stack<T> {
 
   peek(): T {
     return this._last || this._default;
+  }
+
+  truncate(length: number) {
+    this._items.length = length;
+    this._last = length > 0 ? this._items[length - 1] : null;
   }
 }
