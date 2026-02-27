@@ -662,8 +662,8 @@ exports[`parse default scripts call-with-spaces.ms unsafe 1`] = `
 `;
 
 exports[`parse default scripts callexpr-with-nl.ms 1`] = `
-"Chunk[1:1-7:2][
-	CallExpression[1:1-7:2][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
+"Chunk[1:1-6:7][
+	CallExpression[1:1-6:7][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
 ]"
 `;
 
@@ -678,8 +678,8 @@ exports[`parse default scripts callexpr-with-nl.ms 3`] = `5`;
 exports[`parse default scripts callexpr-with-nl.ms 4`] = `0`;
 
 exports[`parse default scripts callexpr-with-nl.ms unsafe 1`] = `
-"Chunk[1:1-7:2][
-	CallExpression[1:1-7:2][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
+"Chunk[1:1-6:7][
+	CallExpression[1:1-6:7][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
 ]"
 `;
 
@@ -910,7 +910,7 @@ exports[`parse default scripts invalid code 2`] = `
 Array [
   [Error: 'break' used outside of loop],
   [Error: 'continue' used outside of loop],
-  [Error: Expected one of ',', ')', got 'print'],
+  [Error: Expected one of ',', ')', got end of line],
   [Error: Expected literal or identifier, got ')'],
   [Error: Expected one of ',', ';', '<eof>', got 'wa'],
   [Error: Expected literal or identifier, got '+'],

@@ -5,7 +5,8 @@ import {
   ASTBaseBlockWithScope
 } from './parser/ast';
 import { isPendingChunk } from './parser/pending-block';
-import Parser, { ParserOptions, describeBlockType } from './parser';
+import Parser, { ParserOptions } from './parser';
+import { describeBlockType } from './parser/describe';
 import { ErrorCode, ParserException } from './types/errors';
 import { Range } from './types/range';
 
@@ -43,7 +44,7 @@ export default class UnsafeParser extends Parser {
     return err;
   }
 
-  protected processStatement(): void {
+  parseStatement(): void {
     const me = this;
 
     me.lexer.recordSnapshot();
@@ -65,7 +66,7 @@ export default class UnsafeParser extends Parser {
       pendingBodyLength: me.backpatches.peek().body.length,
     };
 
-    me.parseStatement();
+    super.parseStatement();
 
     if (me.statementErrors.length > 0) {
       me.tryToRecover(snapshot);

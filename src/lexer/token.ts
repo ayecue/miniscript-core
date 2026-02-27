@@ -12,7 +12,7 @@ export enum TokenType {
   Punctuator = 4000,
   SliceOperator = 4010,
   Comment = 5000,
-  Invalid = 9000,
+  Invalid = 9000
 }
 
 export interface BaseTokenOptions<T> extends CallArgs {
@@ -88,7 +88,17 @@ export interface TokenOptions extends CallArgs {
 
 export class Token extends BaseToken<string> {
   constructor(options: TokenOptions) {
-    super({ type: options.type, value: options.value, line: options.line, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, offsetStart: options.offsetStart, offsetEnd: options.offsetEnd, afterSpace: options.afterSpace, lastLine: options.lastLine });
+    super({
+      type: options.type,
+      value: options.value,
+      line: options.line,
+      rangeStart: options.rangeStart,
+      rangeEnd: options.rangeEnd,
+      offsetStart: options.offsetStart,
+      offsetEnd: options.offsetEnd,
+      afterSpace: options.afterSpace,
+      lastLine: options.lastLine
+    });
   }
 }
 
@@ -109,7 +119,17 @@ export class LiteralToken extends BaseToken<string | number | boolean> {
   readonly raw: string;
 
   constructor(options: LiteralTokenOptions) {
-    super({ type: options.type, value: options.value, line: options.line, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, offsetStart: options.offsetStart, offsetEnd: options.offsetEnd, afterSpace: options.afterSpace, lastLine: options.lastLine });
+    super({
+      type: options.type,
+      value: options.value,
+      line: options.line,
+      rangeStart: options.rangeStart,
+      rangeEnd: options.rangeEnd,
+      offsetStart: options.offsetStart,
+      offsetEnd: options.offsetEnd,
+      afterSpace: options.afterSpace,
+      lastLine: options.lastLine
+    });
     this.raw = options.raw;
   }
 

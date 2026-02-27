@@ -1,7 +1,6 @@
-import { ASTBase, ASTType } from './ast';
-import { Comment } from '../types/comment';
-
 import type Parser from '../parser';
+import { Comment } from '../types/comment';
+import { ASTBase, ASTType } from './ast';
 
 export interface NoopConsumer {
   onComment(parser: Parser, comment: Comment, isStatement: boolean): void;

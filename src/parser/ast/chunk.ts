@@ -20,7 +20,7 @@ export class ASTChunk extends ASTBaseBlockWithScope {
   comments: Comment[];
   scopes: ASTBaseBlockWithScope[];
 
-  private _reg: LineRegistry;
+  protected _reg: LineRegistry;
   private _lines: LineRegistryView;
 
   constructor(options: ASTChunkOptions) {

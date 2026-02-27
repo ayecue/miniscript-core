@@ -1,7 +1,10 @@
 import { Token, TokenType } from '../lexer/token';
+import {
+  registerSelector,
+  registerSelectorGroup
+} from '../utils/selector-registry';
 import { Keyword } from './keywords';
 import { Operator } from './operators';
-import { registerSelector, registerSelectorGroup } from '../utils/selector-registry';
 
 export enum SelectorType {
   EndOfLine = 'EndOfLine',
@@ -56,6 +59,12 @@ export enum SelectorType {
   LessEqual = 'LessEqual',
   New = 'New',
   Not = 'Not',
+  Return = 'Return',
+  If = 'If',
+  While = 'While',
+  For = 'For',
+  Continue = 'Continue',
+  Break = 'Break',
   Comment = 'Comment'
 }
 
@@ -83,9 +92,10 @@ export function createSelector(options: createSelectorOptions): Selector {
   } as Selector;
 
   Object.defineProperty(selectorf, 'name', {
-    value: options.value !== undefined
-      ? `selector_${TokenType[options.type]}_${options.value}`
-      : `selector_${TokenType[options.type]}`,
+    value:
+      options.value !== undefined
+        ? `selector_${TokenType[options.type]}_${options.value}`
+        : `selector_${TokenType[options.type]}`,
     writable: false
   });
 
@@ -307,6 +317,30 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Keyword,
     value: Keyword.Not
   }),
+  Return: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Return
+  }),
+  If: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.If
+  }),
+  While: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.While
+  }),
+  For: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.For
+  }),
+  Continue: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Continue
+  }),
+  Break: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Break
+  }),
   Comment: createSelector({
     type: TokenType.Comment
   })
@@ -323,7 +357,9 @@ export function createSelectorGroup(
   name: string,
   selectors: Selector[]
 ): SelectorGroup {
-  const entries = selectors.map((s) => registerSelector(s.data.type, s.data.value));
+  const entries = selectors.map((s) =>
+    registerSelector(s.data.type, s.data.value)
+  );
   const bit = registerSelectorGroup(entries);
 
   const groupf = function (token: Token): boolean {
@@ -414,5 +450,3 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
     Selectors.RParenthesis
   ])
 };
-
-

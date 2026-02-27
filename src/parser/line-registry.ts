@@ -20,10 +20,10 @@ export class LineRegistry {
 export class LineRegistryView {
   readonly items: ASTBase[];
 
-  private _n: number;            // half-size, always a power of 2
-  private _store: number[];     // flat item refs, grouped by node
-  private _offset: Uint32Array;  // start offset in _store for each node
-  private _count: Uint16Array;   // item count per node
+  private _n: number; // half-size, always a power of 2
+  private _store: number[]; // flat item refs, grouped by node
+  private _offset: Uint32Array; // start offset in _store for each node
+  private _count: Uint16Array; // item count per node
 
   constructor(items: ASTBase[]) {
     const len = items.length;
@@ -99,7 +99,7 @@ export class LineRegistryView {
     const store = this._store;
     const offset = this._offset;
     const count = this._count;
-    let result: ASTBase[] = [];
+    const result: ASTBase[] = [];
 
     // Walk from leaf to root, collecting items at each node
     for (let p = line + n; p > 0; p >>= 1) {

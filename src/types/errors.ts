@@ -25,7 +25,7 @@ export enum ErrorCode {
   BreakOutsideLoop = 5001,
   ContinueOutsideLoop = 5002,
   InvalidDefaultValue = 5003,
-  TrailingCommaInParams = 5004,
+  TrailingCommaInParams = 5004
 }
 
 export class LexerException extends Error {
@@ -33,7 +33,12 @@ export class LexerException extends Error {
   range: Range;
   hint: string | null;
 
-  constructor(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string) {
+  constructor(
+    message: string,
+    range: Range,
+    code: ErrorCode = ErrorCode.Unknown,
+    hint?: string
+  ) {
     super(message);
     this.code = code;
     this.range = range;
@@ -46,7 +51,12 @@ export class ParserException extends Error {
   range: Range;
   hint: string | null;
 
-  constructor(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string) {
+  constructor(
+    message: string,
+    range: Range,
+    code: ErrorCode = ErrorCode.Unknown,
+    hint?: string
+  ) {
     super(message);
     this.code = code;
     this.range = range;

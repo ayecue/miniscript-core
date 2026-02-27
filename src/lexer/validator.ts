@@ -34,7 +34,9 @@ export default class Validator {
   }
 
   isEndOfLine(code: number): boolean {
-    return CharacterCode.NEW_LINE === code || CharacterCode.RETURN_LINE === code;
+    return (
+      CharacterCode.NEW_LINE === code || CharacterCode.RETURN_LINE === code
+    );
   }
 
   isComment(code: number, nextCode: number): boolean {
@@ -42,18 +44,30 @@ export default class Validator {
   }
 
   isIdentifierStart(code: number): boolean {
-    return ((code | CharacterCode.WHITESPACE) - 97 >>> 0) < 26 || code === 95 || code >= 128;
+    return (
+      ((code | CharacterCode.WHITESPACE) - 97) >>> 0 < 26 ||
+      code === 95 ||
+      code >= 128
+    );
   }
 
   isIdentifierPart(code: number): boolean {
-    return ((code | CharacterCode.WHITESPACE) - 97 >>> 0) < 26 || (code - 48 >>> 0) < 10 || code === 95 || code >= 128;
+    return (
+      ((code | CharacterCode.WHITESPACE) - 97) >>> 0 < 26 ||
+      (code - 48) >>> 0 < 10 ||
+      code === 95 ||
+      code >= 128
+    );
   }
 
   isDecDigit(code: number): boolean {
-    return (code - 48 >>> 0) < 10;
+    return (code - 48) >>> 0 < 10;
   }
 
   isWinNewline(code: number, nextCode: number): boolean {
-    return (code ^ nextCode) === 7 && (code === CharacterCode.NEW_LINE || code === CharacterCode.RETURN_LINE);
+    return (
+      (code ^ nextCode) === 7 &&
+      (code === CharacterCode.NEW_LINE || code === CharacterCode.RETURN_LINE)
+    );
   }
 }

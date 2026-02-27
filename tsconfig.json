@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ESNext",
     "module": "commonjs",
     "lib": [
-      "ES6"
+      "ESNext"
     ],
+    "useDefineForClassFields": false,
     "allowJs": true,
     "outDir": "dist",
     "noImplicitAny": true,

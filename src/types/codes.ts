@@ -39,5 +39,5 @@ export enum CharacterCode {
   LETTER_E = 69,
   LETTER_e = 101,
   LETTER_i = 105,
-  LETTER_f = 102,
+  LETTER_f = 102
 }

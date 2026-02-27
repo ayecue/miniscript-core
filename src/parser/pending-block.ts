@@ -71,7 +71,8 @@ export class PendingChunk extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.endLine = endToken.endLine;
+    this.block.endChar = endToken.endChar;
     this.block.rangeEnd = endToken.rangeEnd;
     super.complete(endToken);
   }
@@ -92,7 +93,8 @@ export class PendingFor extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.endLine = endToken.endLine;
+    this.block.endChar = endToken.endChar;
     this.block.rangeEnd = endToken.rangeEnd;
     this.lineRegistry.register(this.block);
     super.complete(endToken);
@@ -121,7 +123,8 @@ export class PendingFunction extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.endLine = endToken.endLine;
+    this.block.endChar = endToken.endChar;
     this.block.rangeEnd = endToken.rangeEnd;
 
     if (this.base !== null) {
@@ -160,7 +163,8 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
 
   next(endToken: Token): void {
     this.currentClause.body = this.body;
-    this.currentClause.endLine = endToken.endLine; this.currentClause.endChar = endToken.endChar;
+    this.currentClause.endLine = endToken.endLine;
+    this.currentClause.endChar = endToken.endChar;
     this.currentClause.rangeEnd = endToken.rangeEnd;
     this.block.clauses.push(this.currentClause);
     super.complete(endToken);
@@ -169,7 +173,8 @@ export class PendingIf extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     if (this.body.length > 0) this.next(endToken);
-    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.endLine = endToken.endLine;
+    this.block.endChar = endToken.endChar;
     this.block.rangeEnd = endToken.rangeEnd;
     this.lineRegistry.register(this.block);
     super.complete(endToken);
@@ -191,7 +196,8 @@ export class PendingWhile extends PendingBlockBase implements PendingBlock {
 
   complete(endToken: Token): void {
     this.block.body = this.body;
-    this.block.endLine = endToken.endLine; this.block.endChar = endToken.endChar;
+    this.block.endLine = endToken.endLine;
+    this.block.endChar = endToken.endChar;
     this.block.rangeEnd = endToken.rangeEnd;
     this.lineRegistry.register(this.block);
     super.complete(endToken);
