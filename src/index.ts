@@ -1,7 +1,9 @@
 export { default as Lexer, LexerOptions } from './lexer';
+export { default as UnsafeLexer } from './unsafe-lexer';
 export * from './lexer/token';
 export { default as LexerValidator } from './lexer/validator';
 export { default as Parser, ParserOptions } from './parser';
+export { default as UnsafeParser } from './unsafe-parser';
 export { NoopConsumer, PreserveConsumer } from './parser/noop-consumer';
 export * from './parser/ast';
 export { default as ParserValidatorm } from './parser/validator';

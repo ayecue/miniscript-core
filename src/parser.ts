@@ -41,7 +41,7 @@ export interface ParserOptions {
   preserve?: boolean;
 }
 
-function describeToken(token: Token): string {
+export function describeToken(token: Token): string {
   switch (token.type) {
     case TokenType.EOF: return 'end of file';
     case TokenType.EOL: return 'end of line';
@@ -49,7 +49,7 @@ function describeToken(token: Token): string {
   }
 }
 
-function describeBlockType(type: string): string {
+export function describeBlockType(type: string): string {
   switch (type) {
     case ASTType.IfStatement:
     case ASTType.IfShortcutStatement:
@@ -59,22 +59,6 @@ function describeBlockType(type: string): string {
     case ASTType.FunctionDeclaration: return 'function';
     default: return type;
   }
-}
-
-interface ParserSnapshot {
-  literalsLength: number;
-  scopesLength: number;
-  outerScopesLength: number;
-  commentsLength: number;
-  iteratorStackLength: number;
-  lineRegistryItemsLength: number;
-  currentScope: ASTBaseBlockWithScope;
-  currentScopeNamespacesLength: number;
-  currentScopeDefinitionsLength: number;
-  currentScopeReturnsLength: number;
-  currentAssignment: ASTAssignmentStatement;
-  backpatchesLength: number;
-  pendingBodyLength: number;
 }
 
 export default class Parser {
@@ -91,7 +75,6 @@ export default class Parser {
   comments: Comment[];
   scopes: ASTBaseBlockWithScope[];
   backpatches: Stack<PendingBlock>;
-  statementErrors: Error[];
   lineRegistry: LineRegistry;
 
   // comment attachment state
@@ -103,7 +86,6 @@ export default class Parser {
   lexer: Lexer;
   validator: Validator;
   astProvider: ASTProvider;
-  unsafe: boolean;
   preserve: boolean;
   noopConsumer: NoopConsumer | null;
   errors: Error[];
@@ -113,7 +95,6 @@ export default class Parser {
 
     me.content = content;
     me.backpatches = new Stack();
-    me.statementErrors = [];
     me.lexer =
       options.lexer ||
       new Lexer(content, {
@@ -134,7 +115,6 @@ export default class Parser {
     me.lastStatement = null;
     me.validator = options.validator || new Validator();
     me.astProvider = options.astProvider || new ASTProvider();
-    me.unsafe = options.unsafe || false;
     me.preserve = options.preserve || false;
     me.noopConsumer = me.preserve ? PreserveConsumer : null;
     me.errors = [];
@@ -293,46 +273,18 @@ export default class Parser {
     me.currentScope = me.outerScopes.pop();
   }
 
-  tryToRecover(snapshot: ParserSnapshot) {
-    const me = this;
-    const firstPointOfFailure = me.statementErrors[0];
-
-    me.errors.push(firstPointOfFailure);
-
-    if (!me.unsafe) {
-      throw firstPointOfFailure;
-    }
-
-    // Roll back parser state to before the failed statement
-    me.literals.length = snapshot.literalsLength;
-    me.scopes.length = snapshot.scopesLength;
-    me.outerScopes.length = snapshot.outerScopesLength;
-    me.comments.length = snapshot.commentsLength;
-    me.iteratorStack.length = snapshot.iteratorStackLength;
-    me.lineRegistry.items.length = snapshot.lineRegistryItemsLength;
-
-    me.currentScope = snapshot.currentScope;
-    me.currentScope.namespaces.length = snapshot.currentScopeNamespacesLength;
-    me.currentScope.definitions.length = snapshot.currentScopeDefinitionsLength;
-    me.currentScope.returns.length = snapshot.currentScopeReturnsLength;
-
-    me.currentAssignment = snapshot.currentAssignment;
-
-    me.backpatches.truncate(snapshot.backpatchesLength);
-    me.backpatches.peek().body.length = snapshot.pendingBodyLength;
-
-    // Rewind lexer and skip to end of line
-    me.lexer.recoverFromSnapshot();
-    me.next();
-    for (; me.token.type !== TokenType.EOL && me.token.type !== TokenType.EOF; me.next());
-  }
-
   finishRemaingScopes() {
     const me = this;
     let last = me.backpatches.pop();
 
     while (!isPendingChunk(last)) {
       const blockName = describeBlockType(last.block.type);
+      const parent = me.backpatches.peek();
+      let hint = `Add 'end ${blockName}' to close this block`;
+      if (!isPendingChunk(parent)) {
+        const parentName = describeBlockType(parent.block.type);
+        hint += ` (inside '${parentName}' at line ${parent.block.startLine})`;
+      }
       const exception = new ParserException(
         `Unclosed '${blockName}' block`,
         new Range(
@@ -340,18 +292,12 @@ export default class Parser {
           [last.block.startLine, last.block.startChar]
         ),
         ErrorCode.UnclosedBlock,
-        `Add 'end ${blockName}' to close this block`
+        hint
       );
 
       last.complete(me.previousToken);
-
       me.errors.push(exception);
-
-      if (!me.unsafe) {
-        throw exception;
-      }
-
-      last = me.backpatches.pop();
+      throw exception;
     }
   }
 
@@ -371,30 +317,7 @@ export default class Parser {
 
       if (Selectors.EndOfFile(me.token)) break;
 
-      me.lexer.recordSnapshot();
-      me.statementErrors = [];
-
-      const snapshot: ParserSnapshot = {
-        literalsLength: me.literals.length,
-        scopesLength: me.scopes.length,
-        outerScopesLength: me.outerScopes.length,
-        commentsLength: me.comments.length,
-        iteratorStackLength: me.iteratorStack.length,
-        lineRegistryItemsLength: me.lineRegistry.items.length,
-        currentScope: me.currentScope,
-        currentScopeNamespacesLength: me.currentScope.namespaces.length,
-        currentScopeDefinitionsLength: me.currentScope.definitions.length,
-        currentScopeReturnsLength: me.currentScope.returns.length,
-        currentAssignment: me.currentAssignment,
-        backpatchesLength: me.backpatches.length,
-        pendingBodyLength: me.backpatches.peek().body.length,
-      };
-
-      me.parseStatement();
-
-      if (me.statementErrors.length > 0) {
-        me.tryToRecover(snapshot);
-      }
+      me.processStatement();
     }
 
     me.finishRemaingScopes();
@@ -406,6 +329,10 @@ export default class Parser {
     chunk.scopes = me.scopes;
 
     return chunk;
+  }
+
+  protected processStatement(): void {
+    this.parseStatement();
   }
 
   parseStatement(): void {
@@ -1983,11 +1910,8 @@ export default class Parser {
   }
 
   raise(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string): ParserException {
-    const me = this;
     const err = new ParserException(message, range, code, hint);
-
-    me.statementErrors.push(err);
-
-    return err;
+    this.errors.push(err);
+    throw err;
   }
 }

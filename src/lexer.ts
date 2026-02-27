@@ -24,13 +24,7 @@ export default class Lexer {
   tabWidth: number;
 
   validator: Validator;
-  unsafe: boolean;
   errors: Error[];
-
-  private _savedIndex: number = 0;
-  private _savedLine: number = 1;
-  private _savedLineStart: number = 0;
-  private _savedOffset: number = 0;
 
   constructor(content: string, options: LexerOptions = {}) {
     const me = this;
@@ -44,7 +38,6 @@ export default class Lexer {
     me.lineStart = 0;
     me.offset = 0;
     me.validator = options.validator || new Validator();
-    me.unsafe = options.unsafe;
     me.errors = [];
   }
 
@@ -541,39 +534,9 @@ export default class Lexer {
     );
   }
 
-  recordSnapshot() {
-    this._savedIndex = this.index;
-    this._savedLine = this.line;
-    this._savedLineStart = this.lineStart;
-    this._savedOffset = this.offset;
-  }
-
-  recoverFromSnapshot() {
-    this.index = this._savedIndex;
-    this.line = this._savedLine;
-    this.lineStart = this._savedLineStart;
-    this.offset = this._savedOffset;
-  }
-
   raise(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string): Token {
-    const me = this;
     const err = new LexerException(message, range, code, hint);
-
-    me.errors.push(err);
-
-    if (me.unsafe) {
-      return new Token({
-        type: TokenType.Invalid,
-        value: '',
-        line: me.line,
-        rangeStart: me.tokenStart,
-        rangeEnd: me.index,
-        offsetStart: me.offset,
-        offsetEnd: me.offset,
-        afterSpace: false
-      });
-    }
-
+    this.errors.push(err);
     throw err;
   }
 }

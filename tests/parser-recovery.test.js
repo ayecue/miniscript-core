@@ -1,13 +1,12 @@
-const { Parser, Lexer, ASTType, ErrorCode } = require('../dist');
+const { Parser, UnsafeParser, UnsafeLexer, Lexer, ASTType, ErrorCode } = require('../dist');
 
 /**
  * Helper: parse in unsafe mode, return { chunk, parser, lexer }.
  */
 function unsafeParse(source) {
-  const lexer = new Lexer(source, { unsafe: true, tabWidth: 2 });
-  const parser = new Parser(source, { unsafe: true, lexer });
+  const parser = new UnsafeParser(source, { tabWidth: 2 });
   const chunk = parser.parseChunk();
-  return { chunk, parser, lexer };
+  return { chunk, parser, lexer: parser.lexer };
 }
 
 describe('tryToRecover', () => {
@@ -48,7 +47,7 @@ describe('tryToRecover', () => {
     test('in non-unsafe mode, throws on first error', () => {
       expect(() => {
         // A dot on its own causes a parser error
-        const parser = new Parser('.\nx = 1', { unsafe: false });
+        const parser = new Parser('.\nx = 1');
         parser.parseChunk();
       }).toThrow();
     });
@@ -202,8 +201,8 @@ describe('tryToRecover', () => {
 
     test('lexer errors are separate from parser errors', () => {
       const source = 'print(" ad"';
-      const lexer = new Lexer(source, { unsafe: true, tabWidth: 2 });
-      const parser = new Parser(source, { unsafe: true, lexer });
+      const lexer = new UnsafeLexer(source, { tabWidth: 2 });
+      const parser = new UnsafeParser(source, { lexer });
       parser.parseChunk();
 
       expect(Array.isArray(lexer.errors)).toBe(true);
@@ -439,7 +438,7 @@ describe('tryToRecover', () => {
     });
 
     test('lexer errors have error codes', () => {
-      const lexer = new Lexer('"unterminated', { unsafe: true, tabWidth: 2 });
+      const lexer = new UnsafeLexer('"unterminated', { tabWidth: 2 });
       while (lexer.next().type !== 1000) {} // drain until EOF
       expect(lexer.errors.length).toBeGreaterThan(0);
       expect(lexer.errors[0].code).toBe(ErrorCode.UnexpectedStringEOF);

@@ -1,4 +1,4 @@
-const { Lexer, TokenType } = require('../dist');
+const { UnsafeLexer, TokenType } = require('../dist');
 const fs = require('fs');
 const path = require('path');
 const testFolder = path.resolve(__dirname, 'scripts');
@@ -7,7 +7,7 @@ const testFolder = path.resolve(__dirname, 'scripts');
  * Collect all non-EOF tokens from reading source with the lexer.
  */
 function collectTokens(source) {
-  const lexer = new Lexer(source, { tabWidth: 4, unsafe: true });
+  const lexer = new UnsafeLexer(source, { tabWidth: 4 });
   const tokens = [];
   let token = lexer.next();
   while (token.type !== TokenType.EOF) {
