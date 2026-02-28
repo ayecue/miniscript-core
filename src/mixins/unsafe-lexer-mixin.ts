@@ -5,7 +5,9 @@ import { Range } from '../types/range';
 
 type LexerConstructor<T extends LexerShape> = new (...args: any[]) => T;
 
-export default function UnsafeLexerMixin<T extends LexerConstructor<LexerShape>>(Base: T) {
+export default function UnsafeLexerMixin<
+  T extends LexerConstructor<LexerShape>
+>(Base: T) {
   return class UnsafeLexer extends Base {
     _savedIndex: number = 0;
     _savedLine: number = 1;
@@ -26,7 +28,12 @@ export default function UnsafeLexerMixin<T extends LexerConstructor<LexerShape>>
       this.offset = this._savedOffset;
     }
 
-    raise(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string): Token {
+    raise(
+      message: string,
+      range: Range,
+      code: ErrorCode = ErrorCode.Unknown,
+      hint?: string
+    ): Token {
       const err = new LexerException(message, range, code, hint);
       this.errors.push(err);
 

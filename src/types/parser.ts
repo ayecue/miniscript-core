@@ -1,9 +1,15 @@
-import { Token } from "../lexer/token";
-import { ASTAssignmentStatement, ASTBaseBlockWithScope, ASTForGenericStatement, ASTLiteral, ASTWhileStatement } from "../parser/ast";
-import { LineRegistry } from "../parser/line-registry";
-import { PendingBlock } from "../parser/pending-block";
-import { Stack } from "../utils/stack";
-import { Comment } from "./comment";
+import { Token } from '../lexer/token';
+import {
+  ASTAssignmentStatement,
+  ASTBaseBlockWithScope,
+  ASTForGenericStatement,
+  ASTLiteral,
+  ASTWhileStatement
+} from '../parser/ast';
+import { LineRegistry } from '../parser/line-registry';
+import { PendingBlock } from '../parser/pending-block';
+import { Stack } from '../utils/stack';
+import { Comment } from './comment';
 
 export interface ParserShape {
   token: Token | null;

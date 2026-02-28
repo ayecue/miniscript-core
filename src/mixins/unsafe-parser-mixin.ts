@@ -1,18 +1,10 @@
-import { Token, TokenType } from '../lexer/token';
-import {
-  ASTAssignmentStatement,
-  ASTBase,
-  ASTBaseBlockWithScope,
-  ASTLiteral
-} from '../parser/ast';
-import { isPendingChunk, PendingBlock } from '../parser/pending-block';
+import { TokenType } from '../lexer/token';
+import { ASTAssignmentStatement, ASTBaseBlockWithScope } from '../parser/ast';
 import { describeBlockType } from '../parser/describe';
+import { isPendingChunk } from '../parser/pending-block';
 import { ErrorCode, ParserException } from '../types/errors';
-import { Range } from '../types/range';
-import { Stack } from '../utils/stack';
-import { LineRegistry } from '../parser/line-registry';
-import { Comment } from '../types/comment';
 import { ParserShape } from '../types/parser';
+import { Range } from '../types/range';
 
 export interface ParserSnapshot {
   literalsLength: number;
@@ -32,11 +24,18 @@ export interface ParserSnapshot {
 
 type ParserConstructor<T extends ParserShape> = new (...args: any[]) => T;
 
-export default function UnsafeParserMixin<T extends ParserConstructor<ParserShape>>(Base: T) {
+export default function UnsafeParserMixin<
+  T extends ParserConstructor<ParserShape>
+>(Base: T) {
   return class UnsafeParser extends Base {
     statementErrors: Error[] = [];
 
-    raise(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string): ParserException {
+    raise(
+      message: string,
+      range: Range,
+      code: ErrorCode = ErrorCode.Unknown,
+      hint?: string
+    ): ParserException {
       const err = new ParserException(message, range, code, hint);
       this.statementErrors.push(err);
       return err;
@@ -61,7 +60,7 @@ export default function UnsafeParserMixin<T extends ParserConstructor<ParserShap
         currentScopeReturnsLength: me.currentScope.returns.length,
         currentAssignment: me.currentAssignment,
         backpatchesLength: me.backpatches.length,
-        pendingBodyLength: me.backpatches.peek().body.length,
+        pendingBodyLength: me.backpatches.peek().body.length
       };
 
       super.parseStatement();
@@ -87,7 +86,8 @@ export default function UnsafeParserMixin<T extends ParserConstructor<ParserShap
 
       me.currentScope = snapshot.currentScope;
       me.currentScope.namespaces.length = snapshot.currentScopeNamespacesLength;
-      me.currentScope.definitions.length = snapshot.currentScopeDefinitionsLength;
+      me.currentScope.definitions.length =
+        snapshot.currentScopeDefinitionsLength;
       me.currentScope.returns.length = snapshot.currentScopeReturnsLength;
 
       me.currentAssignment = snapshot.currentAssignment;
@@ -98,7 +98,11 @@ export default function UnsafeParserMixin<T extends ParserConstructor<ParserShap
       // Rewind lexer and skip to end of line
       me.lexer.recoverFromSnapshot();
       me.next();
-      for (; me.token.type !== TokenType.EOL && me.token.type !== TokenType.EOF; me.next());
+      for (
+        ;
+        me.token.type !== TokenType.EOL && me.token.type !== TokenType.EOF;
+        me.next()
+      );
     }
 
     finishRemaingScopes() {
@@ -114,9 +118,10 @@ export default function UnsafeParserMixin<T extends ParserConstructor<ParserShap
           hint += ` (inside '${parentName}' at line ${parent.block.startLine})`;
         }
         // Use reference-style message for while/for/function; keep specific message for if
-        const message = blockName === 'if'
-          ? `Unclosed '${blockName}' block`
-          : `'${blockName}' without matching 'end ${blockName}'`;
+        const message =
+          blockName === 'if'
+            ? `Unclosed '${blockName}' block`
+            : `'${blockName}' without matching 'end ${blockName}'`;
         const exception = new ParserException(
           message,
           new Range(
