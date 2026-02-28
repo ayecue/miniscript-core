@@ -2,46 +2,44 @@
 
 [![miniscript-core](https://circleci.com/gh/ayecue/miniscript-core.svg?style=svg)](https://circleci.com/gh/ayecue/miniscript-core)
 
-Basic Lexer and Parser for MiniScript.
+A lexer and parser for [MiniScript](https://miniscript.org) written in TypeScript. It produces an AST and is designed to serve as a foundation for language supersets such as [greybel-core](../greybel-core) and [greyscript-core](../greyscript-core).
+
+## Features
+
+* Produces a full AST from MiniScript source code
+* Pratt parser with O(1) operator dispatch via precomputed selector IDs
+* Rich error reporting — exceptions include message, source range, error code, and an optional hint
+* Unsafe mode via `UnsafeLexer` and `UnsafeParser` for error recovery without throwing
+* Fully extensible through custom operator tables, keyword handlers, selectors, and AST providers
+* Written in TypeScript with type definitions included
 
 ## Install
 
-```bash
-npm install --save miniscript-core
+```
+npm install miniscript-core
 ```
 
-## Lexer
-
-### Options
-
-- `validator` - define custom validator
-- `tabWidth` - define the used tab width in file
-- `unsafe` - will parse invalid MiniScript without throwing (useful for debugging)
-
-### Usage
+## Usage
 
 ```ts
-const content = 'print "hello world"';
-const lexer = new Lexer(content);
-const parser = new Parser(content, { lexer });
-const payload = parser.parseChunk(); // AST
+import { Parser } from 'miniscript-core';
+
+const chunk = new Parser('print "hello world"').parseChunk();
+console.log(chunk.toString());
 ```
 
-## Parser 
+## Extending
 
+miniscript-core is built to be extended without forking. The parser accepts custom operator tables (`prefixOps`, `infixOps`, `atomOps`, `keywordOps`) that control how every expression, statement, atom, and keyword is parsed. You can start from the default behavior using the provided builders — `default*OpBuilder()` and `defaultKeywordHandlerBuilder()` — and then add or replace individual entries.
 
-### Options
+Token matching uses `Selector` objects with precomputed `selectorId` values for fast dispatch. New selectors can be created with `createSelector` and grouped with `createSelectorGroup`.
 
-- `validator` - define custom validator
-- `astProvider` - define custom ast provider
-- `lexer` - define custom lexer
-- `tabWidth` - define the used tab width in file
-- `unsafe` - will parse invalid MiniScript without throwing (useful for debugging)
+When building a custom subclass of `Lexer` or `Parser`, wrap it with `UnsafeLexerMixin` or `UnsafeParserMixin` to gain the same error-recovery behavior as the built-in unsafe variants.
 
-### Usage
+## Testing
 
-```ts
-const content = 'print "hello world"';
-const parser = new Parser(content);
-const payload = parser.parseChunk(); // AST
+The test suite can be run from the command line with:
+
+```
+npm test
 ```
