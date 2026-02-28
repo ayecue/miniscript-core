@@ -45,6 +45,7 @@
     "nodemon": "^2.0.15",
     "ts-node": "^10.4.0",
     "ts-patch": "^3.3.0",
+    "ts-transform-args": "^0.1.2",
     "typescript": "~5.9.0"
   },
   "keywords": [
