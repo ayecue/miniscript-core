@@ -8,7 +8,7 @@ A lexer and parser for [MiniScript](https://miniscript.org) written in TypeScrip
 
 * Produces a full AST from MiniScript source code
 * Pratt parser with O(1) operator dispatch via precomputed selector IDs
-* Rich error reporting — exceptions include message, source range, error code, and an optional hint
+* Rich error reporting; exceptions include message, source range, error code, and an optional hint
 * Unsafe mode via `UnsafeLexer` and `UnsafeParser` for error recovery without throwing
 * Fully extensible through custom operator tables, keyword handlers, selectors, and AST providers
 * Written in TypeScript with type definitions included
