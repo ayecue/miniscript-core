@@ -364,6 +364,201 @@ describe('tryToRecover', () => {
     });
   });
 
+  describe('open nested block error positions', () => {
+    test('unclosed if points to the opening keyword', () => {
+      const { parser } = unsafeParse([
+        'x = 1',
+        'if true then',
+        '  y = 2'
+      ].join('\n'));
+
+      const err = parser.errors.find((e) => e.code === ErrorCode.UnclosedBlock);
+      expect(err).toBeDefined();
+      expect(err.range.start).toEqual([2, 1]);
+    });
+
+    test('nested unclosed blocks each point to their own opening keyword', () => {
+      const { parser } = unsafeParse([
+        'x = 1',
+        'if true then',
+        '  while true',
+        '    for i in [1, 2]',
+        '      y = 2'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(3);
+
+      // Innermost (for) reported first, outermost (if) last
+      const positions = unclosedErrors.map((e) => e.range.start);
+      expect(positions).toEqual([
+        [4, 5],   // for
+        [3, 3],   // while
+        [2, 1]    // if
+      ]);
+    });
+
+    test('unclosed function inside unclosed if both report their positions', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  f = function()',
+        '    x = 1'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(2);
+
+      const positions = unclosedErrors.map((e) => e.range.start);
+      expect(positions).toEqual([
+        [2, 7],   // function
+        [1, 1]    // if
+      ]);
+    });
+
+    test('hints reference the parent block for nested unclosed blocks', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  while true',
+        '    x = 1'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+
+      // Inner block hint mentions parent
+      expect(unclosedErrors[0].hint).toMatch(/end while/);
+      expect(unclosedErrors[0].hint).toMatch(/inside 'if'/);
+
+      // Outer block hint has no parent reference
+      expect(unclosedErrors[1].hint).toMatch(/end if/);
+    });
+
+    test('deeply nested unclosed blocks (4 levels) all report correctly', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  while true',
+        '    for i in [1]',
+        '      f = function()',
+        '        x = 1'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(4);
+
+      // Each error should point to its respective opening keyword line
+      const lines = unclosedErrors.map((e) => e.range.start[0]);
+      expect(lines).toEqual([4, 3, 2, 1]);
+    });
+
+    test('closed block followed by unclosed block only reports the open one', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  x = 1',
+        'end if',
+        'while true',
+        '  y = 2'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(1);
+      expect(unclosedErrors[0].message).toMatch(/while/);
+      expect(unclosedErrors[0].range.start).toEqual([4, 1]);
+    });
+
+    test('inner block closed, outer block unclosed reports only the outer', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  while true',
+        '    x = 1',
+        '  end while'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(1);
+      expect(unclosedErrors[0].message).toMatch(/if/);
+      expect(unclosedErrors[0].range.start).toEqual([1, 1]);
+    });
+
+    test('closed block then unclosed block with unclosed nested child', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  x = 1',
+        'end if',
+        'while true',
+        '  for i in [1]',
+        '    y = 2'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(2);
+
+      const positions = unclosedErrors.map((e) => e.range.start);
+      expect(positions).toEqual([
+        [5, 3],   // for (inner, reported first)
+        [4, 1]    // while (outer)
+      ]);
+    });
+
+    test('alternating closed and open blocks only reports the last open one', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  x = 1',
+        'end if',
+        'while true',
+        '  y = 2',
+        'end while',
+        'for i in [1]',
+        '  z = 3'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(1);
+      expect(unclosedErrors[0].message).toMatch(/for/);
+      expect(unclosedErrors[0].range.start).toEqual([7, 1]);
+    });
+
+    test('sibling: first child closed, second child open, parent open', () => {
+      const { parser } = unsafeParse([
+        'if true then',
+        '  while true',
+        '    x = 1',
+        '  end while',
+        '  for i in [1]',
+        '    y = 2'
+      ].join('\n'));
+
+      const unclosedErrors = parser.errors.filter(
+        (e) => e.code === ErrorCode.UnclosedBlock
+      );
+      expect(unclosedErrors.length).toBe(2);
+
+      const positions = unclosedErrors.map((e) => e.range.start);
+      expect(positions).toEqual([
+        [5, 3],   // for (unclosed child, reported first)
+        [1, 1]    // if (unclosed parent)
+      ]);
+
+      // for's hint should reference the parent if
+      expect(unclosedErrors[0].hint).toMatch(/end for/);
+      expect(unclosedErrors[0].hint).toMatch(/inside 'if'/);
+    });
+  });
+
   describe('error codes and hints', () => {
     test('expression error has ExpectedExpression code', () => {
       const { parser } = unsafeParse('.');
