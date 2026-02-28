@@ -570,3 +570,4 @@ export default class Lexer implements LexerShape {
 }
 
 export const UnsafeLexer = UnsafeLexerMixin(Lexer);
+export type UnsafeLexer = InstanceType<typeof UnsafeLexer>;

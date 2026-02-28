@@ -113,7 +113,7 @@ describe('tryToRecover', () => {
     });
   });
 
-  describe('open block recovery (finishRemaingScopes)', () => {
+  describe('open block recovery (finishRemainingScopes)', () => {
     test('unclosed if produces error and still returns chunk', () => {
       const { chunk, parser } = unsafeParse([
         'x = 1',
