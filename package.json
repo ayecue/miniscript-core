@@ -1,6 +1,6 @@
 {
   "name": "miniscript-core",
-  "version": "1.7.0",
+  "version": "2.0.0",
   "description": "Core lexer/parser for MiniScript",
   "main": "dist/index",
   "typings": "dist/index",
