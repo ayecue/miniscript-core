@@ -1,8 +1,10 @@
 import { BaseToken, LiteralToken, Token, TokenType } from './lexer/token';
 import Validator from './lexer/validator';
+import UnsafeLexerMixin from './mixins/unsafe-lexer-mixin';
 import { CharacterCode } from './types/codes';
 import { ErrorCode, LexerException } from './types/errors';
 import { Keyword } from './types/keywords';
+import { LexerShape } from './types/lexer';
 import { Literal } from './types/literals';
 import { Operator } from './types/operators';
 import { Range } from './types/range';
@@ -13,7 +15,7 @@ export interface LexerOptions {
   tabWidth?: number;
 }
 
-export default class Lexer {
+export default class Lexer implements LexerShape {
   content: string;
   length: number;
   index: number;
@@ -540,3 +542,5 @@ export default class Lexer {
     throw err;
   }
 }
+
+export const UnsafeLexer = UnsafeLexerMixin(Lexer);

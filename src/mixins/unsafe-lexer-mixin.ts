@@ -1,19 +1,11 @@
-import { Token, TokenType } from './lexer/token';
-import { ErrorCode, LexerException } from './types/errors';
-import { Range } from './types/range';
+import { Token, TokenType } from '../lexer/token';
+import { ErrorCode, LexerException } from '../types/errors';
+import { LexerShape } from '../types/lexer';
+import { Range } from '../types/range';
 
-export interface UnsafeLexerBase {
-  index: number;
-  line: number;
-  lineStart: number;
-  offset: number;
-  tokenStart: number | null;
-  errors: Error[];
-}
+type LexerConstructor<T extends LexerShape> = new (...args: any[]) => T;
 
-type LexerConstructor<T extends UnsafeLexerBase> = new (...args: any[]) => T;
-
-export default function UnsafeLexerMixin<T extends LexerConstructor<UnsafeLexerBase>>(Base: T) {
+export default function UnsafeLexerMixin<T extends LexerConstructor<LexerShape>>(Base: T) {
   return class UnsafeLexer extends Base {
     _savedIndex: number = 0;
     _savedLine: number = 1;

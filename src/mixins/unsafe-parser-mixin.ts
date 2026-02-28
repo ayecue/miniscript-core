@@ -1,17 +1,18 @@
-import { Token, TokenType } from './lexer/token';
+import { Token, TokenType } from '../lexer/token';
 import {
   ASTAssignmentStatement,
   ASTBase,
   ASTBaseBlockWithScope,
   ASTLiteral
-} from './parser/ast';
-import { isPendingChunk, PendingBlock } from './parser/pending-block';
-import { describeBlockType } from './parser/describe';
-import { ErrorCode, ParserException } from './types/errors';
-import { Range } from './types/range';
-import { Stack } from './utils/stack';
-import { LineRegistry } from './parser/line-registry';
-import { Comment } from './types/comment';
+} from '../parser/ast';
+import { isPendingChunk, PendingBlock } from '../parser/pending-block';
+import { describeBlockType } from '../parser/describe';
+import { ErrorCode, ParserException } from '../types/errors';
+import { Range } from '../types/range';
+import { Stack } from '../utils/stack';
+import { LineRegistry } from '../parser/line-registry';
+import { Comment } from '../types/comment';
+import { ParserShape } from '../types/parser';
 
 export interface ParserSnapshot {
   literalsLength: number;
@@ -29,28 +30,9 @@ export interface ParserSnapshot {
   pendingBodyLength: number;
 }
 
-export interface UnsafeParserBase {
-  token: Token | null;
-  previousToken: Token | null;
-  literals: ASTLiteral[];
-  scopes: ASTBaseBlockWithScope[];
-  outerScopes: ASTBaseBlockWithScope[];
-  comments: Comment[];
-  iteratorStack: any[];
-  lineRegistry: LineRegistry;
-  currentScope: ASTBaseBlockWithScope;
-  currentAssignment: ASTAssignmentStatement;
-  backpatches: Stack<PendingBlock>;
-  errors: Error[];
-  lexer: any;
-  next(): void;
-  parseStatement(): void;
-  finishRemaingScopes(): void;
-}
+type ParserConstructor<T extends ParserShape> = new (...args: any[]) => T;
 
-type ParserConstructor<T extends UnsafeParserBase> = new (...args: any[]) => T;
-
-export default function UnsafeParserMixin<T extends ParserConstructor<UnsafeParserBase>>(Base: T) {
+export default function UnsafeParserMixin<T extends ParserConstructor<ParserShape>>(Base: T) {
   return class UnsafeParser extends Base {
     statementErrors: Error[] = [];
 

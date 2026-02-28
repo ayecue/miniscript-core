@@ -1,11 +1,9 @@
-export { default as Lexer, LexerOptions } from './lexer';
-export { default as UnsafeLexer } from './unsafe-lexer';
-export { default as UnsafeLexerMixin } from './unsafe-lexer-mixin';
-export type { UnsafeLexerBase } from './unsafe-lexer-mixin';
+export { default as Lexer, LexerOptions, UnsafeLexer } from './lexer';
+export { default as UnsafeLexerMixin } from './mixins/unsafe-lexer-mixin';
 export * from './lexer/token';
 export { default as LexerValidator } from './lexer/validator';
-export { default as Parser, ParserOptions, describeBlockType } from './parser';
-export { describeToken } from './parser/describe';
+export { default as Parser, ParserOptions, UnsafeParser } from './parser';
+export { describeToken, describeBlockType } from './parser/describe';
 export * from './types/precedence';
 export * from './types/ops';
 export { OpBuilder } from './parser/ops/base';
@@ -13,9 +11,7 @@ export { PrefixOpBuilder, groupPrefixOps, buildPrefixOpIndex, defaultPrefixOpBui
 export { InfixOpBuilder, groupInfixOps, buildInfixOpIndex, defaultInfixOpBuilder, defaultInfixOps, parseCallArgs } from './parser/ops/infix';
 export { AtomOpBuilder, buildAtomOpIndex, defaultAtomOpBuilder, defaultAtomOps, parseMap, parseList, parseQuantity } from './parser/ops/atom';
 export { KeywordHandlerBuilder, buildKeywordOpIndex, defaultKeywordHandlerBuilder, defaultKeywordOps, parseReturnStatement, parseContinueStatement, parseBreakStatement, parseShortcutStatement, parseIfStatement, nextIfClause, parseWhileStatement, finalizeWhileStatement, parseForStatement, finalizeForStatement, finalizeFunction } from './parser/ops/keyword';
-export { default as UnsafeParser } from './unsafe-parser';
-export { default as UnsafeParserMixin } from './unsafe-parser-mixin';
-export type { UnsafeParserBase } from './unsafe-parser-mixin';
+export { default as UnsafeParserMixin } from './mixins/unsafe-parser-mixin';
 export { NoopConsumer, PreserveConsumer } from './parser/noop-consumer';
 export * from './parser/ast';
 export { default as ParserValidatorm } from './parser/validator';

@@ -29,6 +29,11 @@ import { defaultPrefixOps } from './parser/ops/prefix';
 import { defaultInfixOps } from './parser/ops/infix';
 import { defaultAtomOps } from './parser/ops/atom';
 import { defaultKeywordOps } from './parser/ops/keyword';
+import { describeToken } from './parser/describe';
+import { describeBlockType } from './parser/describe';
+import { ParserShape } from './types/parser';
+import UnsafeParserMixin from './mixins/unsafe-parser-mixin';
+import { UnsafeLexer } from './lexer';
 
 export interface ParserOptions {
   validator?: Validator;
@@ -43,11 +48,7 @@ export interface ParserOptions {
   keywordOps?: KeywordOp[];
 }
 
-export { describeToken, describeBlockType } from './parser/describe';
-import { describeToken } from './parser/describe';
-import { describeBlockType } from './parser/describe';
-
-export default class Parser {
+export default class Parser implements ParserShape {
   // runtime
   token: Token | null;
   previousToken: Token | null;
@@ -737,5 +738,14 @@ export default class Parser {
     const err = new ParserException(message, range, code, hint);
     this.errors.push(err);
     throw err;
+  }
+}
+
+export class UnsafeParser extends UnsafeParserMixin(Parser) {
+  constructor(content: string, options: ParserOptions = {}) {
+    const lexer = new UnsafeLexer(content, {
+      tabWidth: options.tabWidth
+    });
+    super(content, { ...options, lexer });
   }
 }
