@@ -748,7 +748,7 @@ export default class Parser implements ParserShape {
 
 export class UnsafeParser extends UnsafeParserMixin(Parser) {
   constructor(content: string, options: ParserOptions = {}) {
-    const lexer = new UnsafeLexer(content, {
+    const lexer = options.lexer || new UnsafeLexer(content, {
       tabWidth: options.tabWidth
     });
     super(content, { ...options, lexer });

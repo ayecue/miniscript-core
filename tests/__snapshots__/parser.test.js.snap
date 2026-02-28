@@ -904,7 +904,25 @@ exports[`parse default scripts function.ms unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts invalid code 1`] = `Array []`;
+exports[`parse default scripts invalid code 1`] = `
+Array [
+  Object {
+    "code": 1004,
+    "hint": null,
+    "message": "'end' without following keyword ('if', 'function', etc.)",
+    "range": Object {
+      "end": Array [
+        20,
+        17,
+      ],
+      "start": Array [
+        20,
+        9,
+      ],
+    },
+  },
+]
+`;
 
 exports[`parse default scripts invalid code 2`] = `
 Array [
@@ -945,11 +963,11 @@ Array [
     "range": Object {
       "end": Array [
         4,
-        16,
+        20,
       ],
       "start": Array [
         4,
-        11,
+        15,
       ],
     },
   },
@@ -960,11 +978,11 @@ Array [
     "range": Object {
       "end": Array [
         6,
-        13,
+        17,
       ],
       "start": Array [
         6,
-        12,
+        16,
       ],
     },
   },
@@ -975,11 +993,11 @@ Array [
     "range": Object {
       "end": Array [
         10,
-        21,
+        25,
       ],
       "start": Array [
         10,
-        11,
+        15,
       ],
     },
   },
@@ -990,11 +1008,11 @@ Array [
     "range": Object {
       "end": Array [
         13,
-        10,
+        14,
       ],
       "start": Array [
         13,
-        9,
+        13,
       ],
     },
   },
@@ -1005,11 +1023,11 @@ Array [
     "range": Object {
       "end": Array [
         15,
-        12,
+        16,
       ],
       "start": Array [
         15,
-        9,
+        13,
       ],
     },
   },
@@ -1020,11 +1038,11 @@ Array [
     "range": Object {
       "end": Array [
         19,
-        13,
+        17,
       ],
       "start": Array [
         19,
-        5,
+        9,
       ],
     },
   },
@@ -1035,11 +1053,11 @@ Array [
     "range": Object {
       "end": Array [
         20,
-        13,
+        17,
       ],
       "start": Array [
         20,
-        5,
+        9,
       ],
     },
   },
@@ -1050,11 +1068,11 @@ Array [
     "range": Object {
       "end": Array [
         30,
-        21,
+        25,
       ],
       "start": Array [
         30,
-        5,
+        9,
       ],
     },
   },
@@ -1437,7 +1455,25 @@ exports[`parse default scripts obj-init.ms unsafe 1`] = `
 ]"
 `;
 
-exports[`parse default scripts open block 1`] = `Array []`;
+exports[`parse default scripts open block 1`] = `
+Array [
+  Object {
+    "code": 1004,
+    "hint": null,
+    "message": "'end' without following keyword ('if', 'function', etc.)",
+    "range": Object {
+      "end": Array [
+        40,
+        17,
+      ],
+      "start": Array [
+        40,
+        9,
+      ],
+    },
+  },
+]
+`;
 
 exports[`parse default scripts open block 2`] = `
 Array [
