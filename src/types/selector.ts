@@ -22,25 +22,25 @@ export enum SelectorType {
   DivideShorthand = 'DivideShorthand',
   PowerShorthand = 'PowerShorthand',
   ModuloShorthand = 'ModuloShorthand',
-  Seperator = 'Seperator',
+  Separator = 'Separator',
   Function = 'Function',
   EndFunction = 'EndFunction',
   EndWhile = 'EndWhile',
   EndFor = 'EndFor',
   EndIf = 'EndIf',
-  SliceSeperator = 'SliceSeperator',
-  MapKeyValueSeperator = 'MapKeyValueSeperator',
-  MapSeperator = 'MapSeperator',
-  ListSeperator = 'ListSeperator',
-  CallSeperator = 'CallSeperator',
-  ArgumentSeperator = 'ArgumentSeperator',
-  ImportCodeSeperator = 'ImportCodeSeperator',
+  SliceSeparator = 'SliceSeparator',
+  MapKeyValueSeparator = 'MapKeyValueSeparator',
+  MapSeparator = 'MapSeparator',
+  ListSeparator = 'ListSeparator',
+  CallSeparator = 'CallSeparator',
+  ArgumentSeparator = 'ArgumentSeparator',
+  ImportCodeSeparator = 'ImportCodeSeparator',
   ElseIf = 'ElseIf',
   Then = 'Then',
   Else = 'Else',
   In = 'In',
-  MemberSeperator = 'MemberSeperator',
-  NumberSeperator = 'NumberSeperator',
+  MemberSeparator = 'MemberSeparator',
+  NumberSeparator = 'NumberSeparator',
   Reference = 'Reference',
   Isa = 'Isa',
   Or = 'Or',
@@ -170,7 +170,7 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Punctuator,
     value: Operator.ModuloShorthand
   }),
-  Seperator: createSelector({
+  Separator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
@@ -194,33 +194,33 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Keyword,
     value: Keyword.EndIf
   }),
-  SliceSeperator: createSelector({
+  SliceSeparator: createSelector({
     type: TokenType.SliceOperator,
-    value: Operator.SliceSeperator
+    value: Operator.SliceSeparator
   }),
-  MapKeyValueSeperator: createSelector({
+  MapKeyValueSeparator: createSelector({
     type: TokenType.SliceOperator,
-    value: Operator.SliceSeperator
+    value: Operator.SliceSeparator
   }),
-  MapSeperator: createSelector({
+  MapSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ListSeperator: createSelector({
+  ListSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  CallSeperator: createSelector({
+  CallSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ArgumentSeperator: createSelector({
+  ArgumentSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ImportCodeSeperator: createSelector({
+  ImportCodeSeparator: createSelector({
     type: TokenType.SliceOperator,
-    value: Operator.SliceSeperator
+    value: Operator.SliceSeparator
   }),
   ElseIf: createSelector({
     type: TokenType.Keyword,
@@ -238,11 +238,11 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Keyword,
     value: Keyword.In
   }),
-  MemberSeperator: createSelector({
+  MemberSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Member
   }),
-  NumberSeperator: createSelector({
+  NumberSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Member
   }),
@@ -272,7 +272,7 @@ export const Selectors: Record<SelectorType, Selector> = {
   }),
   Times: createSelector({
     type: TokenType.Punctuator,
-    value: Operator.Asterik
+    value: Operator.Asterisk
   }),
   Power: createSelector({
     type: TokenType.Punctuator,
@@ -424,7 +424,7 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
   ),
   AssignmentCommandArgs: createSelectorGroup(
     SelectorGroupType.AssignmentCommandArgs,
-    [Selectors.ArgumentSeperator, Selectors.EndOfLine, Selectors.EndOfFile]
+    [Selectors.ArgumentSeparator, Selectors.EndOfLine, Selectors.EndOfFile]
   ),
   ReturnStatementEnd: createSelectorGroup(
     SelectorGroupType.ReturnStatementEnd,
@@ -451,7 +451,7 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
     Selectors.Mod
   ]),
   CallArgsEnd: createSelectorGroup(SelectorGroupType.CallArgsEnd, [
-    Selectors.ArgumentSeperator,
+    Selectors.ArgumentSeparator,
     Selectors.RParenthesis
   ])
 };

@@ -83,7 +83,7 @@ export default class Lexer implements LexerShape {
       case CharacterCode.ASTERISK:
         if (CharacterCode.EQUAL === this.codeAt(1))
           return this.scanPunctuator(Operator.MultiplyShorthand, afterSpace);
-        return this.scanPunctuator(Operator.Asterik, afterSpace);
+        return this.scanPunctuator(Operator.Asterisk, afterSpace);
       case CharacterCode.SLASH:
         if (CharacterCode.EQUAL === this.codeAt(1))
           return this.scanPunctuator(Operator.DivideShorthand, afterSpace);
@@ -228,7 +228,7 @@ export default class Lexer implements LexerShape {
   createSlice(afterSpace: boolean) {
     const token = new Token({
       type: TokenType.SliceOperator,
-      value: Operator.SliceSeperator,
+      value: Operator.SliceSeparator,
       line: this.line,
       rangeStart: this.tokenStart,
       rangeEnd: this.index,

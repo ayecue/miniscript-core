@@ -57,7 +57,7 @@ export function parseMap(me: Parser): ASTBase {
       });
       keyValueItem.key = me.parseExpr(null);
 
-      me.requireToken(Selectors.MapKeyValueSeperator);
+      me.requireToken(Selectors.MapKeyValueSeparator);
       me.consumeNoop();
 
       keyValueItem.value = me.parseExpr(keyValueItem);
@@ -65,7 +65,7 @@ export function parseMap(me: Parser): ASTBase {
       keyValueItem.rangeEnd = me.previousToken.rangeEnd;
       fields.push(keyValueItem);
 
-      if (Selectors.MapSeperator(me.token)) {
+      if (Selectors.MapSeparator(me.token)) {
         me.next();
         me.consumeNoop();
       }
@@ -123,7 +123,7 @@ export function parseList(me: Parser): ASTBase {
       listValue.rangeEnd = me.previousToken.rangeEnd;
       fields.push(listValue);
 
-      if (Selectors.MapSeperator(me.token)) {
+      if (Selectors.MapSeparator(me.token)) {
         me.next();
         me.consumeNoop();
       }

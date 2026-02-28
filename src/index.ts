@@ -14,7 +14,7 @@ export { KeywordHandlerBuilder, buildKeywordOpIndex, defaultKeywordHandlerBuilde
 export { default as UnsafeParserMixin } from './mixins/unsafe-parser-mixin';
 export { NoopConsumer, PreserveConsumer } from './parser/noop-consumer';
 export * from './parser/ast';
-export { default as ParserValidatorm } from './parser/validator';
+export { default as ParserValidator } from './parser/validator';
 export { LineRegistry, LineRegistryView } from './parser/line-registry';
 export * from './parser/pending-block';
 export * from './utils/stack';

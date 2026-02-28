@@ -144,8 +144,8 @@ export function parseCallArgs(me: Parser): ASTBase[] {
 export function defaultInfixOpBuilder(): InfixOpBuilder {
   return new InfixOpBuilder()
     .add({
-      match: (p) => Selectors.MemberSeperator(p.token),
-      selectorId: Selectors.MemberSeperator.selectorId,
+      match: (p) => Selectors.MemberSeparator(p.token),
+      selectorId: Selectors.MemberSeparator.selectorId,
       precedence: Precedence.Call,
       parse: (p, left, startToken) => {
         p.next();
@@ -175,7 +175,7 @@ export function defaultInfixOpBuilder(): InfixOpBuilder {
         p.next();
         p.consumeNoop();
 
-        if (Selectors.SliceSeperator(p.token)) {
+        if (Selectors.SliceSeparator(p.token)) {
           const sliceLeft = p.astProvider.emptyExpression({
             startLine: p.previousToken.line,
             startChar: p.previousToken.startChar,
@@ -223,7 +223,7 @@ export function defaultInfixOpBuilder(): InfixOpBuilder {
         } else {
           const index = p.parseExpr(null);
 
-          if (Selectors.SliceSeperator(p.token)) {
+          if (Selectors.SliceSeparator(p.token)) {
             p.next();
             p.consumeNoop();
 

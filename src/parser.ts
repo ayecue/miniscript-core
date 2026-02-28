@@ -271,7 +271,7 @@ export default class Parser implements ParserShape {
     me.currentScope = me.outerScopes.pop();
   }
 
-  finishRemaingScopes() {
+  finishRemainingScopes() {
     const me = this;
     let last = me.backpatches.pop();
 
@@ -321,7 +321,7 @@ export default class Parser implements ParserShape {
       me.parseStatement();
     }
 
-    me.finishRemaingScopes();
+    me.finishRemainingScopes();
     me.popScope();
     pending.complete(me.token);
 
@@ -457,7 +457,7 @@ export default class Parser implements ParserShape {
 
       if (SelectorGroups.BlockEndOfLine(me.token)) break;
       if (Selectors.Else(me.token)) break;
-      if (Selectors.ArgumentSeperator(me.token)) {
+      if (Selectors.ArgumentSeparator(me.token)) {
         me.next();
         me.consumeNoop();
         continue;
@@ -585,7 +585,7 @@ export default class Parser implements ParserShape {
         }
 
         if (Selectors.RParenthesis(me.token)) break;
-        me.requireToken(Selectors.ArgumentSeperator, functionStartToken.line, functionStartToken.startChar);
+        me.requireToken(Selectors.ArgumentSeparator, functionStartToken.line, functionStartToken.startChar);
         if (Selectors.RParenthesis(me.token)) {
           me.raise('Trailing comma in parameter list', new Range(
             [me.previousToken.endLine, me.previousToken.endChar],

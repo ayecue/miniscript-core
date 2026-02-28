@@ -27,5 +27,5 @@ export interface ParserShape {
   lexer: any;
   next(): void;
   parseStatement(): void;
-  finishRemaingScopes(): void;
+  finishRemainingScopes(): void;
 }

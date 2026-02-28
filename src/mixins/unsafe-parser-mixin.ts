@@ -105,7 +105,7 @@ export default function UnsafeParserMixin<
       );
     }
 
-    finishRemaingScopes() {
+    finishRemainingScopes() {
       const me = this;
       let last = me.backpatches.pop();
 
