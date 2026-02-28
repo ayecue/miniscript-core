@@ -3,6 +3,15 @@ const fs = require('fs');
 const path = require('path');
 const testFolder = path.resolve(__dirname, 'scripts');
 
+function describeErrors(errors) {
+  return errors.map((e) => ({
+    message: e.message,
+    range: e.range ? { start: e.range.start, end: e.range.end } : null,
+    code: e.code,
+    hint: e.hint ?? null
+  }));
+}
+
 describe('parse', function () {
   describe('default scripts', function () {
     fs
@@ -87,8 +96,8 @@ describe('parse', function () {
 
       parser.parseChunk();
 
-      expect(lexer.errors).toMatchSnapshot();
-      expect(parser.errors).toMatchSnapshot();
+      expect(describeErrors(lexer.errors)).toMatchSnapshot();
+      expect(describeErrors(parser.errors)).toMatchSnapshot();
     });
 
     test('using repeat keyword', () => {
@@ -104,8 +113,8 @@ describe('parse', function () {
 
       parser.parseChunk();
 
-      expect(lexer.errors).toMatchSnapshot();
-      expect(parser.errors).toMatchSnapshot();
+      expect(describeErrors(lexer.errors)).toMatchSnapshot();
+      expect(describeErrors(parser.errors)).toMatchSnapshot();
     });
 
     test('open block', () => {
@@ -159,8 +168,8 @@ describe('parse', function () {
 
       parser.parseChunk();
 
-      expect(lexer.errors).toMatchSnapshot();
-      expect(parser.errors).toMatchSnapshot();
+      expect(describeErrors(lexer.errors)).toMatchSnapshot();
+      expect(describeErrors(parser.errors)).toMatchSnapshot();
     });
   });
 });

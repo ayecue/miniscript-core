@@ -167,7 +167,7 @@ describe('tryToRecover', () => {
       ].join('\n'));
 
       const openBlockErrors = parser.errors.filter(
-        (e) => e.message.includes('Unclosed')
+        (e) => e.message.includes('Unclosed') || e.message.includes('without matching')
       );
       expect(openBlockErrors.length).toBe(2);
     });

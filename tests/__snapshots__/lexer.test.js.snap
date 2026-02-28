@@ -1246,7 +1246,25 @@ EOL[7:13 - 7:13: value = ';']
 Keyword[8:1 - 8:13: value = 'end function']"
 `;
 
-exports[`parse default scripts invalid code 1`] = `Array []`;
+exports[`parse default scripts invalid code 1`] = `
+Array [
+  Object {
+    "code": 1004,
+    "hint": null,
+    "message": "'end' without following keyword ('if', 'function', etc.)",
+    "range": Object {
+      "end": Array [
+        9,
+        13,
+      ],
+      "start": Array [
+        9,
+        5,
+      ],
+    },
+  },
+]
+`;
 
 exports[`parse default scripts list.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']

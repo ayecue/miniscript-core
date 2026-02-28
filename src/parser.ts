@@ -29,7 +29,7 @@ import { defaultPrefixOps } from './parser/ops/prefix';
 import { defaultInfixOps } from './parser/ops/infix';
 import { defaultAtomOps } from './parser/ops/atom';
 import { defaultKeywordOps } from './parser/ops/keyword';
-import { describeToken } from './parser/describe';
+import { describeTokenRef, describeSelectorRef, joinWithOr } from './parser/describe';
 import { describeBlockType } from './parser/describe';
 import { ParserShape } from './types/parser';
 import UnsafeParserMixin from './mixins/unsafe-parser-mixin';
@@ -77,7 +77,7 @@ export default class Parser implements ParserShape {
   noopConsumer: NoopConsumer | null;
   errors: Error[];
 
-  // O(1) selectorId → op indexes
+  // O(1) selectorId
   prefixOps: PrefixOp[];
   infixOps: InfixOp[];
   atomOps: AtomOp[];
@@ -149,7 +149,7 @@ export default class Parser implements ParserShape {
 
     if (this.token.type !== type) {
       this.raise(
-        `Expected ${TokenType[type]}, got ${describeToken(token)}`,
+        `got ${describeTokenRef(token)} where ${TokenType[type]} is required`,
         new Range(
           fromLine == null || fromChar == null
             ? [token.line, token.startChar]
@@ -170,7 +170,7 @@ export default class Parser implements ParserShape {
 
     if (!selector(token)) {
       this.raise(
-        `Expected '${getSelectorValue(selector)}', got ${describeToken(token)}`,
+        `got ${describeTokenRef(token)} where ${describeSelectorRef(selector)} is required`,
         new Range(
           fromLine == null || fromChar == null
             ? [token.line, token.startChar]
@@ -195,9 +195,10 @@ export default class Parser implements ParserShape {
     }
 
     this.raise(
-      `Expected one of ${getSelectorsFromGroup(selectorGroup)
-        .map((selector: Selector) => `'${getSelectorValue(selector)}'`)
-        .join(', ')}, got ${describeToken(token)}`,
+      `got ${describeTokenRef(token)} where one of ${joinWithOr(
+        getSelectorsFromGroup(selectorGroup)
+          .map((selector: Selector) => describeSelectorRef(selector))
+      )} is required`,
       new Range(
         fromLine == null || fromChar == null
           ? [token.line, token.startChar]
@@ -282,8 +283,11 @@ export default class Parser implements ParserShape {
         const parentName = describeBlockType(parent.block.type);
         hint += ` (inside '${parentName}' at line ${parent.block.startLine})`;
       }
+      const message = blockName === 'if'
+        ? `Unclosed '${blockName}' block`
+        : `'${blockName}' without matching 'end ${blockName}'`;
       const exception = new ParserException(
-        `Unclosed '${blockName}' block`,
+        message,
         new Range(
           [last.block.startLine, last.block.startChar],
           [last.block.startLine, last.block.startChar]
@@ -339,13 +343,14 @@ export default class Parser implements ParserShape {
       }
       if (Keyword.Not !== me.token.value) {
         me.raise(
-          `Unexpected keyword '${me.token.value}'`,
+          `Unexpected Keyword('${me.token.value}')`,
           new Range(
             [me.token.line, me.token.startChar],
             [me.token.endLine, me.token.endChar]
           ),
           ErrorCode.UnexpectedKeyword
         );
+
         return;
       }
     }
@@ -657,7 +662,7 @@ export default class Parser implements ParserShape {
     }
 
     me.raise(
-      `Expected literal or identifier, got ${describeToken(me.token)}`,
+      `got ${describeTokenRef(me.token)} where number, string, or identifier is required`,
       new Range(
         [me.token.line, me.token.startChar],
         [me.token.endLine, me.token.endChar]

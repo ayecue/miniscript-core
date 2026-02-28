@@ -908,16 +908,156 @@ exports[`parse default scripts invalid code 1`] = `Array []`;
 
 exports[`parse default scripts invalid code 2`] = `
 Array [
-  [Error: 'break' used outside of loop],
-  [Error: 'continue' used outside of loop],
-  [Error: Expected one of ',', ')', got end of line],
-  [Error: Expected literal or identifier, got ')'],
-  [Error: Expected one of ',', ';', '<eof>', got 'wa'],
-  [Error: Expected literal or identifier, got '+'],
-  [Error: Expected literal or identifier, got 'not'],
-  [Error: Unexpected keyword 'function'],
-  [Error: Unexpected keyword 'end func'],
-  [Error: Expected 'then', got 'print'],
+  Object {
+    "code": 5001,
+    "hint": "'break' can only be used inside 'while' or 'for' loops",
+    "message": "Keyword('break') without open loop block",
+    "range": Object {
+      "end": Array [
+        2,
+        14,
+      ],
+      "start": Array [
+        2,
+        9,
+      ],
+    },
+  },
+  Object {
+    "code": 5002,
+    "hint": "'continue' can only be used inside 'while' or 'for' loops",
+    "message": "Keyword('continue') without open loop block",
+    "range": Object {
+      "end": Array [
+        3,
+        17,
+      ],
+      "start": Array [
+        3,
+        9,
+      ],
+    },
+  },
+  Object {
+    "code": 3001,
+    "hint": null,
+    "message": "got EOL('end of line') where one of Punctuator(',') or Punctuator(')') is required",
+    "range": Object {
+      "end": Array [
+        4,
+        16,
+      ],
+      "start": Array [
+        4,
+        11,
+      ],
+    },
+  },
+  Object {
+    "code": 3002,
+    "hint": null,
+    "message": "got Punctuator(')') where number, string, or identifier is required",
+    "range": Object {
+      "end": Array [
+        6,
+        13,
+      ],
+      "start": Array [
+        6,
+        12,
+      ],
+    },
+  },
+  Object {
+    "code": 3001,
+    "hint": null,
+    "message": "got Identifier('wa') where one of Punctuator(','), EOL('end of line') or EOF('end of file') is required",
+    "range": Object {
+      "end": Array [
+        10,
+        21,
+      ],
+      "start": Array [
+        10,
+        11,
+      ],
+    },
+  },
+  Object {
+    "code": 3002,
+    "hint": null,
+    "message": "got Punctuator('+') where number, string, or identifier is required",
+    "range": Object {
+      "end": Array [
+        13,
+        10,
+      ],
+      "start": Array [
+        13,
+        9,
+      ],
+    },
+  },
+  Object {
+    "code": 3002,
+    "hint": null,
+    "message": "got Keyword('not') where number, string, or identifier is required",
+    "range": Object {
+      "end": Array [
+        15,
+        12,
+      ],
+      "start": Array [
+        15,
+        9,
+      ],
+    },
+  },
+  Object {
+    "code": 2002,
+    "hint": "Use 'function' on the right side of an assignment, e.g. f = function(x)",
+    "message": "Keyword('function') can only be used within expressions",
+    "range": Object {
+      "end": Array [
+        19,
+        13,
+      ],
+      "start": Array [
+        19,
+        5,
+      ],
+    },
+  },
+  Object {
+    "code": 3002,
+    "hint": null,
+    "message": "got Unknown('') where number, string, or identifier is required",
+    "range": Object {
+      "end": Array [
+        20,
+        13,
+      ],
+      "start": Array [
+        20,
+        5,
+      ],
+    },
+  },
+  Object {
+    "code": 3001,
+    "hint": null,
+    "message": "got Identifier('print') where Keyword('then') is required",
+    "range": Object {
+      "end": Array [
+        30,
+        21,
+      ],
+      "start": Array [
+        30,
+        5,
+      ],
+    },
+  },
 ]
 `;
 
@@ -1301,8 +1441,36 @@ exports[`parse default scripts open block 1`] = `Array []`;
 
 exports[`parse default scripts open block 2`] = `
 Array [
-  [Error: Unexpected keyword 'end whil'],
-  [Error: Unclosed 'while' block],
+  Object {
+    "code": 3002,
+    "hint": null,
+    "message": "got Unknown('') where number, string, or identifier is required",
+    "range": Object {
+      "end": Array [
+        40,
+        17,
+      ],
+      "start": Array [
+        40,
+        9,
+      ],
+    },
+  },
+  Object {
+    "code": 4002,
+    "hint": "Add 'end while' to close this block",
+    "message": "'while' without matching 'end while'",
+    "range": Object {
+      "end": Array [
+        36,
+        9,
+      ],
+      "start": Array [
+        36,
+        9,
+      ],
+    },
+  },
 ]
 `;
 
@@ -2511,7 +2679,35 @@ exports[`parse default scripts using repeat keyword 1`] = `Array []`;
 
 exports[`parse default scripts using repeat keyword 2`] = `
 Array [
-  [Error: Unexpected keyword 'repeat'],
-  [Error: 'end function' without matching 'function'],
+  Object {
+    "code": 2002,
+    "hint": "'repeat' is a reserved keyword but has no function",
+    "message": "Keyword('repeat') is currently unused",
+    "range": Object {
+      "end": Array [
+        2,
+        15,
+      ],
+      "start": Array [
+        2,
+        9,
+      ],
+    },
+  },
+  Object {
+    "code": 4001,
+    "hint": null,
+    "message": "'end function' without matching 'function'",
+    "range": Object {
+      "end": Array [
+        4,
+        21,
+      ],
+      "start": Array [
+        4,
+        21,
+      ],
+    },
+  },
 ]
 `;

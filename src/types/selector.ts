@@ -65,6 +65,7 @@ export enum SelectorType {
   For = 'For',
   Continue = 'Continue',
   Break = 'Break',
+  Repeat = 'Repeat',
   Comment = 'Comment'
 }
 
@@ -340,6 +341,10 @@ export const Selectors: Record<SelectorType, Selector> = {
   Break: createSelector({
     type: TokenType.Keyword,
     value: Keyword.Break
+  }),
+  Repeat: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Repeat
   }),
   Comment: createSelector({
     type: TokenType.Comment

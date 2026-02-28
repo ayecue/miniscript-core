@@ -113,8 +113,12 @@ export default function UnsafeParserMixin<T extends ParserConstructor<ParserShap
           const parentName = describeBlockType(parent.block.type);
           hint += ` (inside '${parentName}' at line ${parent.block.startLine})`;
         }
+        // Use reference-style message for while/for/function; keep specific message for if
+        const message = blockName === 'if'
+          ? `Unclosed '${blockName}' block`
+          : `'${blockName}' without matching 'end ${blockName}'`;
         const exception = new ParserException(
-          `Unclosed '${blockName}' block`,
+          message,
           new Range(
             [last.block.startLine, last.block.startChar],
             [last.block.startLine, last.block.startChar]

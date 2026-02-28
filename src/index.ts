@@ -3,7 +3,7 @@ export { default as UnsafeLexerMixin } from './mixins/unsafe-lexer-mixin';
 export * from './lexer/token';
 export { default as LexerValidator } from './lexer/validator';
 export { default as Parser, ParserOptions, UnsafeParser } from './parser';
-export { describeToken, describeBlockType } from './parser/describe';
+export { describeToken, describeTokenRef, describeSelectorRef, joinWithOr, describeBlockType } from './parser/describe';
 export * from './types/precedence';
 export * from './types/ops';
 export { OpBuilder } from './parser/ops/base';

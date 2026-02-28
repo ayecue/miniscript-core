@@ -38,7 +38,6 @@ export class LineRegistryView {
       return;
     }
 
-    // Determine tree range – covers lines [0, n) where n > maxLine
     let maxLine = 0;
     for (let i = 0; i < len; i++) {
       const e = items[i].endLine;
@@ -49,7 +48,6 @@ export class LineRegistryView {
     this._n = n;
     const size = n << 1; // total tree nodes
 
-    // --- Pass 1: count how many items land on each tree node ---
     const count = new Uint16Array(size);
     for (let i = 0; i < len; i++) {
       let lo = items[i].startLine + n;
@@ -62,16 +60,13 @@ export class LineRegistryView {
       }
     }
 
-    // Prefix sum → per-node offsets into the flat store
     const offset = new Uint32Array(size + 1);
     for (let i = 0; i < size; i++) {
       offset[i + 1] = offset[i] + count[i];
     }
 
-    // --- Pass 2: distribute items into the flat store ---
     const total = offset[size];
     const store: number[] = new Array(total);
-    // Temporary write cursors (reuses offset values)
     const cursor = new Uint32Array(size);
     for (let i = 0; i < size; i++) cursor[i] = offset[i];
 

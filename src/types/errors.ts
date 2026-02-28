@@ -7,6 +7,7 @@ export enum ErrorCode {
   InvalidCharacter = 1001,
   UnexpectedStringEOF = 1002,
   InvalidNumericLiteral = 1003,
+  InvalidEndKeyword = 1004,
 
   // Parser errors — unexpected (2xxx)
   UnexpectedToken = 2001,

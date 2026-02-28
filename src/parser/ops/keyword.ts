@@ -9,6 +9,20 @@ import { PendingClauseType, PendingFor, PendingFunction, PendingIf, PendingWhile
 import { KeywordOp, KeywordStatementHandler } from '../../types/ops';
 import { OpBuilder } from './base';
 
+function raiseKeywordError(message: string, hint?: string): KeywordStatementHandler {
+  return (me: Parser) => {
+    me.raise(
+      message,
+      new Range(
+        [me.token.line, me.token.startChar],
+        [me.token.endLine, me.token.endChar]
+      ),
+      ErrorCode.UnexpectedKeyword,
+      hint
+    );
+  };
+}
+
 export class KeywordHandlerBuilder extends OpBuilder<KeywordOp> {
   add(op: KeywordOp): this;
   add(selectorId: number, handler: KeywordStatementHandler): this;
@@ -71,7 +85,7 @@ export function parseContinueStatement(me: Parser): void {
 
   if (me.iteratorStack.length === 0) {
     me.raise(
-      `'continue' used outside of loop`,
+      `Keyword('continue') without open loop block`,
       new Range(
         [me.previousToken.line, me.previousToken.startChar],
         [me.previousToken.endLine, me.previousToken.endChar]
@@ -99,7 +113,7 @@ export function parseBreakStatement(me: Parser): void {
 
   if (me.iteratorStack.length === 0) {
     me.raise(
-      `'break' used outside of loop`,
+      `Keyword('break') without open loop block`,
       new Range(
         [me.previousToken.line, me.previousToken.startChar],
         [me.previousToken.endLine, me.previousToken.endChar]
@@ -125,7 +139,7 @@ export function parseBreakStatement(me: Parser): void {
 function parseShortcutContinueStatement(me: Parser): ASTBase {
   if (me.iteratorStack.length === 0) {
     me.raise(
-      `'continue' used outside of loop`,
+      `Keyword('continue') without open loop block`,
       new Range(
         [me.previousToken.line, me.previousToken.startChar],
         [me.previousToken.endLine, me.previousToken.endChar]
@@ -147,7 +161,7 @@ function parseShortcutContinueStatement(me: Parser): ASTBase {
 function parseShortcutBreakStatement(me: Parser): ASTBase {
   if (me.iteratorStack.length === 0) {
     me.raise(
-      `'break' used outside of loop`,
+      `Keyword('break') without open loop block`,
       new Range(
         [me.previousToken.line, me.previousToken.startChar],
         [me.previousToken.endLine, me.previousToken.endChar]
@@ -518,8 +532,6 @@ export function finalizeFunction(me: Parser): void {
   me.backpatches.pop();
 }
 
-// ── Keyword handler builder ──────────────────────────────────────────────
-
 export function defaultKeywordHandlerBuilder(): KeywordHandlerBuilder {
   return new KeywordHandlerBuilder()
     .add(Selectors.Return.selectorId, (me: Parser) => {
@@ -581,7 +593,39 @@ export function defaultKeywordHandlerBuilder(): KeywordHandlerBuilder {
     .add(Selectors.Break.selectorId, (me: Parser) => {
       me.next();
       parseBreakStatement(me);
-    });
+    })
+    .add(Selectors.Function.selectorId, raiseKeywordError(
+      `Keyword('function') can only be used within expressions`,
+      `Use 'function' on the right side of an assignment, e.g. f = function(x)`
+    ))
+    .add(Selectors.New.selectorId, raiseKeywordError(
+      `Keyword('new') can only be used within expressions`,
+      `Use 'new' on the right side of an assignment, e.g. obj = new MyClass`
+    ))
+    .add(Selectors.And.selectorId, raiseKeywordError(
+      `Keyword('and') can only be used within expressions`,
+      `Use 'and' as a binary operator, e.g. if a and b then`
+    ))
+    .add(Selectors.Or.selectorId, raiseKeywordError(
+      `Keyword('or') can only be used within expressions`,
+      `Use 'or' as a binary operator, e.g. if a or b then`
+    ))
+    .add(Selectors.Isa.selectorId, raiseKeywordError(
+      `Keyword('isa') can only be used within expressions`,
+      `Use 'isa' as a binary operator, e.g. if obj isa MyClass then`
+    ))
+    .add(Selectors.In.selectorId, raiseKeywordError(
+      `Keyword('in') can only be used within a 'for' loop`,
+      `Use 'in' as part of a for loop, e.g. for item in collection`
+    ))
+    .add(Selectors.Then.selectorId, raiseKeywordError(
+      `Keyword('then') can only be used within an 'if' or 'else if' statement`,
+      `Use 'then' after an 'if' condition, e.g. if x > 0 then`
+    ))
+    .add(Selectors.Repeat.selectorId, raiseKeywordError(
+      `Keyword('repeat') is currently unused`,
+      `'repeat' is a reserved keyword but has no function`
+    ));
 }
 
 export const defaultKeywordOps: KeywordOp[] = buildKeywordOpIndex(

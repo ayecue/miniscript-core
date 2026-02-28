@@ -300,7 +300,7 @@ export default class Lexer implements LexerShape {
 
     if (!closed) {
       return me.raise(
-        `Unterminated string literal`,
+        `missing closing quote (")`,
         new Range(
           [beginLine, strStart - strStartOffset + 1],
           [me.line, me.index - endOffset + 2]
@@ -387,7 +387,7 @@ export default class Lexer implements LexerShape {
 
     if (isNaN(value)) {
       return this.raise(
-        `Invalid numeric literal '${raw}'`,
+        `invalid numeric literal: ${raw}`,
         new Range(
           [this.line, this.tokenStart - this.offset + 1],
           [this.line, this.index - this.offset + 1]
@@ -424,23 +424,49 @@ export default class Lexer implements LexerShape {
 
     switch (keyword) {
       case Keyword.End: {
-        me.index++;
+        // Skip whitespace (spaces and tabs) between 'end' and the following keyword,
+        // matching reference MiniScript behavior which calls Dequeue() (skips whitespace).
+        for (; me.index < me.length; me.index++) {
+          const ch = me.content.charCodeAt(me.index);
+          if (ch !== CharacterCode.WHITESPACE && ch !== CharacterCode.TAB) break;
+        }
 
         for (; validator.isIdentifierPart(me.codeAt()); me.index++);
         value = me.content.slice(me.tokenStart, me.index);
+
+        if (value.length > 3) {
+          const afterEnd = value.slice(3).trimStart();
+          if (afterEnd.length > 0) {
+            value = 'end ' + afterEnd;
+          }
+        }
+
+        if (value !== Keyword.EndIf && value !== Keyword.EndWhile &&
+            value !== Keyword.EndFor && value !== Keyword.EndFunction) {
+          return me.raise(
+            `'end' without following keyword ('if', 'function', etc.)`,
+            new Range(
+              [me.line, me.tokenStart - me.offset + 1],
+              [me.line, me.index - me.offset + 1]
+            ),
+            ErrorCode.InvalidEndKeyword
+          );
+        }
         break;
       }
       case Keyword.Else: {
-        // Byte-level lookahead: check " if" without allocating a string slice
-        const remaining = me.length - me.index;
+        let p = me.index;
+        for (; p < me.length; p++) {
+          const ch = me.content.charCodeAt(p);
+          if (ch !== CharacterCode.WHITESPACE && ch !== CharacterCode.TAB) break;
+        }
         if (
-          remaining >= 3 &&
-          me.content.charCodeAt(me.index) === CharacterCode.WHITESPACE &&
-          me.content.charCodeAt(me.index + 1) === CharacterCode.LETTER_i && // 'i'
-          me.content.charCodeAt(me.index + 2) === CharacterCode.LETTER_f && // 'f'
-          (me.index + 3 >= me.length || !validator.isIdentifierPart(me.content.charCodeAt(me.index + 3)))
+          p + 2 <= me.length &&
+          me.content.charCodeAt(p) === CharacterCode.LETTER_i && // 'i'
+          me.content.charCodeAt(p + 1) === CharacterCode.LETTER_f && // 'f'
+          (p + 2 >= me.length || !validator.isIdentifierPart(me.content.charCodeAt(p + 2)))
         ) {
-          me.index += 3;
+          me.index = p + 2;
           value = Keyword.ElseIf;
         }
         break;
