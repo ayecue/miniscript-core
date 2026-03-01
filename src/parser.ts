@@ -47,6 +47,7 @@ export interface ParserOptions {
   infixOps?: InfixOp[];
   atomOps?: AtomOp[];
   keywordOps?: KeywordOp[];
+  state?: ParserState;
 }
 
 export default class Parser implements ParserShape {
@@ -94,7 +95,7 @@ export default class Parser implements ParserShape {
       });
     me.token = null;
     me.previousToken = null;
-    me.state = new ParserState();
+    me.state = options.state || new ParserState();
     me.currentScope = null;
     me.currentAssignment = null;
     me.outerScopes = [];
