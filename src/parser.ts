@@ -10,6 +10,7 @@ import {
   ASTIdentifierKind,
   ASTLiteral,
   ASTProvider,
+  ASTType,
   ASTWhileStatement
 } from './parser/ast';
 import Validator from './parser/validator';
@@ -218,21 +219,49 @@ export default class Parser implements ParserShape {
     return null;
   }
 
+  protected createComment(token: Token): Comment {
+    return { value: token.value, isMultiline: false };
+  }
+
   consumeNoop(): number {
     const me = this;
     let lines = 0;
     while (true) {
       if (Selectors.Comment(me.token)) {
         const isStatement = me.previousToken?.line !== me.token.line;
-        const comment: Comment = {
-          value: me.token.value,
-          isMultiline: false
-        };
+        const comment = me.createComment(me.token);
 
         me.getState().comments.push(comment);
         me.noopConsumer?.onComment(me, comment, isStatement);
       } else if (Selectors.EndOfLine(me.token)) {
-        me.noopConsumer?.onEmptyLine(me);
+        // skip EOLs without emitting empty lines
+      } else {
+        break;
+      }
+
+      me.next();
+    }
+
+    return lines;
+  }
+
+  consumeNoopStatement(): number {
+    const me = this;
+    let lines = 0;
+    let seenEol = false;
+    while (true) {
+      if (Selectors.Comment(me.token)) {
+        const isStatement = me.previousToken?.line !== me.token.line;
+        const comment = me.createComment(me.token);
+
+        me.getState().comments.push(comment);
+        me.noopConsumer?.onComment(me, comment, isStatement);
+        seenEol = false;
+      } else if (Selectors.EndOfLine(me.token)) {
+        if (seenEol) {
+          me.noopConsumer?.onEmptyLine(me);
+        }
+        seenEol = true;
       } else {
         break;
       }
@@ -258,7 +287,22 @@ export default class Parser implements ParserShape {
   flushPendingComments(): void {
     const me = this;
     if (!me.preserve) return;
-    me.pendingLeadingComments = [];
+
+    if (me.pendingLeadingComments.length > 0) {
+      const noop = new ASTBase(ASTType.NoopStatement, {
+        startLine: me.previousToken?.endLine ?? me.token.line,
+        startChar: 0,
+        endLine: me.previousToken?.endLine ?? me.token.line,
+        endChar: 0,
+        rangeStart: me.previousToken?.rangeEnd ?? me.token.rangeStart,
+        rangeEnd: me.previousToken?.rangeEnd ?? me.token.rangeStart,
+        scope: me.currentScope
+      });
+      noop.leadingComments = me.pendingLeadingComments;
+      me.backpatches.peek().body.push(noop);
+      me.pendingLeadingComments = [];
+    }
+
     me.lastStatement = null;
   }
 
@@ -321,13 +365,14 @@ export default class Parser implements ParserShape {
     me.pushScope(chunk);
 
     while (!Selectors.EndOfFile(me.token)) {
-      me.consumeNoop();
+      me.consumeNoopStatement();
 
       if (Selectors.EndOfFile(me.token)) break;
 
       me.parseStatement();
     }
 
+    me.flushPendingComments();
     me.finishRemainingScopes();
     me.popScope();
     pending.complete(me.token);
