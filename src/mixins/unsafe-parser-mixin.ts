@@ -47,13 +47,15 @@ export default function UnsafeParserMixin<
       me.lexer.recordSnapshot();
       me.statementErrors = [];
 
+      const state = me.getState();
+
       const snapshot: ParserSnapshot = {
-        literalsLength: me.literals.length,
-        scopesLength: me.scopes.length,
+        literalsLength: state.literals.length,
+        scopesLength: state.scopes.length,
         outerScopesLength: me.outerScopes.length,
-        commentsLength: me.comments.length,
+        commentsLength: state.comments.length,
         iteratorStackLength: me.iteratorStack.length,
-        lineRegistryItemsLength: me.lineRegistry.items.length,
+        lineRegistryItemsLength: state.lineRegistry.items.length,
         currentScope: me.currentScope,
         currentScopeNamespacesLength: me.currentScope.namespaces.length,
         currentScopeDefinitionsLength: me.currentScope.definitions.length,
@@ -77,12 +79,13 @@ export default function UnsafeParserMixin<
       me.errors.push(firstPointOfFailure);
 
       // Roll back parser state to before the failed statement
-      me.literals.length = snapshot.literalsLength;
-      me.scopes.length = snapshot.scopesLength;
+      const state = me.getState();
+      state.literals.length = snapshot.literalsLength;
+      state.scopes.length = snapshot.scopesLength;
       me.outerScopes.length = snapshot.outerScopesLength;
-      me.comments.length = snapshot.commentsLength;
+      state.comments.length = snapshot.commentsLength;
       me.iteratorStack.length = snapshot.iteratorStackLength;
-      me.lineRegistry.items.length = snapshot.lineRegistryItemsLength;
+      state.lineRegistry.items.length = snapshot.lineRegistryItemsLength;
 
       me.currentScope = snapshot.currentScope;
       me.currentScope.namespaces.length = snapshot.currentScopeNamespacesLength;

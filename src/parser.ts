@@ -34,6 +34,7 @@ import { describeBlockType } from './parser/describe';
 import { ParserShape } from './types/parser';
 import UnsafeParserMixin from './mixins/unsafe-parser-mixin';
 import { UnsafeLexer } from './lexer';
+import { ParserState } from './parser/state';
 
 export interface ParserOptions {
   validator?: Validator;
@@ -58,11 +59,8 @@ export default class Parser implements ParserShape {
   iteratorStack: (ASTForGenericStatement | ASTWhileStatement)[];
 
   // helpers
-  literals: ASTLiteral[];
-  comments: Comment[];
-  scopes: ASTBaseBlockWithScope[];
+  state: ParserState;
   backpatches: Stack<PendingBlock>;
-  lineRegistry: LineRegistry;
 
   // comment attachment state
   pendingLeadingComments: string[];
@@ -96,14 +94,11 @@ export default class Parser implements ParserShape {
       });
     me.token = null;
     me.previousToken = null;
-    me.lineRegistry = new LineRegistry();
-    me.scopes = [];
+    me.state = new ParserState();
     me.currentScope = null;
     me.currentAssignment = null;
     me.outerScopes = [];
     me.iteratorStack = [];
-    me.literals = [];
-    me.comments = [];
     me.pendingLeadingComments = [];
     me.lastStatement = null;
     me.validator = options.validator || new Validator();
@@ -115,6 +110,14 @@ export default class Parser implements ParserShape {
     me.infixOps = options.infixOps || defaultInfixOps;
     me.atomOps = options.atomOps || defaultAtomOps;
     me.keywordOps = options.keywordOps || defaultKeywordOps;
+  }
+
+  getState(): ParserState {
+    return this.state;
+  }
+
+  get lineRegistry(): LineRegistry {
+    return this.getState().lineRegistry;
   }
 
   next() {
@@ -222,7 +225,7 @@ export default class Parser implements ParserShape {
           isMultiline: false
         };
 
-        me.comments.push(comment);
+        me.getState().comments.push(comment);
         me.noopConsumer?.onComment(me, comment, isStatement);
       } else if (Selectors.EndOfLine(me.token)) {
         me.noopConsumer?.onEmptyLine(me);
@@ -259,7 +262,7 @@ export default class Parser implements ParserShape {
     const me = this;
 
     if (me.currentScope !== null) {
-      me.scopes.push(scope);
+      me.getState().scopes.push(scope);
       me.outerScopes.push(me.currentScope);
     }
 
@@ -325,9 +328,9 @@ export default class Parser implements ParserShape {
     me.popScope();
     pending.complete(me.token);
 
-    chunk.literals = me.literals;
-    chunk.comments = me.comments;
-    chunk.scopes = me.scopes;
+    chunk.literals = me.state.literals;
+    chunk.comments = me.state.comments;
+    chunk.scopes = me.state.scopes;
 
     return chunk;
   }
@@ -695,7 +698,7 @@ export default class Parser implements ParserShape {
       }
     );
 
-    me.literals.push(<ASTLiteral>base);
+    me.getState().literals.push(<ASTLiteral>base);
 
     me.next();
 

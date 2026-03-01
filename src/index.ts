@@ -17,6 +17,7 @@ export * from './parser/ast';
 export { default as ParserValidator } from './parser/validator';
 export { LineRegistry, LineRegistryView } from './parser/line-registry';
 export * from './parser/pending-block';
+export { ParserState } from './parser/state';
 export * from './utils/stack';
 export * from './types/codes';
 export * from './types/errors';

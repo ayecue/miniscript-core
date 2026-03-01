@@ -3,21 +3,18 @@ import {
   ASTAssignmentStatement,
   ASTBaseBlockWithScope,
   ASTForGenericStatement,
-  ASTLiteral,
   ASTWhileStatement
 } from '../parser/ast';
+import { ParserState } from '../parser/state';
 import { LineRegistry } from '../parser/line-registry';
 import { PendingBlock } from '../parser/pending-block';
 import { Stack } from '../utils/stack';
-import { Comment } from './comment';
 
 export interface ParserShape {
   token: Token | null;
   previousToken: Token | null;
-  literals: ASTLiteral[];
-  scopes: ASTBaseBlockWithScope[];
+  state: ParserState;
   outerScopes: ASTBaseBlockWithScope[];
-  comments: Comment[];
   iteratorStack: (ASTForGenericStatement | ASTWhileStatement)[];
   lineRegistry: LineRegistry;
   currentScope: ASTBaseBlockWithScope;
@@ -25,6 +22,7 @@ export interface ParserShape {
   backpatches: Stack<PendingBlock>;
   errors: Error[];
   lexer: any;
+  getState(): ParserState;
   next(): void;
   parseStatement(): void;
   finishRemainingScopes(): void;
