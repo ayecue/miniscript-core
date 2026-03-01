@@ -4,6 +4,8 @@
 
 A lexer and parser for [MiniScript](https://miniscript.org) written in TypeScript. It produces an AST and is designed to serve as a foundation for language supersets such as [greybel-core](../greybel-core) and [greyscript-core](../greyscript-core).
 
+For more information about the MiniScript language itself, see the [official MiniScript site](https://miniscript.org) and the [MiniScript manual](https://miniscript.org/files/MiniScript-Manual.pdf).
+
 ## Features
 
 * Produces a full AST from MiniScript source code
