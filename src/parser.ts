@@ -48,6 +48,7 @@ export interface ParserOptions {
   atomOps?: AtomOp[];
   keywordOps?: KeywordOp[];
   state?: ParserState;
+  strictMode?: boolean;
 }
 
 export default class Parser implements ParserShape {
@@ -75,6 +76,7 @@ export default class Parser implements ParserShape {
   preserve: boolean;
   noopConsumer: NoopConsumer | null;
   errors: Error[];
+  strictMode: boolean;
 
   // O(1) selectorId
   prefixOps: PrefixOp[];
@@ -111,6 +113,7 @@ export default class Parser implements ParserShape {
     me.infixOps = options.infixOps || defaultInfixOps;
     me.atomOps = options.atomOps || defaultAtomOps;
     me.keywordOps = options.keywordOps || defaultKeywordOps;
+    me.strictMode = options.strictMode ?? false;
   }
 
   getState(): ParserState {
@@ -408,6 +411,16 @@ export default class Parser implements ParserShape {
         me.token
       )
     ) {
+      if (me.strictMode) {
+        me.raise(
+          `shorthand assignment '${me.token.value}' is not allowed in strict mode`,
+          new Range(
+            [me.token.line, me.token.startChar],
+            [me.token.endLine, me.token.endChar]
+          )
+        );
+      }
+
       const op = me.token;
 
       me.next();
