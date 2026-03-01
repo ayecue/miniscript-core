@@ -394,7 +394,9 @@ export enum SelectorGroupType {
   FunctionDeclarationArgEnd = 'FunctionDeclarationArgEnd',
   ComparisonOperators = 'ComparisonOperators',
   MultiDivOperators = 'MultiDivOperators',
-  CallArgsEnd = 'CallArgsEnd'
+  CallArgsEnd = 'CallArgsEnd',
+  MapSeparator = 'MapSeparator',
+  ListSeparator = 'ListSeparator'
 }
 
 export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
@@ -453,5 +455,13 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
   CallArgsEnd: createSelectorGroup(SelectorGroupType.CallArgsEnd, [
     Selectors.ArgumentSeparator,
     Selectors.RParenthesis
+  ]),
+  MapSeparator: createSelectorGroup(SelectorGroupType.MapSeparator, [
+    Selectors.MapSeparator,
+    Selectors.CRBracket
+  ]),
+  ListSeparator: createSelectorGroup(SelectorGroupType.ListSeparator, [
+    Selectors.MapSeparator,
+    Selectors.SRBracket
   ])
 };

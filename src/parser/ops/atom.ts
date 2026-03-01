@@ -1,4 +1,4 @@
-import { Selectors } from '../../types/selector';
+import { SelectorGroups, Selectors } from '../../types/selector';
 import { OpBuilder } from './base';
 import { AtomOp } from '../../types/ops';
 import type Parser from '../../parser';
@@ -65,17 +65,15 @@ export function parseMap(me: Parser): ASTBase {
       keyValueItem.rangeEnd = me.previousToken.rangeEnd;
       fields.push(keyValueItem);
 
-      if (Selectors.MapSeparator(me.token)) {
-        me.next();
-        me.consumeNoop();
-      }
+      const token = me.requireTokenOfAny(
+        SelectorGroups.MapSeparator,
+        startToken.line,
+        startToken.startChar
+      );
 
-      if (
-        Selectors.CRBracket(me.token)
-      ) {
-        me.next();
-        break;
-      }
+      if (Selectors.CRBracket(token)) break;
+
+      me.consumeNoop();
     }
   }
 
@@ -123,17 +121,15 @@ export function parseList(me: Parser): ASTBase {
       listValue.rangeEnd = me.previousToken.rangeEnd;
       fields.push(listValue);
 
-      if (Selectors.MapSeparator(me.token)) {
-        me.next();
-        me.consumeNoop();
-      }
+      const token = me.requireTokenOfAny(
+        SelectorGroups.ListSeparator,
+        startToken.line,
+        startToken.startChar
+      );
 
-      if (
-        Selectors.SRBracket(me.token)
-      ) {
-        me.next();
-        break;
-      }
+      if (Selectors.SRBracket(token)) break;
+
+      me.consumeNoop();
     }
   }
 
