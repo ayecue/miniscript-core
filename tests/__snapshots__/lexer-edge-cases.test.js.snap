@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lexer edge cases numeric edge cases leading decimal point 1`] = `
+Array [
+  Object {
+    "line": 1,
+    "type": 3010,
+    "value": "x",
+  },
+  Object {
+    "line": 1,
+    "type": 4000,
+    "value": "=",
+  },
+  Object {
+    "line": 1,
+    "type": 2010,
+    "value": 0.5,
+  },
+]
+`;
+
+exports[`lexer edge cases numeric edge cases scientific notation 1`] = `
+Array [
+  Object {
+    "line": 1,
+    "type": 3010,
+    "value": "x",
+  },
+  Object {
+    "line": 1,
+    "type": 4000,
+    "value": "=",
+  },
+  Object {
+    "line": 1,
+    "type": 2010,
+    "value": 100000,
+  },
+]
+`;
+
+exports[`lexer edge cases numeric edge cases trailing decimal point 1`] = `
+Array [
+  Object {
+    "line": 1,
+    "type": 3010,
+    "value": "x",
+  },
+  Object {
+    "line": 1,
+    "type": 4000,
+    "value": "=",
+  },
+  Object {
+    "line": 1,
+    "type": 2010,
+    "value": 1,
+  },
+]
+`;
