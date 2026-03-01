@@ -220,7 +220,7 @@ export function parseIfStatement(me: Parser): void {
   const ifCondition = me.parseExpr(null);
 
   me.lineRegistry.register(ifCondition);
-  me.requireToken(Selectors.Then, startToken.line, startToken.startChar);
+  me.requireToken(Selectors.Then, startToken.line, startToken.startChar, 'if statement');
 
   if (!SelectorGroups.BlockEndOfLine(me.token)) {
     parseIfShortcutStatement(me, ifCondition, startToken);
@@ -320,7 +320,7 @@ export function nextIfClause(me: Parser, type: PendingClauseType | null): void {
       const ifStatementStartToken = me.token;
       const ifCondition = me.parseExpr(null);
 
-      me.requireToken(Selectors.Then, ifStatementStartToken.line, ifStatementStartToken.startChar);
+      me.requireToken(Selectors.Then, ifStatementStartToken.line, ifStatementStartToken.startChar, 'else-if clause');
 
       pendingBlock.currentClause = me.astProvider.elseifClause({
         condition: ifCondition,
@@ -430,7 +430,7 @@ export function parseForStatement(me: Parser): void {
   const startToken = me.previousToken;
   const variable = me.parseIdentifier(ASTIdentifierKind.ForInVariable) as ASTIdentifier;
 
-  me.requireToken(Selectors.In, startToken.line, startToken.startChar);
+  me.requireToken(Selectors.In, startToken.line, startToken.startChar, 'for statement');
 
   const iterator = me.parseExpr(null);
 

@@ -144,12 +144,12 @@ export default class Parser implements ParserShape {
     return false;
   }
 
-  requireType(type: TokenType, fromLine?: number, fromChar?: number): Token | null {
+  requireType(type: TokenType, fromLine?: number, fromChar?: number, context?: string): Token | null {
     const token = this.token;
 
     if (this.token.type !== type) {
       this.raise(
-        `got ${describeTokenRef(token)} where ${TokenType[type]} is required`,
+        `got ${describeTokenRef(token)}${context ? ' in ' + context : ''} where ${TokenType[type]} is required`,
         new Range(
           fromLine == null || fromChar == null
             ? [token.line, token.startChar]
@@ -165,12 +165,12 @@ export default class Parser implements ParserShape {
     return token;
   }
 
-  requireToken(selector: Selector, fromLine?: number, fromChar?: number): Token | null {
+  requireToken(selector: Selector, fromLine?: number, fromChar?: number, context?: string): Token | null {
     const token = this.token;
 
     if (!selector(token)) {
       this.raise(
-        `got ${describeTokenRef(token)} where ${describeSelectorRef(selector)} is required`,
+        `got ${describeTokenRef(token)}${context ? ' in ' + context : ''} where ${describeSelectorRef(selector)} is required`,
         new Range(
           fromLine == null || fromChar == null
             ? [token.line, token.startChar]
@@ -186,7 +186,7 @@ export default class Parser implements ParserShape {
     return token;
   }
 
-  requireTokenOfAny(selectorGroup: SelectorGroup, fromLine?: number, fromChar?: number): Token | null {
+  requireTokenOfAny(selectorGroup: SelectorGroup, fromLine?: number, fromChar?: number, context?: string): Token | null {
     const token = this.token;
 
     if (selectorGroup(token)) {
@@ -195,7 +195,7 @@ export default class Parser implements ParserShape {
     }
 
     this.raise(
-      `got ${describeTokenRef(token)} where one of ${joinWithOr(
+      `got ${describeTokenRef(token)}${context ? ' in ' + context : ''} where one of ${joinWithOr(
         getSelectorsFromGroup(selectorGroup)
           .map((selector: Selector) => describeSelectorRef(selector))
       )} is required`,
@@ -466,7 +466,8 @@ export default class Parser implements ParserShape {
       const requiredToken = me.requireTokenOfAny(
         SelectorGroups.AssignmentCommandArgs,
         startToken.line,
-        startToken.startChar
+        startToken.startChar,
+        'command arguments'
       );
 
       if (
@@ -527,7 +528,7 @@ export default class Parser implements ParserShape {
     me.pushScope(functionStatement);
 
     if (!SelectorGroups.BlockEndOfLine(me.token)) {
-      me.requireToken(Selectors.LParenthesis, functionStartToken.line, functionStartToken.startChar);
+      me.requireToken(Selectors.LParenthesis, functionStartToken.line, functionStartToken.startChar, 'function declaration');
 
       while (!SelectorGroups.FunctionDeclarationArgEnd(me.token)) {
         const parameter = me.parseIdentifier(ASTIdentifierKind.Argument);
@@ -585,7 +586,7 @@ export default class Parser implements ParserShape {
         }
 
         if (Selectors.RParenthesis(me.token)) break;
-        me.requireToken(Selectors.ArgumentSeparator, functionStartToken.line, functionStartToken.startChar);
+        me.requireToken(Selectors.ArgumentSeparator, functionStartToken.line, functionStartToken.startChar, 'function parameters');
         if (Selectors.RParenthesis(me.token)) {
           me.raise('Trailing comma in parameter list', new Range(
             [me.previousToken.endLine, me.previousToken.endChar],
@@ -595,7 +596,7 @@ export default class Parser implements ParserShape {
         }
       }
 
-      me.requireToken(Selectors.RParenthesis, functionStartToken.line, functionStartToken.startChar);
+      me.requireToken(Selectors.RParenthesis, functionStartToken.line, functionStartToken.startChar, 'function parameters');
     }
 
     functionStatement.parameters = parameters;

@@ -124,13 +124,18 @@ export function parseCallArgs(me: Parser): ASTBase[] {
     } else {
       while (!Selectors.EndOfFile(me.token)) {
         me.consumeNoop();
+        if (Selectors.RParenthesis(me.token)) {
+          me.next();
+          break;
+        }
         const arg = me.parseExpr(null);
         expressions.push(arg);
         if (
           Selectors.RParenthesis(me.requireTokenOfAny(
             SelectorGroups.CallArgsEnd,
             arg.startLine,
-            arg.startChar
+            arg.startChar,
+            'call arguments'
           ))
         )
           break;
@@ -217,7 +222,8 @@ export function defaultInfixOpBuilder(): InfixOpBuilder {
           p.requireToken(
             Selectors.SRBracket,
             startToken.line,
-            startToken.startChar
+            startToken.startChar,
+            'slice expression'
           );
           return result;
         } else {
@@ -255,7 +261,8 @@ export function defaultInfixOpBuilder(): InfixOpBuilder {
             p.requireToken(
               Selectors.SRBracket,
               startToken.line,
-              startToken.startChar
+              startToken.startChar,
+              'slice expression'
             );
             return result;
           } else {
@@ -275,7 +282,8 @@ export function defaultInfixOpBuilder(): InfixOpBuilder {
             p.requireToken(
               Selectors.SRBracket,
               startToken.line,
-              startToken.startChar
+              startToken.startChar,
+              'index expression'
             );
             return result;
           }

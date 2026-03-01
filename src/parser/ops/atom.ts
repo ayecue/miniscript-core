@@ -57,7 +57,7 @@ export function parseMap(me: Parser): ASTBase {
       });
       keyValueItem.key = me.parseExpr(null);
 
-      me.requireToken(Selectors.MapKeyValueSeparator);
+      me.requireToken(Selectors.MapKeyValueSeparator, undefined, undefined, 'map literal');
       me.consumeNoop();
 
       keyValueItem.value = me.parseExpr(keyValueItem);
@@ -68,7 +68,8 @@ export function parseMap(me: Parser): ASTBase {
       const token = me.requireTokenOfAny(
         SelectorGroups.MapSeparator,
         startToken.line,
-        startToken.startChar
+        startToken.startChar,
+        'map literal'
       );
 
       if (Selectors.CRBracket(token)) break;
@@ -124,7 +125,8 @@ export function parseList(me: Parser): ASTBase {
       const token = me.requireTokenOfAny(
         SelectorGroups.ListSeparator,
         startToken.line,
-        startToken.startChar
+        startToken.startChar,
+        'list literal'
       );
 
       if (Selectors.SRBracket(token)) break;
@@ -147,7 +149,7 @@ export function parseQuantity(me: Parser): ASTBase {
 
   const val = me.parseExpr(null);
 
-  me.requireToken(Selectors.RParenthesis, startToken.line, startToken.startChar);
+  me.requireToken(Selectors.RParenthesis, startToken.line, startToken.startChar, 'parenthesized expression');
 
   return me.astProvider.parenthesisExpression({
     expression: val,

@@ -662,24 +662,26 @@ exports[`parse default scripts call-with-spaces.ms unsafe 1`] = `
 `;
 
 exports[`parse default scripts callexpr-with-nl.ms 1`] = `
-"Chunk[1:1-6:7][
+"Chunk[1:1-14:2][
 	CallExpression[1:1-6:7][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
+	CallExpression[8:1-14:2][Identifier[8:1-8:2][x](Literal[9:5-9:6][1], Literal[10:5-10:6][2], Literal[11:5-11:6][3], Literal[12:5-12:6][4], Literal[13:5-13:6][5])]
 ]"
 `;
 
 exports[`parse default scripts callexpr-with-nl.ms 2`] = `
 Object {
-  "variable": 1,
+  "variable": 2,
 }
 `;
 
-exports[`parse default scripts callexpr-with-nl.ms 3`] = `5`;
+exports[`parse default scripts callexpr-with-nl.ms 3`] = `10`;
 
 exports[`parse default scripts callexpr-with-nl.ms 4`] = `0`;
 
 exports[`parse default scripts callexpr-with-nl.ms unsafe 1`] = `
-"Chunk[1:1-6:7][
+"Chunk[1:1-14:2][
 	CallExpression[1:1-6:7][Identifier[1:1-1:2][x](Literal[2:5-2:6][1], Literal[3:5-3:6][2], Literal[4:5-4:6][3], Literal[5:5-5:6][4], Literal[6:5-6:6][5])]
+	CallExpression[8:1-14:2][Identifier[8:1-8:2][x](Literal[9:5-9:6][1], Literal[10:5-10:6][2], Literal[11:5-11:6][3], Literal[12:5-12:6][4], Literal[13:5-13:6][5])]
 ]"
 `;
 
@@ -959,7 +961,7 @@ Array [
   Object {
     "code": 3001,
     "hint": null,
-    "message": "got EOL('end of line') where one of Punctuator(',') or Punctuator(')') is required",
+    "message": "got EOL('end of line') in call arguments where one of Punctuator(',') or Punctuator(')') is required",
     "range": Object {
       "end": Array [
         4,
@@ -989,7 +991,7 @@ Array [
   Object {
     "code": 3001,
     "hint": null,
-    "message": "got Identifier('wa') where one of Punctuator(','), EOL('end of line') or EOF('end of file') is required",
+    "message": "got Identifier('wa') in command arguments where one of Punctuator(','), EOL('end of line') or EOF('end of file') is required",
     "range": Object {
       "end": Array [
         10,
@@ -1064,7 +1066,7 @@ Array [
   Object {
     "code": 3001,
     "hint": null,
-    "message": "got Identifier('print') where Keyword('then') is required",
+    "message": "got Identifier('print') in if statement where Keyword('then') is required",
     "range": Object {
       "end": Array [
         30,
