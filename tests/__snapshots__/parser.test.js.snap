@@ -2749,10 +2749,3 @@ Array [
   },
 ]
 `;
-
-exports[`parse strictMode shorthand assignment allowed without strict mode 1`] = `
-"Chunk[1:1-2:7][
-	AssignmentStatement[1:1-1:6][Identifier[1:1-1:2][x] = Literal[1:5-1:6][1]]
-	AssignmentStatement[2:1-2:7][Identifier[2:1-2:2][x] = BinaryExpression[2:6-2:7][Identifier[2:1-2:2][x] + Literal[2:6-2:7][2]]]
-]"
-`;
