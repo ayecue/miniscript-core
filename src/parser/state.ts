@@ -2,6 +2,13 @@ import { ASTBaseBlockWithScope, ASTLiteral } from './ast';
 import { LineRegistry } from './line-registry';
 import { Comment } from '../types/comment';
 
+export interface ParserStateSnapshot {
+  literalsLength: number;
+  scopesLength: number;
+  commentsLength: number;
+  lineRegistryItemsLength: number;
+}
+
 export class ParserState {
   literals: ASTLiteral[];
   comments: Comment[];
@@ -13,6 +20,22 @@ export class ParserState {
     this.comments = [];
     this.scopes = [];
     this.lineRegistry = new LineRegistry();
+  }
+
+  snapshot(): ParserStateSnapshot {
+    return {
+      literalsLength: this.literals.length,
+      scopesLength: this.scopes.length,
+      commentsLength: this.comments.length,
+      lineRegistryItemsLength: this.lineRegistry.items.length
+    };
+  }
+
+  restore(snapshot: ParserStateSnapshot): void {
+    this.literals.length = snapshot.literalsLength;
+    this.scopes.length = snapshot.scopesLength;
+    this.comments.length = snapshot.commentsLength;
+    this.lineRegistry.items.length = snapshot.lineRegistryItemsLength;
   }
 
   merge(other: ParserState): void {

@@ -2,17 +2,15 @@ import { TokenType } from '../lexer/token';
 import { ASTAssignmentStatement, ASTBaseBlockWithScope } from '../parser/ast';
 import { describeBlockType } from '../parser/describe';
 import { isPendingChunk } from '../parser/pending-block';
+import { ParserStateSnapshot } from '../parser/state';
 import { ErrorCode, ParserException } from '../types/errors';
 import { ParserShape } from '../types/parser';
 import { Range } from '../types/range';
 
 export interface ParserSnapshot {
-  literalsLength: number;
-  scopesLength: number;
+  stateSnapshot: ParserStateSnapshot;
   outerScopesLength: number;
-  commentsLength: number;
   iteratorStackLength: number;
-  lineRegistryItemsLength: number;
   currentScope: ASTBaseBlockWithScope;
   currentScopeNamespacesLength: number;
   currentScopeDefinitionsLength: number;
@@ -50,12 +48,9 @@ export default function UnsafeParserMixin<
       const state = me.getState();
 
       const snapshot: ParserSnapshot = {
-        literalsLength: state.literals.length,
-        scopesLength: state.scopes.length,
+        stateSnapshot: state.snapshot(),
         outerScopesLength: me.outerScopes.length,
-        commentsLength: state.comments.length,
         iteratorStackLength: me.iteratorStack.length,
-        lineRegistryItemsLength: state.lineRegistry.items.length,
         currentScope: me.currentScope,
         currentScopeNamespacesLength: me.currentScope.namespaces.length,
         currentScopeDefinitionsLength: me.currentScope.definitions.length,
@@ -80,12 +75,9 @@ export default function UnsafeParserMixin<
 
       // Roll back parser state to before the failed statement
       const state = me.getState();
-      state.literals.length = snapshot.literalsLength;
-      state.scopes.length = snapshot.scopesLength;
+      state.restore(snapshot.stateSnapshot);
       me.outerScopes.length = snapshot.outerScopesLength;
-      state.comments.length = snapshot.commentsLength;
       me.iteratorStack.length = snapshot.iteratorStackLength;
-      state.lineRegistry.items.length = snapshot.lineRegistryItemsLength;
 
       me.currentScope = snapshot.currentScope;
       me.currentScope.namespaces.length = snapshot.currentScopeNamespacesLength;
