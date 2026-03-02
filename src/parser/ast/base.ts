@@ -69,6 +69,7 @@ export class ASTBase {
   scope?: ASTBaseBlockWithScope;
   leadingComments?: string[];
   trailingComments?: string[];
+  endTrailingComments?: string[];
 
   constructor(type: string, options: ASTBaseOptions) {
     this.type = type;

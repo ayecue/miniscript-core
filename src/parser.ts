@@ -306,6 +306,40 @@ export default class Parser implements ParserShape {
     me.lastStatement = null;
   }
 
+  consumeEndTrailingComment(): void {
+    const me = this;
+    if (!me.preserve) return;
+    if (!Selectors.Comment(me.token)) return;
+    if (me.previousToken?.line !== me.token.line) return;
+
+    const comment = me.createComment(me.token);
+    me.getState().comments.push(comment);
+
+    const parentBody = me.backpatches.peek().body;
+    const lastItem = parentBody.length > 0 ? parentBody[parentBody.length - 1] : null;
+    if (lastItem) {
+      if (!lastItem.endTrailingComments) lastItem.endTrailingComments = [];
+      lastItem.endTrailingComments.push(comment.value);
+    }
+
+    me.next();
+  }
+
+  consumeInlineComment(target: ASTBase): void {
+    const me = this;
+    if (!me.preserve) return;
+    if (!Selectors.Comment(me.token)) return;
+    if (me.previousToken?.line !== me.token.line) return;
+
+    const comment = me.createComment(me.token);
+    me.getState().comments.push(comment);
+
+    if (!target.trailingComments) target.trailingComments = [];
+    target.trailingComments.push(comment.value);
+
+    me.next();
+  }
+
   pushScope(scope: ASTBaseBlockWithScope) {
     const me = this;
 

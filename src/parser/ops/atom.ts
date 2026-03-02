@@ -74,6 +74,7 @@ export function parseMap(me: Parser): ASTBase {
 
       if (Selectors.CRBracket(token)) break;
 
+      me.consumeInlineComment(keyValueItem);
       me.consumeNoop();
     }
   }
@@ -131,6 +132,7 @@ export function parseList(me: Parser): ASTBase {
 
       if (Selectors.SRBracket(token)) break;
 
+      me.consumeInlineComment(listValue);
       me.consumeNoop();
     }
   }

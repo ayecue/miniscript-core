@@ -244,6 +244,7 @@ export function parseIfStatement(me: Parser): void {
   });
 
   me.attachPendingComments(ifStatement);
+  me.lastStatement = clause;
 
   const pendingBlock = new PendingIf(ifStatement, clause, me.lineRegistry);
   me.backpatches.push(pendingBlock);
@@ -332,12 +333,10 @@ export function nextIfClause(me: Parser, type: PendingClauseType | null): void {
       break;
     }
     case ASTType.ElseClause: {
-      const elseStatementStartToken = me.token;
-
       pendingBlock.currentClause = me.astProvider.elseClause({
-        startLine: elseStatementStartToken.line, startChar: elseStatementStartToken.startChar,
+        startLine: me.previousToken.line, startChar: me.previousToken.startChar,
         endLine: 0, endChar: 0,
-        rangeStart: elseStatementStartToken.rangeStart, rangeEnd: null,
+        rangeStart: me.previousToken.rangeStart, rangeEnd: null,
         scope: me.currentScope
       });
       break;
@@ -349,6 +348,13 @@ export function nextIfClause(me: Parser, type: PendingClauseType | null): void {
     me.backpatches.pop();
 
     me.backpatches.peek().body.push(pendingBlock.block);
+  }
+}
+
+function consumeClauseTrailingComment(me: Parser): void {
+  const pendingBlock = me.backpatches.peek();
+  if (isPendingIf(pendingBlock)) {
+    me.consumeInlineComment(pendingBlock.currentClause);
   }
 }
 
@@ -552,11 +558,13 @@ export function defaultKeywordHandlerBuilder(): KeywordHandlerBuilder {
       me.next();
       me.flushPendingComments();
       nextIfClause(me, ASTType.ElseifClause);
+      consumeClauseTrailingComment(me);
     })
     .add(Selectors.Else.selectorId, (me: Parser) => {
       me.next();
       me.flushPendingComments();
       nextIfClause(me, ASTType.ElseClause);
+      consumeClauseTrailingComment(me);
     })
     .add(Selectors.While.selectorId, (me: Parser) => {
       me.next();
@@ -570,21 +578,25 @@ export function defaultKeywordHandlerBuilder(): KeywordHandlerBuilder {
       me.next();
       me.flushPendingComments();
       finalizeFunction(me);
+      me.consumeEndTrailingComment();
     })
     .add(Selectors.EndFor.selectorId, (me: Parser) => {
       me.next();
       me.flushPendingComments();
       finalizeForStatement(me);
+      me.consumeEndTrailingComment();
     })
     .add(Selectors.EndWhile.selectorId, (me: Parser) => {
       me.next();
       me.flushPendingComments();
       finalizeWhileStatement(me);
+      me.consumeEndTrailingComment();
     })
     .add(Selectors.EndIf.selectorId, (me: Parser) => {
       me.next();
       me.flushPendingComments();
       nextIfClause(me, null);
+      me.consumeEndTrailingComment();
     })
     .add(Selectors.Continue.selectorId, (me: Parser) => {
       me.next();
