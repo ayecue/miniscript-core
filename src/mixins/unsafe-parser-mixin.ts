@@ -1,0 +1,137 @@
+import { TokenType } from '../lexer/token';
+import { ASTAssignmentStatement, ASTBaseBlockWithScope } from '../parser/ast';
+import { describeBlockType } from '../parser/describe';
+import { isPendingChunk } from '../parser/pending-block';
+import { ParserStateSnapshot } from '../parser/state';
+import { ErrorCode, ParserException } from '../types/errors';
+import { ParserShape } from '../types/parser';
+import { Range } from '../types/range';
+
+export interface ParserSnapshot {
+  stateSnapshot: ParserStateSnapshot;
+  outerScopesLength: number;
+  iteratorStackLength: number;
+  currentScope: ASTBaseBlockWithScope;
+  currentScopeNamespacesLength: number;
+  currentScopeDefinitionsLength: number;
+  currentScopeReturnsLength: number;
+  currentAssignment: ASTAssignmentStatement;
+  backpatchesLength: number;
+  pendingBodyLength: number;
+}
+
+type ParserConstructor<T extends ParserShape> = new (...args: any[]) => T;
+
+export default function UnsafeParserMixin<
+  T extends ParserConstructor<ParserShape>
+>(Base: T) {
+  return class UnsafeParser extends Base {
+    statementErrors: Error[] = [];
+
+    raise(
+      message: string,
+      range: Range,
+      code: ErrorCode = ErrorCode.Unknown,
+      hint?: string
+    ): ParserException {
+      const err = new ParserException(message, range, code, hint);
+      this.statementErrors.push(err);
+      return err;
+    }
+
+    parseStatement(): void {
+      const me = this;
+
+      me.lexer.recordSnapshot();
+      me.statementErrors = [];
+
+      const state = me.getState();
+
+      const snapshot: ParserSnapshot = {
+        stateSnapshot: state.snapshot(),
+        outerScopesLength: me.outerScopes.length,
+        iteratorStackLength: me.iteratorStack.length,
+        currentScope: me.currentScope,
+        currentScopeNamespacesLength: me.currentScope.namespaces.length,
+        currentScopeDefinitionsLength: me.currentScope.definitions.length,
+        currentScopeReturnsLength: me.currentScope.returns.length,
+        currentAssignment: me.currentAssignment,
+        backpatchesLength: me.backpatches.length,
+        pendingBodyLength: me.backpatches.peek().body.length
+      };
+
+      super.parseStatement();
+
+      if (me.statementErrors.length > 0) {
+        me.tryToRecover(snapshot);
+      }
+    }
+
+    tryToRecover(snapshot: ParserSnapshot) {
+      const me = this;
+      const firstPointOfFailure = me.statementErrors[0];
+
+      me.errors.push(firstPointOfFailure);
+
+      // Roll back parser state to before the failed statement
+      const state = me.getState();
+      state.restore(snapshot.stateSnapshot);
+      me.outerScopes.length = snapshot.outerScopesLength;
+      me.iteratorStack.length = snapshot.iteratorStackLength;
+
+      me.currentScope = snapshot.currentScope;
+      me.currentScope.namespaces.length = snapshot.currentScopeNamespacesLength;
+      me.currentScope.definitions.length =
+        snapshot.currentScopeDefinitionsLength;
+      me.currentScope.returns.length = snapshot.currentScopeReturnsLength;
+
+      me.currentAssignment = snapshot.currentAssignment;
+
+      me.backpatches.truncate(snapshot.backpatchesLength);
+      me.backpatches.peek().body.length = snapshot.pendingBodyLength;
+
+      // Rewind lexer and skip to end of line
+      me.lexer.recoverFromSnapshot();
+      me.next();
+      for (
+        ;
+        me.token.type !== TokenType.EOL && me.token.type !== TokenType.EOF;
+        me.next()
+      );
+    }
+
+    finishRemainingScopes() {
+      const me = this;
+      let last = me.backpatches.pop();
+
+      while (!isPendingChunk(last)) {
+        const blockName = describeBlockType(last.block.type);
+        const parent = me.backpatches.peek();
+        let hint = `Add 'end ${blockName}' to close this block`;
+        if (!isPendingChunk(parent)) {
+          const parentName = describeBlockType(parent.block.type);
+          hint += ` (inside '${parentName}' at line ${parent.block.startLine})`;
+        }
+        // Use reference-style message for while/for/function; keep specific message for if
+        const message =
+          blockName === 'if'
+            ? `Unclosed '${blockName}' block`
+            : `'${blockName}' without matching 'end ${blockName}'`;
+        const exception = new ParserException(
+          message,
+          new Range(
+            [last.block.startLine, last.block.startChar],
+            [last.block.startLine, last.block.startChar]
+          ),
+          ErrorCode.UnclosedBlock,
+          hint
+        );
+
+        last.complete(me.previousToken);
+        me.errors.push(exception);
+
+        last = me.backpatches.pop();
+      }
+    }
+  };
+}

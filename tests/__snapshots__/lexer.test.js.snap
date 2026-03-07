@@ -977,8 +977,28 @@ NumericLiteral[5:5 - 5:6: value = 4]
 Punctuator[5:6 - 5:7: value = ',']
 EOL[5:7 - 5:7: value = ';']
 NumericLiteral[6:5 - 6:6: value = 5]
-EOL[6:6 - 6:6: value = ';']
-Punctuator[7:1 - 7:2: value = ')']"
+Punctuator[6:6 - 6:7: value = ')']
+EOL[6:7 - 6:7: value = ';']
+EOL[7:1 - 7:1: value = ';']
+Identifier[8:1 - 8:2: value = 'x']
+Punctuator[8:2 - 8:3: value = '(']
+EOL[8:3 - 8:3: value = ';']
+NumericLiteral[9:5 - 9:6: value = 1]
+Punctuator[9:6 - 9:7: value = ',']
+EOL[9:7 - 9:7: value = ';']
+NumericLiteral[10:5 - 10:6: value = 2]
+Punctuator[10:6 - 10:7: value = ',']
+EOL[10:7 - 10:7: value = ';']
+NumericLiteral[11:5 - 11:6: value = 3]
+Punctuator[11:6 - 11:7: value = ',']
+EOL[11:7 - 11:7: value = ';']
+NumericLiteral[12:5 - 12:6: value = 4]
+Punctuator[12:6 - 12:7: value = ',']
+EOL[12:7 - 12:7: value = ';']
+NumericLiteral[13:5 - 13:6: value = 5]
+Punctuator[13:6 - 13:7: value = ',']
+EOL[13:7 - 13:7: value = ';']
+Punctuator[14:1 - 14:2: value = ')']"
 `;
 
 exports[`parse default scripts comments.ms 1`] = `
@@ -1247,7 +1267,25 @@ EOL[7:13 - 7:13: value = ';']
 Keyword[8:1 - 8:13: value = 'end function']"
 `;
 
-exports[`parse default scripts invalid code 1`] = `Array []`;
+exports[`parse default scripts invalid code 1`] = `
+Array [
+  Object {
+    "code": 1004,
+    "hint": null,
+    "message": "'end' without following keyword ('if', 'function', etc.)",
+    "range": Object {
+      "end": Array [
+        9,
+        13,
+      ],
+      "start": Array [
+        9,
+        5,
+      ],
+    },
+  },
+]
+`;
 
 exports[`parse default scripts list.ms 1`] = `
 "Identifier[1:1 - 1:5: value = 'test']

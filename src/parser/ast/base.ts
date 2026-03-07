@@ -1,4 +1,3 @@
-import { Position } from '../../types/position';
 import { ASTIdentifier, ASTMemberExpression } from './identifier';
 
 export enum ASTType {
@@ -27,7 +26,6 @@ export enum ASTType {
   Unknown = 'Unknown',
   MemberExpression = 'MemberExpression',
   CallExpression = 'CallExpression',
-  Comment = 'Comment',
   NegationExpression = 'NegationExpression',
   BinaryNegatedExpression = 'BinaryNegatedExpression',
   UnaryExpression = 'UnaryExpression',
@@ -46,40 +44,56 @@ export enum ASTType {
   ImportCodeExpression = 'ImportCodeExpression',
   InvalidCodeExpression = 'InvalidCodeExpression',
   ParenthesisExpression = 'ParenthesisExpression',
-  ComparisonGroupExpression = 'ComparisonGroupExpression'
+  ComparisonGroupExpression = 'ComparisonGroupExpression',
+  NoopStatement = 'NoopStatement'
 }
 
-export interface ASTBaseOptions {
-  start: Position | null;
-  end: Position | null;
-  range: [number, number];
+export interface ASTBaseOptions extends CallArgs {
+  startLine: number;
+  startChar: number;
+  endLine: number;
+  endChar: number;
+  rangeStart: number;
+  rangeEnd: number;
   scope?: ASTBaseBlockWithScope;
 }
 
 export class ASTBase {
   readonly type: string;
-  start: Position | null;
-  end: Position | null;
-  range: [number, number];
+  startLine: number;
+  startChar: number;
+  endLine: number;
+  endChar: number;
+  rangeStart: number;
+  rangeEnd: number;
   scope?: ASTBaseBlockWithScope;
+  leadingComments?: string[];
+  trailingComments?: string[];
+  endTrailingComments?: string[];
 
   constructor(type: string, options: ASTBaseOptions) {
     this.type = type;
-    this.start = options.start;
-    this.end = options.end;
-    this.range = options.range;
+    this.startLine = options.startLine;
+    this.startChar = options.startChar;
+    this.endLine = options.endLine;
+    this.endChar = options.endChar;
+    this.rangeStart = options.rangeStart;
+    this.rangeEnd = options.rangeEnd;
     this.scope = options.scope || null;
   }
 
   toString(): string {
-    return `${this.type}[${this.start}-${this.end}][]`;
+    return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][]`;
   }
 
   clone(): ASTBase {
     return new ASTBase(this.type, {
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
@@ -93,7 +107,7 @@ export class ASTBaseBlock extends ASTBase {
   body: ASTBase[];
 
   constructor(type: string, options: ASTBaseBlockOptions) {
-    super(type, options);
+    super(type, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.body = options.body || [];
   }
 
@@ -105,16 +119,19 @@ export class ASTBaseBlock extends ASTBase {
       .map((item) => `\t${item}`)
       .join('\n');
 
-    return `${this.type}[${this.start}-${this.end}][${body.length > 0 ? `\n${body}\n` : ''
+    return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${body.length > 0 ? `\n${body}\n` : ''
       }]`;
   }
 
   clone(): ASTBaseBlock {
     return new ASTBaseBlock(this.type, {
       body: this.body.map((it) => it.clone()),
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
@@ -142,7 +159,7 @@ export class ASTBaseBlockWithScope extends ASTBaseBlock {
   namespaces: ASTScopeNamespace[];
 
   constructor(type: string, options: ASTBaseBlockWithScopeOptions) {
-    super(type, options);
+    super(type, { body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.namespaces = options.namespaces || [];
     this.definitions = options.definitions || [];
     this.returns = options.returns || [];
@@ -154,44 +171,12 @@ export class ASTBaseBlockWithScope extends ASTBaseBlock {
       definitions: this.definitions.map((it) => it.clone()),
       returns: this.returns.map((it) => it.clone()),
       body: this.body.map((it) => it.clone()),
-      start: this.start,
-      end: this.end,
-      range: this.range,
-      scope: this.scope
-    });
-  }
-}
-
-export interface ASTCommentOptions extends ASTBaseOptions {
-  value: string;
-  isMultiline?: boolean;
-  isStatement: boolean;
-}
-
-export class ASTComment extends ASTBase {
-  value: string;
-  isMultiline: boolean;
-  isStatement: boolean;
-
-  constructor(options: ASTCommentOptions) {
-    super(ASTType.Comment, options);
-    this.value = options.value;
-    this.isStatement = options.isStatement;
-    this.isMultiline = options.isMultiline || false;
-  }
-
-  toString(): string {
-    return `Comment[${this.start}-${this.end}][${this.value}]`;
-  }
-
-  clone(): ASTComment {
-    return new ASTComment({
-      value: this.value,
-      isMultiline: this.isMultiline,
-      isStatement: this.isStatement,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

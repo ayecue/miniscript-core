@@ -11,14 +11,14 @@ export class ASTForGenericStatement extends ASTBaseBlock {
   iterator: ASTBase;
 
   constructor(options: ASTForGenericStatementOptions) {
-    super(ASTType.ForGenericStatement, options);
+    super(ASTType.ForGenericStatement, { body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.variable = options.variable;
     this.iterator = options.iterator;
   }
 
   toString(): string {
     if (this.body.length === 0) {
-      return `${this.type}[${this.start}-${this.end}][${this.variable} in ${this.iterator}]`;
+      return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.variable} in ${this.iterator}]`;
     }
 
     const body = this.body
@@ -28,16 +28,19 @@ export class ASTForGenericStatement extends ASTBaseBlock {
       .map((item) => `\t${item}`)
       .join('\n');
 
-    return `For[${this.start}-${this.end}][${this.variable} in ${this.iterator}\n${body}\n]`;
+    return `For[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.variable} in ${this.iterator}\n${body}\n]`;
   }
 
   clone(): ASTForGenericStatement {
     return new ASTForGenericStatement({
       variable: this.variable.clone(),
       iterator: this.iterator.clone(),
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

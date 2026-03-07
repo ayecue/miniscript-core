@@ -1,0 +1,170 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parser edge cases command-style calls command call with multiple arguments 1`] = `
+"Chunk[1:1-1:20][
+	CallStatment[1:1-1:20][CallExpression[1:1-1:20][Identifier[1:1-1:6][print](Literal[1:7-1:10][a], Literal[1:12-1:15][b], Literal[1:17-1:20][c])]]
+]"
+`;
+
+exports[`parser edge cases command-style calls print with string argument 1`] = `
+"Chunk[1:1-1:20][
+	CallStatment[1:1-1:20][CallExpression[1:1-1:20][Identifier[1:1-1:6][print](Literal[1:7-1:20][hello world])]]
+]"
+`;
+
+exports[`parser edge cases comparison group expressions chained comparisons produce ComparisonGroupExpression 1`] = `
+"Chunk[1:1-1:26][
+	AssignmentStatement[1:1-1:26][Identifier[1:1-1:7][result] = LogicalExpression[1:10-1:26][BinaryExpression[1:10-1:15][Literal[1:10-1:11][1] < Identifier[1:14-1:15][x]] and BinaryExpression[1:20-1:26][Identifier[1:20-1:21][x] < Literal[1:24-1:26][10]]]]
+]"
+`;
+
+exports[`parser edge cases comparison group expressions equality comparison 1`] = `
+"Chunk[1:1-1:16][
+	AssignmentStatement[1:1-1:16][Identifier[1:1-1:7][result] = BinaryExpression[1:10-1:16][Identifier[1:10-1:11][x] == Identifier[1:15-1:16][y]]]
+]"
+`;
+
+exports[`parser edge cases comparison group expressions inequality comparison 1`] = `
+"Chunk[1:1-1:16][
+	AssignmentStatement[1:1-1:16][Identifier[1:1-1:7][result] = BinaryExpression[1:10-1:16][Identifier[1:10-1:11][x] != Identifier[1:15-1:16][y]]]
+]"
+`;
+
+exports[`parser edge cases comparison group expressions mixed comparison operators 1`] = `
+"Chunk[1:1-1:16][
+	AssignmentStatement[1:1-1:16][Identifier[1:1-1:7][result] = BinaryExpression[1:10-1:16][Identifier[1:10-1:11][a] >= Identifier[1:15-1:16][b]]]
+]"
+`;
+
+exports[`parser edge cases comparison group expressions single comparison is a binary expression 1`] = `
+"Chunk[1:1-1:15][
+	AssignmentStatement[1:1-1:15][Identifier[1:1-1:7][result] = BinaryExpression[1:10-1:15][Literal[1:10-1:11][1] < Literal[1:14-1:15][2]]]
+]"
+`;
+
+exports[`parser edge cases indexing with space rule no space before bracket is index expression 1`] = `
+"Chunk[1:1-1:16][
+	AssignmentStatement[1:1-1:16][Identifier[1:1-1:7][result] = IndexExpression[1:10-1:16][Identifier[1:10-1:13][arr][Literal[1:14-1:15][0]]]]
+]"
+`;
+
+exports[`parser edge cases indexing with space rule slice expression with colon 1`] = `
+"Chunk[1:1-1:18][
+	AssignmentStatement[1:1-1:18][Identifier[1:1-1:7][result] = SliceExpression[1:10-1:18][Identifier[1:10-1:13][arr][Literal[1:14-1:15][1]:Literal[1:16-1:17][3]]]]
+]"
+`;
+
+exports[`parser edge cases isa expression basic isa expression 1`] = `
+"Chunk[1:1-1:22][
+	AssignmentStatement[1:1-1:22][Identifier[1:1-1:7][result] = IsaExpression[1:10-1:22][Identifier[1:10-1:11][x] isa Identifier[1:16-1:22][string]]]
+]"
+`;
+
+exports[`parser edge cases isa expression isa with member expression 1`] = `
+"Chunk[1:1-1:26][
+	AssignmentStatement[1:1-1:26][Identifier[1:1-1:7][result] = IsaExpression[1:10-1:26][MemberExpression[1:10-1:17][Identifier[1:10-1:13][obj].Identifier[1:14-1:17][val]] isa Identifier[1:22-1:26][list]]]
+]"
+`;
+
+exports[`parser edge cases logical operators and expression 1`] = `
+"Chunk[1:1-1:17][
+	AssignmentStatement[1:1-1:17][Identifier[1:1-1:7][result] = LogicalExpression[1:10-1:17][Identifier[1:10-1:11][a] and Identifier[1:16-1:17][b]]]
+]"
+`;
+
+exports[`parser edge cases logical operators and/or precedence 1`] = `
+"Chunk[1:1-1:22][
+	AssignmentStatement[1:1-1:22][Identifier[1:1-1:7][result] = LogicalExpression[1:10-1:22][Identifier[1:10-1:11][a] or LogicalExpression[1:15-1:22][Identifier[1:15-1:16][b] and Identifier[1:21-1:22][c]]]]
+]"
+`;
+
+exports[`parser edge cases logical operators or expression 1`] = `
+"Chunk[1:1-1:16][
+	AssignmentStatement[1:1-1:16][Identifier[1:1-1:7][result] = LogicalExpression[1:10-1:16][Identifier[1:10-1:11][a] or Identifier[1:15-1:16][b]]]
+]"
+`;
+
+exports[`parser edge cases map and list literals empty list 1`] = `
+"Chunk[1:1-1:12][
+	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][result] = ListConstructor[1:10-1:12][]]
+]"
+`;
+
+exports[`parser edge cases map and list literals empty map 1`] = `
+"Chunk[1:1-1:12][
+	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][result] = MapConstructor[1:10-1:12][]]
+]"
+`;
+
+exports[`parser edge cases map and list literals list with values 1`] = `
+"Chunk[1:1-1:19][
+	AssignmentStatement[1:1-1:19][Identifier[1:1-1:7][result] = ListConstructor[1:10-1:19][
+		ListValue[1:11-1:12][Literal[1:11-1:12][1]]
+		ListValue[1:14-1:15][Literal[1:14-1:15][2]]
+		ListValue[1:17-1:18][Literal[1:17-1:18][3]]
+	]]
+]"
+`;
+
+exports[`parser edge cases map and list literals map with entries 1`] = `
+"Chunk[1:1-1:26][
+	AssignmentStatement[1:1-1:26][Identifier[1:1-1:7][result] = MapConstructor[1:10-1:26][
+		MapKeyString[1:11-1:17][Literal[1:11-1:14][a]: Literal[1:16-1:17][1]]
+		MapKeyString[1:19-1:25][Literal[1:19-1:22][b]: Literal[1:24-1:25][2]]
+	]]
+]"
+`;
+
+exports[`parser edge cases member/index chaining call then member 1`] = `
+"Chunk[1:1-1:19][
+	AssignmentStatement[1:1-1:19][Identifier[1:1-1:7][result] = MemberExpression[1:10-1:19][CallExpression[1:10-1:15][Identifier[1:10-1:13][foo]()].Identifier[1:16-1:19][bar]]]
+]"
+`;
+
+exports[`parser edge cases member/index chaining chained index and member 1`] = `
+"Chunk[1:1-1:16][
+	AssignmentStatement[1:1-1:16][Identifier[1:1-1:7][result] = MemberExpression[1:10-1:16][IndexExpression[1:10-1:14][Identifier[1:10-1:11][a][Literal[1:12-1:13][0]]].Identifier[1:15-1:16][b]]]
+]"
+`;
+
+exports[`parser edge cases member/index chaining chained member access 1`] = `
+"Chunk[1:1-1:15][
+	AssignmentStatement[1:1-1:15][Identifier[1:1-1:7][result] = MemberExpression[1:10-1:15][MemberExpression[1:10-1:13][Identifier[1:10-1:11][a].Identifier[1:12-1:13][b]].Identifier[1:14-1:15][c]]]
+]"
+`;
+
+exports[`parser edge cases power precedence power operator binds tighter than multiply 1`] = `
+"Chunk[1:1-1:19][
+	AssignmentStatement[1:1-1:19][Identifier[1:1-1:7][result] = BinaryExpression[1:10-1:19][Literal[1:10-1:11][2] * BinaryExpression[1:14-1:19][Literal[1:14-1:15][3] ^ Literal[1:18-1:19][4]]]]
+]"
+`;
+
+exports[`parser edge cases prefix operators address-of operator @ 1`] = `
+"Chunk[1:1-1:12][
+	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][result] = UnaryExpression[1:10-1:12][@ Identifier[1:11-1:12][x]]]
+]"
+`;
+
+exports[`parser edge cases prefix operators new operator 1`] = `
+"Chunk[1:1-1:17][
+	AssignmentStatement[1:1-1:17][Identifier[1:1-1:7][result] = UnaryExpression[1:10-1:17][new Identifier[1:14-1:17][Foo]]]
+]"
+`;
+
+exports[`parser edge cases prefix operators not operator 1`] = `
+"Chunk[1:1-1:18][
+	AssignmentStatement[1:1-1:18][Identifier[1:1-1:7][result] = NegationExpression[1:10-1:18][not Literal[1:14-1:18][true]]]
+]"
+`;
+
+exports[`parser edge cases prefix operators unary minus 1`] = `
+"Chunk[1:1-1:12][
+	AssignmentStatement[1:1-1:12][Identifier[1:1-1:7][result] = Literal[1:11-1:12][-5]]
+]"
+`;
+
+exports[`parser edge cases string concatenation plus with strings 1`] = `
+"Chunk[1:1-1:33][
+	AssignmentStatement[1:1-1:33][Identifier[1:1-1:7][result] = BinaryExpression[1:10-1:33][BinaryExpression[1:10-1:23][Literal[1:10-1:17][hello] + Literal[1:20-1:23][ ]] + Literal[1:26-1:33][world]]]
+]"
+`;

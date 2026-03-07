@@ -10,7 +10,7 @@ export class ASTComparisonGroupExpression extends ASTBase {
   expressions: ASTBase[];
 
   constructor(options: ASTComparisonGroupExpressionOptions) {
-    super(ASTType.ComparisonGroupExpression, options);
+    super(ASTType.ComparisonGroupExpression, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.operators = options.operators;
     this.expressions = options.expressions;
   }
@@ -22,16 +22,19 @@ export class ASTComparisonGroupExpression extends ASTBase {
       group.push(this.operators[index - 1], this.expressions[index].toString());
     }
 
-    return `${this.type}[${this.start}-${this.end}][${group.join(' ')}]`;
+    return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${group.join(' ')}]`;
   }
 
   clone(): ASTComparisonGroupExpression {
     return new ASTComparisonGroupExpression({
       operators: this.operators,
       expressions: this.expressions,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

@@ -2,7 +2,32 @@ import { CharacterCode } from '../types/codes';
 import { Keyword } from '../types/keywords';
 
 export default class Validator {
-  isKeyword = Set.prototype.has.bind(new Set(Object.values(Keyword)));
+  readonly isKeyword = Set.prototype.has.bind(
+    new Set([
+      Keyword.If,
+      Keyword.In,
+      Keyword.Or,
+      Keyword.And,
+      Keyword.Isa,
+      Keyword.For,
+      Keyword.Not,
+      Keyword.New,
+      Keyword.End,
+      Keyword.EndFor,
+      Keyword.EndWhile,
+      Keyword.EndFunction,
+      Keyword.EndIf,
+      Keyword.Then,
+      Keyword.Else,
+      Keyword.Break,
+      Keyword.While,
+      Keyword.ElseIf,
+      Keyword.Return,
+      Keyword.Function,
+      Keyword.Continue,
+      Keyword.Repeat
+    ])
+  );
 
   isWhitespace(code: number): boolean {
     return CharacterCode.WHITESPACE === code || CharacterCode.TAB === code;
@@ -20,32 +45,29 @@ export default class Validator {
 
   isIdentifierStart(code: number): boolean {
     return (
-      ((code | 32) >= 97 && (code | 32) <= 122) || // a-z or A-Z
-      code >= 128 || // extended ASCII
-      code === 95 // _
+      ((code | CharacterCode.WHITESPACE) - 97) >>> 0 < 26 ||
+      code === 95 ||
+      code >= 128
     );
   }
 
   isIdentifierPart(code: number): boolean {
     return (
-      ((code | 32) >= 97 && (code | 32) <= 122) || // a-z or A-Z
-      (code >= 48 && code <= 57) || // 0-9
-      code >= 128 || // extended ASCII
-      code === 95 // _
+      ((code | CharacterCode.WHITESPACE) - 97) >>> 0 < 26 ||
+      (code - 48) >>> 0 < 10 ||
+      code === 95 ||
+      code >= 128
     );
   }
 
   isDecDigit(code: number): boolean {
-    return code >= CharacterCode.NUMBER_0 && code <= CharacterCode.NUMBER_9;
+    return (code - 48) >>> 0 < 10;
   }
 
-  isWinNewline(code: number, nextCode: number) {
-    switch (code) {
-      case CharacterCode.RETURN_LINE:
-        return CharacterCode.NEW_LINE === nextCode;
-      case CharacterCode.NEW_LINE:
-        return CharacterCode.RETURN_LINE === nextCode;
-    }
-    return false;
+  isWinNewline(code: number, nextCode: number): boolean {
+    return (
+      (code ^ nextCode) === 7 &&
+      (code === CharacterCode.NEW_LINE || code === CharacterCode.RETURN_LINE)
+    );
   }
 }

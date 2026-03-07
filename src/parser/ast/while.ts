@@ -8,13 +8,13 @@ export class ASTWhileStatement extends ASTBaseBlock {
   condition: ASTBase;
 
   constructor(options: ASTWhileStatementOptions) {
-    super(ASTType.WhileStatement, options);
+    super(ASTType.WhileStatement, { body: options.body, startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.condition = options.condition;
   }
 
   toString(): string {
     if (this.body.length === 0) {
-      return `WhileStatement[${this.start}-${this.end}][${this.condition}]`;
+      return `WhileStatement[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.condition}]`;
     }
 
     const body = this.body
@@ -24,15 +24,18 @@ export class ASTWhileStatement extends ASTBaseBlock {
       .map((item) => `\t${item}`)
       .join('\n');
 
-    return `WhileStatement[${this.start}-${this.end}][${this.condition}\n${body}\n]`;
+    return `WhileStatement[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.condition}\n${body}\n]`;
   }
 
   clone(): ASTWhileStatement {
     return new ASTWhileStatement({
       condition: this.condition.clone(),
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

@@ -1,13 +1,13 @@
 import { BaseToken, LiteralToken, Token, TokenType } from './lexer/token';
 import Validator from './lexer/validator';
+import UnsafeLexerMixin from './mixins/unsafe-lexer-mixin';
 import { CharacterCode } from './types/codes';
-import { LexerException } from './types/errors';
+import { ErrorCode, LexerException } from './types/errors';
 import { Keyword } from './types/keywords';
+import { LexerShape } from './types/lexer';
 import { Literal } from './types/literals';
 import { Operator } from './types/operators';
-import { Position } from './types/position';
 import { Range } from './types/range';
-import Queue from './utils/queue';
 
 export interface LexerOptions {
   validator?: Validator;
@@ -15,13 +15,7 @@ export interface LexerOptions {
   tabWidth?: number;
 }
 
-function defaultScanHandler(this: Lexer, afterSpace: boolean) {
-  const value = this.content[this.index];
-  this.index += value.length;
-  return this.createPunctuator(value, afterSpace);
-}
-
-export default class Lexer {
+export default class Lexer implements LexerShape {
   content: string;
   length: number;
   index: number;
@@ -32,11 +26,7 @@ export default class Lexer {
   tabWidth: number;
 
   validator: Validator;
-  unsafe: boolean;
   errors: Error[];
-
-  backlog: Queue<Token>;
-  snapshot: Queue<Token>;
 
   constructor(content: string, options: LexerOptions = {}) {
     const me = this;
@@ -50,103 +40,97 @@ export default class Lexer {
     me.lineStart = 0;
     me.offset = 0;
     me.validator = options.validator || new Validator();
-    me.unsafe = options.unsafe;
     me.errors = [];
-    me.backlog = new Queue();
-    me.snapshot = new Queue();
   }
-
-  private static scanHandlers: Record<string, (this: Lexer, afterSpace: boolean) => BaseToken<any> | null> = {
-    [CharacterCode.QUOTE]: function quoteHandler(this, afterSpace) {
-      return this.scanStringLiteral(afterSpace);
-    },
-    [CharacterCode.DOT]: function dotHandler(this, afterSpace) {
-      if (this.validator.isDecDigit(this.codeAt(1)))
-        return this.scanNumericLiteral(afterSpace);
-      this.index++;
-      return this.createPunctuator(Operator.Member, afterSpace);
-    },
-    [CharacterCode.EQUAL]: function equalHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1)) {
-        return this.scanPunctuator(Operator.Equal, afterSpace);
-      }
-      return this.scanPunctuator(Operator.Assign, afterSpace);
-    },
-    [CharacterCode.ARROW_LEFT]: function arrowLeftHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.LessThanOrEqual, afterSpace);
-      return this.scanPunctuator(Operator.LessThan, afterSpace);
-    },
-    [CharacterCode.ARROW_RIGHT]: function arrowRightHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.GreaterThanOrEqual, afterSpace);
-      return this.scanPunctuator(Operator.GreaterThan, afterSpace);
-    },
-    [CharacterCode.EXCLAMATION_MARK]: function exclamationMarkHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.NotEqual, afterSpace);
-      this.index++;
-      return null;
-    },
-    [CharacterCode.MINUS]: function minusHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.SubtractShorthand, afterSpace);
-      return this.scanPunctuator(Operator.Minus, afterSpace);
-    },
-    [CharacterCode.PLUS]: function plusHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.AddShorthand, afterSpace);
-      return this.scanPunctuator(Operator.Plus, afterSpace);
-    },
-    [CharacterCode.ASTERISK]: function asteriskHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.MultiplyShorthand, afterSpace);
-      return this.scanPunctuator(Operator.Asterik, afterSpace);
-    },
-    [CharacterCode.SLASH]: function slashHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.DivideShorthand, afterSpace);
-      return this.scanPunctuator(Operator.Slash, afterSpace);
-    },
-    [CharacterCode.COLON]: function colonHandler(this, afterSpace) {
-      this.index++;
-      return this.createSlice(afterSpace);
-    },
-    [CharacterCode.CARET]: function caretHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.PowerShorthand, afterSpace);
-      return this.scanPunctuator(Operator.Power, afterSpace);
-    },
-    [CharacterCode.PERCENT]: function percentHandler(this, afterSpace) {
-      if (CharacterCode.EQUAL === this.codeAt(1))
-        return this.scanPunctuator(Operator.ModuloShorthand, afterSpace);
-      return this.scanPunctuator(Operator.Modulo, afterSpace);
-    },
-    [CharacterCode.SEMICOLON]: function semicolonHandler(this, afterSpace) {
-      this.index++;
-      return this.createEOL(afterSpace);
-    },
-    [CharacterCode.COMMA]: defaultScanHandler,
-    [CharacterCode.CURLY_BRACKET_LEFT]: defaultScanHandler,
-    [CharacterCode.CURLY_BRACKET_RIGHT]: defaultScanHandler,
-    [CharacterCode.SQUARE_BRACKETS_LEFT]: defaultScanHandler,
-    [CharacterCode.SQUARE_BRACKETS_RIGHT]: defaultScanHandler,
-    [CharacterCode.PARENTHESIS_LEFT]: defaultScanHandler,
-    [CharacterCode.PARENTHESIS_RIGHT]: defaultScanHandler,
-    [CharacterCode.AT_SIGN]: defaultScanHandler
-  };
 
   scan(
     code: number,
     afterSpace: boolean
   ): BaseToken<any> | null {
-    const handler = Lexer.scanHandlers[code];
-
-    if (handler) return handler.call(this, afterSpace);
-    if (this.validator.isDecDigit(code)) return this.scanNumericLiteral(afterSpace);
-
-    this.index++;
-    return null;
+    switch (code) {
+      case CharacterCode.QUOTE:
+        return this.scanStringLiteral(afterSpace);
+      case CharacterCode.DOT:
+        if (this.validator.isDecDigit(this.codeAt(1)))
+          return this.scanNumericLiteral(afterSpace);
+        this.index++;
+        return this.createPunctuator(Operator.Member, afterSpace);
+      case CharacterCode.EQUAL:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.Equal, afterSpace);
+        return this.scanPunctuator(Operator.Assign, afterSpace);
+      case CharacterCode.ARROW_LEFT:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.LessThanOrEqual, afterSpace);
+        return this.scanPunctuator(Operator.LessThan, afterSpace);
+      case CharacterCode.ARROW_RIGHT:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.GreaterThanOrEqual, afterSpace);
+        return this.scanPunctuator(Operator.GreaterThan, afterSpace);
+      case CharacterCode.EXCLAMATION_MARK:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.NotEqual, afterSpace);
+        this.index++;
+        return null;
+      case CharacterCode.MINUS:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.SubtractShorthand, afterSpace);
+        return this.scanPunctuator(Operator.Minus, afterSpace);
+      case CharacterCode.PLUS:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.AddShorthand, afterSpace);
+        return this.scanPunctuator(Operator.Plus, afterSpace);
+      case CharacterCode.ASTERISK:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.MultiplyShorthand, afterSpace);
+        return this.scanPunctuator(Operator.Asterisk, afterSpace);
+      case CharacterCode.SLASH:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.DivideShorthand, afterSpace);
+        return this.scanPunctuator(Operator.Slash, afterSpace);
+      case CharacterCode.COLON:
+        this.index++;
+        return this.createSlice(afterSpace);
+      case CharacterCode.CARET:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.PowerShorthand, afterSpace);
+        return this.scanPunctuator(Operator.Power, afterSpace);
+      case CharacterCode.PERCENT:
+        if (CharacterCode.EQUAL === this.codeAt(1))
+          return this.scanPunctuator(Operator.ModuloShorthand, afterSpace);
+        return this.scanPunctuator(Operator.Modulo, afterSpace);
+      case CharacterCode.SEMICOLON:
+        this.index++;
+        return this.createEOL(afterSpace);
+      case CharacterCode.COMMA:
+        this.index++;
+        return this.createPunctuator(Operator.Comma, afterSpace);
+      case CharacterCode.CURLY_BRACKET_LEFT:
+        this.index++;
+        return this.createPunctuator(Operator.CLBracket, afterSpace);
+      case CharacterCode.CURLY_BRACKET_RIGHT:
+        this.index++;
+        return this.createPunctuator(Operator.CRBracket, afterSpace);
+      case CharacterCode.SQUARE_BRACKETS_LEFT:
+        this.index++;
+        return this.createPunctuator(Operator.SLBracket, afterSpace);
+      case CharacterCode.SQUARE_BRACKETS_RIGHT:
+        this.index++;
+        return this.createPunctuator(Operator.SRBracket, afterSpace);
+      case CharacterCode.PARENTHESIS_LEFT:
+        this.index++;
+        return this.createPunctuator(Operator.LParenthesis, afterSpace);
+      case CharacterCode.PARENTHESIS_RIGHT:
+        this.index++;
+        return this.createPunctuator(Operator.RParenthesis, afterSpace);
+      case CharacterCode.AT_SIGN:
+        this.index++;
+        return this.createPunctuator(Operator.Reference, afterSpace);
+      default:
+        if (this.validator.isDecDigit(code)) return this.scanNumericLiteral(afterSpace);
+        this.index++;
+        return null;
+    }
   }
 
   isAtWhitespace(): boolean {
@@ -165,13 +149,12 @@ export default class Lexer {
       type: TokenType.EOL,
       value: Operator.EndOfLine,
       line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offsetRange: [me.offset, me.offset],
+      rangeStart: me.tokenStart,
+      rangeEnd: me.index,
+      offsetStart: me.offset,
+      offsetEnd: me.offset,
       afterSpace
     });
-
-    me.snapshot.enqueue(token);
 
     return token;
   }
@@ -182,13 +165,12 @@ export default class Lexer {
       type: TokenType.Identifier,
       value,
       line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offsetRange: [me.offset, me.offset],
+      rangeStart: me.tokenStart,
+      rangeEnd: me.index,
+      offsetStart: me.offset,
+      offsetEnd: me.offset,
       afterSpace
     });
-
-    me.snapshot.enqueue(token);
 
     return token;
   }
@@ -199,13 +181,12 @@ export default class Lexer {
       type: TokenType.EOF,
       value: Operator.EndOfFile,
       line: me.line,
-      lineStart: me.lineStart,
-      range: [me.index, me.index],
-      offsetRange: [me.offset, me.offset],
+      rangeStart: me.index,
+      rangeEnd: me.index,
+      offsetStart: me.offset,
+      offsetEnd: me.offset,
       afterSpace
     });
-
-    me.snapshot.enqueue(token);
 
     return token;
   }
@@ -217,13 +198,12 @@ export default class Lexer {
       value: value === Literal.True,
       raw: value,
       line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offsetRange: [me.offset, me.offset],
+      rangeStart: me.tokenStart,
+      rangeEnd: me.index,
+      offsetStart: me.offset,
+      offsetEnd: me.offset,
       afterSpace
     });
-
-    me.snapshot.enqueue(literalToken as Token);
 
     return literalToken;
   }
@@ -235,13 +215,12 @@ export default class Lexer {
       value: null,
       raw: Literal.Null,
       line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offsetRange: [me.offset, me.offset],
+      rangeStart: me.tokenStart,
+      rangeEnd: me.index,
+      offsetStart: me.offset,
+      offsetEnd: me.offset,
       afterSpace
     });
-
-    me.snapshot.enqueue(literalToken as Token);
 
     return literalToken;
   }
@@ -249,15 +228,14 @@ export default class Lexer {
   createSlice(afterSpace: boolean) {
     const token = new Token({
       type: TokenType.SliceOperator,
-      value: Operator.SliceSeperator,
+      value: Operator.SliceSeparator,
       line: this.line,
-      lineStart: this.lineStart,
-      range: [this.tokenStart, this.index],
-      offsetRange: [this.offset, this.offset],
+      rangeStart: this.tokenStart,
+      rangeEnd: this.index,
+      offsetStart: this.offset,
+      offsetEnd: this.offset,
       afterSpace
     });
-
-    this.snapshot.enqueue(token);
 
     return token;
   }
@@ -267,13 +245,12 @@ export default class Lexer {
       type: TokenType.Punctuator,
       value,
       line: this.line,
-      lineStart: this.lineStart,
-      range: [this.tokenStart, this.index],
-      offsetRange: [this.offset, this.offset],
+      rangeStart: this.tokenStart,
+      rangeEnd: this.index,
+      offsetStart: this.offset,
+      offsetEnd: this.offset,
       afterSpace
     });
-
-    this.snapshot.enqueue(token);
 
     return token;
   }
@@ -281,25 +258,23 @@ export default class Lexer {
   createNumericLiteral(value: number, raw: string, afterSpace: boolean) {
     const literalToken = new LiteralToken({
       type: TokenType.NumericLiteral,
-      value: value,
-      raw: raw,
+      value,
+      raw,
       line: this.line,
-      lineStart: this.lineStart,
-      range: [this.tokenStart, this.index],
-      offsetRange: [this.offset, this.offset],
+      rangeStart: this.tokenStart,
+      rangeEnd: this.index,
+      offsetStart: this.offset,
+      offsetEnd: this.offset,
       afterSpace
     });
-
-    this.snapshot.enqueue(literalToken as Token);
 
     return literalToken;
   }
 
-  scanStringLiteral(afterSpace: boolean): LiteralToken {
+  scanStringLiteral(afterSpace: boolean): LiteralToken | Token {
     const me = this;
     const validator = me.validator;
     const beginLine = me.line;
-    const beginLineStart = me.lineStart;
     const strStart = me.index;
     const strStartOffset = me.offset;
     let endOffset = me.offset;
@@ -325,35 +300,37 @@ export default class Lexer {
 
     if (!closed) {
       return me.raise(
-        `Unexpected string end of file.`,
+        `missing closing quote (")`,
         new Range(
-          new Position(beginLine, strStart - strStartOffset + 1),
-          new Position(me.line, me.index - endOffset + 2)
-        )
+          [beginLine, strStart - strStartOffset + 1],
+          [me.line, me.index - endOffset + 2]
+        ),
+        ErrorCode.UnexpectedStringEOF,
+        `Add a closing quote to terminate the string`
       );
     }
 
     me.index++;
     const rawString = me.content.slice(me.tokenStart, me.index);
-    const string = rawString
-      .slice(1, -1)
-      .replace(/""/g, Operator.Escape);
+    const inner = rawString.length > 2 ? rawString.slice(1, -1) : '';
+    const string = inner.indexOf('""') !== -1
+      ? inner.replace(/""/g, Operator.Escape)
+      : inner;
 
     const literalToken = new LiteralToken({
       type: TokenType.StringLiteral,
       value: string,
       raw: rawString,
       line: beginLine,
-      lineStart: beginLineStart,
-      range: [me.tokenStart, me.index],
-      offsetRange: [strStartOffset, endOffset],
+      rangeStart: me.tokenStart,
+      rangeEnd: me.index,
+      offsetStart: strStartOffset,
+      offsetEnd: endOffset,
       afterSpace,
-      lastLine: me.line,
-      lastLineStart: me.lineStart
+      lastLine: me.line
     });
 
     me.offset = endOffset;
-    me.snapshot.enqueue(literalToken as Token);
 
     return literalToken;
   }
@@ -362,7 +339,6 @@ export default class Lexer {
     const me = this;
     const validator = me.validator;
     const beginLine = me.line;
-    const beginLineStart = me.lineStart;
 
     for (; this.index < this.length && !validator.isEndOfLine(me.codeAt()); me.index++);
 
@@ -373,13 +349,12 @@ export default class Lexer {
       type: TokenType.Comment,
       value,
       line: beginLine,
-      lineStart: beginLineStart,
-      range: [me.tokenStart, me.index],
-      offsetRange: [me.offset, me.offset],
+      rangeStart: me.tokenStart,
+      rangeEnd: me.index,
+      offsetStart: me.offset,
+      offsetEnd: me.offset,
       afterSpace
     });
-
-    me.snapshot.enqueue(token);
 
     return token;
   }
@@ -412,11 +387,12 @@ export default class Lexer {
 
     if (isNaN(value)) {
       return this.raise(
-        `Invalid numeric literal: ${raw}`,
+        `invalid numeric literal: ${raw}`,
         new Range(
-          new Position(this.line, this.tokenStart - this.offset + 1),
-          new Position(this.line, this.index - this.offset + 1)
-        )
+          [this.line, this.tokenStart - this.offset + 1],
+          [this.line, this.index - this.offset + 1]
+        ),
+        ErrorCode.InvalidNumericLiteral
       );
     }
 
@@ -432,10 +408,10 @@ export default class Lexer {
     const me = this;
 
     for (; me.index < me.length; me.index++) {
-      const code = me.content[me.index];
-      if (code === '\t') {
+      const code = me.content.charCodeAt(me.index);
+      if (code === CharacterCode.TAB) {
         me.offset -= me.tabWidth - 1;
-      } else if (code !== ' ') {
+      } else if (code !== CharacterCode.WHITESPACE) {
         return;
       }
     }
@@ -448,17 +424,50 @@ export default class Lexer {
 
     switch (keyword) {
       case Keyword.End: {
-        me.index++;
+        // Skip whitespace (spaces and tabs) between 'end' and the following keyword,
+        // matching reference MiniScript behavior which calls Dequeue() (skips whitespace).
+        for (; me.index < me.length; me.index++) {
+          const ch = me.content.charCodeAt(me.index);
+          if (ch !== CharacterCode.WHITESPACE && ch !== CharacterCode.TAB) break;
+        }
 
         for (; validator.isIdentifierPart(me.codeAt()); me.index++);
         value = me.content.slice(me.tokenStart, me.index);
+
+        if (value.length > 3) {
+          const afterEnd = value.slice(3).trimStart();
+          if (afterEnd.length > 0) {
+            value = 'end ' + afterEnd;
+          }
+        }
+
+        if (value !== Keyword.EndIf && value !== Keyword.EndWhile &&
+            value !== Keyword.EndFor && value !== Keyword.EndFunction) {
+          return me.raise(
+            `'end' without following keyword ('if', 'function', etc.)`,
+            new Range(
+              [me.line, me.tokenStart - me.offset + 1],
+              [me.line, me.index - me.offset + 1]
+            ),
+            ErrorCode.InvalidEndKeyword
+          );
+        }
         break;
       }
       case Keyword.Else: {
-        const elseIfStatement = me.content.slice(me.tokenStart, me.index + 3);
-        if (elseIfStatement === Keyword.ElseIf) {
-          me.index += 3;
-          value = elseIfStatement;
+        let p = me.index;
+        for (; p < me.length; p++) {
+          const ch = me.content.charCodeAt(p);
+          if (ch !== CharacterCode.WHITESPACE && ch !== CharacterCode.TAB) break;
+        }
+        if (
+          p + 2 <= me.length &&
+          me.content.charCodeAt(p) === CharacterCode.LETTER_i && // 'i'
+          me.content.charCodeAt(p + 1) === CharacterCode.LETTER_f && // 'f'
+          (p + 2 >= me.length || !validator.isIdentifierPart(me.content.charCodeAt(p + 2)))
+        ) {
+          me.index = p + 2;
+          value = Keyword.ElseIf;
         }
         break;
       }
@@ -468,13 +477,12 @@ export default class Lexer {
       type: TokenType.Keyword,
       value,
       line: me.line,
-      lineStart: me.lineStart,
-      range: [me.tokenStart, me.index],
-      offsetRange: [me.offset, me.offset],
+      rangeStart: me.tokenStart,
+      rangeEnd: me.index,
+      offsetStart: me.offset,
+      offsetEnd: me.offset,
       afterSpace
     });
-
-    me.snapshot.enqueue(token);
 
     return token;
   }
@@ -506,10 +514,6 @@ export default class Lexer {
 
   next(): BaseToken<any> {
     const me = this;
-
-    if (me.backlog.size) {
-      return me.backlog.dequeue();
-    }
 
     const oldPosition = me.index;
     me.skipWhiteSpace();
@@ -549,39 +553,21 @@ export default class Lexer {
     if (item) return item;
 
     return me.raise(
-      `Invalid character ${code} (Code: ${String.fromCharCode(code)})`,
+      `Invalid character '${String.fromCharCode(code)}'`,
       new Range(
-        new Position(beginLine, me.tokenStart - me.offset + 1),
-        new Position(me.line, me.index - me.offset + 1)
-      )
+        [beginLine, me.tokenStart - me.offset + 1],
+        [me.line, me.index - me.offset + 1]
+      ),
+      ErrorCode.InvalidCharacter
     );
   }
 
-  recordSnapshot() {
-    this.snapshot.clear();
-  }
-
-  recoverFromSnapshot() {
-    this.backlog.copyInto(this.snapshot);
-  }
-
-  raise(message: string, range: Range): Token {
-    const me = this;
-    const err = new LexerException(message, range);
-
-    me.errors.push(err);
-
-    if (me.unsafe) {
-      return new Token({
-        type: TokenType.Invalid,
-        value: '',
-        line: me.line,
-        lineStart: me.lineStart,
-        range: [me.tokenStart, me.index],
-        offsetRange: [me.offset, me.offset],
-      });
-    }
-
+  raise(message: string, range: Range, code: ErrorCode = ErrorCode.Unknown, hint?: string): Token {
+    const err = new LexerException(message, range, code, hint);
+    this.errors.push(err);
     throw err;
   }
 }
+
+export const UnsafeLexer = UnsafeLexerMixin(Lexer);
+export type UnsafeLexer = InstanceType<typeof UnsafeLexer>;

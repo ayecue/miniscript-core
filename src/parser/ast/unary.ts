@@ -31,22 +31,25 @@ export class ASTUnaryExpression extends ASTBase {
   }
 
   constructor(options: ASTUnaryExpressionOptions) {
-    super(ASTUnaryExpression.getUnaryType(options.operator), options);
+    super(ASTUnaryExpression.getUnaryType(options.operator), { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.argument = options.argument;
     this.operator = options.operator;
   }
 
   toString(): string {
-    return `${this.type}[${this.start}-${this.end}][${this.operator} ${this.argument}]`;
+    return `${this.type}[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.operator} ${this.argument}]`;
   }
 
   clone(): ASTUnaryExpression {
     return new ASTUnaryExpression({
       argument: this.argument.clone(),
       operator: this.operator,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

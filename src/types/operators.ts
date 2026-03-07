@@ -1,6 +1,6 @@
 export enum Operator {
   Plus = '+',
-  Asterik = '*',
+  Asterisk = '*',
   Minus = '-',
   Slash = '/',
   Power = '^',
@@ -25,7 +25,7 @@ export enum Operator {
   Assign = '=',
   EndOfLine = ';',
   EndOfFile = '<eof>',
-  SliceSeperator = ':',
+  SliceSeparator = ':',
   Comma = ',',
   Escape = '"',
   SLBracket = '[',

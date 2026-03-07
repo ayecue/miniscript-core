@@ -1,4 +1,3 @@
-import { TokenType } from '../../lexer/token';
 import { ASTBase, ASTBaseOptions, ASTType } from './base';
 
 export abstract class ASTLiteral extends ASTBase {
@@ -20,23 +19,26 @@ export class ASTNumericLiteral extends ASTLiteral {
   constructor(
     options: ASTLiteralOptions<number>
   ) {
-    super(TokenType.NumericLiteral, options);
+    super(ASTType.NumericLiteral, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.value = options.value;
     this.raw = options.raw;
     this.negated = false;
   }
 
   toString(): string {
-    return `Literal[${this.start}-${this.end}][${this.negated ? '-' : ''}${this.value}]`;
+    return `Literal[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.negated ? '-' : ''}${this.value}]`;
   }
 
   clone(): ASTNumericLiteral {
     const cloned = new ASTNumericLiteral({
       value: this.value,
       raw: this.raw,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
 
@@ -54,23 +56,26 @@ export class ASTBooleanLiteral extends ASTLiteral {
   constructor(
     options: ASTLiteralOptions<boolean>
   ) {
-    super(TokenType.BooleanLiteral, options);
+    super(ASTType.BooleanLiteral, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.value = options.value;
     this.raw = options.raw;
     this.negated = false;
   }
 
   toString(): string {
-    return `Literal[${this.start}-${this.end}][${this.negated ? '-' : ''}${this.value}]`;
+    return `Literal[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.negated ? '-' : ''}${this.value}]`;
   }
 
   clone(): ASTBooleanLiteral {
     const cloned = new ASTBooleanLiteral({
       value: this.value,
       raw: this.raw,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
 
@@ -87,22 +92,25 @@ export class ASTStringLiteral extends ASTLiteral {
   constructor(
     options: ASTLiteralOptions<string>
   ) {
-    super(ASTType.StringLiteral, options);
+    super(ASTType.StringLiteral, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.value = options.value;
     this.raw = options.raw;
   }
 
   toString(): string {
-    return `Literal[${this.start}-${this.end}][${this.value}]`;
+    return `Literal[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.value}]`;
   }
 
   clone(): ASTStringLiteral {
     return new ASTStringLiteral({
       value: this.value,
       raw: this.raw,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
@@ -115,22 +123,25 @@ export class ASTNilLiteral extends ASTLiteral {
   constructor(
     options: ASTLiteralOptions<null>
   ) {
-    super(ASTType.NilLiteral, options);
+    super(ASTType.NilLiteral, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.value = options.value;
     this.raw = options.raw;
   }
 
   toString(): string {
-    return `Literal[${this.start}-${this.end}][${this.value}]`;
+    return `Literal[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.value}]`;
   }
 
   clone(): ASTNilLiteral {
     return new ASTNilLiteral({
       value: this.value,
       raw: this.raw,
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }

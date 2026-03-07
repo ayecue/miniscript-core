@@ -1,4 +1,9 @@
 import { Token, TokenType } from '../lexer/token';
+import {
+  compile,
+  registerSelector,
+  registerSelectorGroup
+} from '../utils/selector-registry';
 import { Keyword } from './keywords';
 import { Operator } from './operators';
 
@@ -18,25 +23,25 @@ export enum SelectorType {
   DivideShorthand = 'DivideShorthand',
   PowerShorthand = 'PowerShorthand',
   ModuloShorthand = 'ModuloShorthand',
-  Seperator = 'Seperator',
+  Separator = 'Separator',
   Function = 'Function',
   EndFunction = 'EndFunction',
   EndWhile = 'EndWhile',
   EndFor = 'EndFor',
   EndIf = 'EndIf',
-  SliceSeperator = 'SliceSeperator',
-  MapKeyValueSeperator = 'MapKeyValueSeperator',
-  MapSeperator = 'MapSeperator',
-  ListSeperator = 'ListSeperator',
-  CallSeperator = 'CallSeperator',
-  ArgumentSeperator = 'ArgumentSeperator',
-  ImportCodeSeperator = 'ImportCodeSeperator',
+  SliceSeparator = 'SliceSeparator',
+  MapKeyValueSeparator = 'MapKeyValueSeparator',
+  MapSeparator = 'MapSeparator',
+  ListSeparator = 'ListSeparator',
+  CallSeparator = 'CallSeparator',
+  ArgumentSeparator = 'ArgumentSeparator',
+  ImportCodeSeparator = 'ImportCodeSeparator',
   ElseIf = 'ElseIf',
   Then = 'Then',
   Else = 'Else',
   In = 'In',
-  MemberSeperator = 'MemberSeperator',
-  NumberSeperator = 'NumberSeperator',
+  MemberSeparator = 'MemberSeparator',
+  NumberSeparator = 'NumberSeparator',
   Reference = 'Reference',
   Isa = 'Isa',
   Or = 'Or',
@@ -55,6 +60,13 @@ export enum SelectorType {
   LessEqual = 'LessEqual',
   New = 'New',
   Not = 'Not',
+  Return = 'Return',
+  If = 'If',
+  While = 'While',
+  For = 'For',
+  Continue = 'Continue',
+  Break = 'Break',
+  Repeat = 'Repeat',
   Comment = 'Comment'
 }
 
@@ -69,31 +81,28 @@ export interface Selector {
     type: TokenType;
     value?: string;
   };
+  selectorId: number;
   name: string;
 }
 
 export function createSelector(options: createSelectorOptions): Selector {
-  let selectorf: Selector;
-  if (options.value === undefined) {
-    selectorf = new Function(
-      'token',
-      `if (token == null) return false;return token.type === '${options.type}';`
-    ) as Selector;
-    Object.defineProperty(selectorf, 'name', {
-      value: `selector_${options.type}`,
-      writable: false
-    });
-  } else {
-    selectorf = new Function(
-      'token',
-      `if (token == null) return false;return token.value === '${options.value}' && token.type === '${options.type}';`
-    ) as Selector;
-    Object.defineProperty(selectorf, 'name', {
-      value: `selector_${options.type}_${options.value}`,
-      writable: false
-    });
-  }
+  const entry = registerSelector(options.type, options.value);
+  const id = entry.selectorId;
+
+  const selectorf = function (token: Token): boolean {
+    return token != null && token.selectorId === id;
+  } as Selector;
+
+  Object.defineProperty(selectorf, 'name', {
+    value:
+      options.value !== undefined
+        ? `selector_${TokenType[options.type]}_${options.value}`
+        : `selector_${TokenType[options.type]}`,
+    writable: false
+  });
+
   selectorf.data = options;
+  selectorf.selectorId = id;
   return selectorf;
 }
 
@@ -162,7 +171,7 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Punctuator,
     value: Operator.ModuloShorthand
   }),
-  Seperator: createSelector({
+  Separator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
@@ -186,33 +195,33 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Keyword,
     value: Keyword.EndIf
   }),
-  SliceSeperator: createSelector({
+  SliceSeparator: createSelector({
     type: TokenType.SliceOperator,
-    value: Operator.SliceSeperator
+    value: Operator.SliceSeparator
   }),
-  MapKeyValueSeperator: createSelector({
+  MapKeyValueSeparator: createSelector({
     type: TokenType.SliceOperator,
-    value: Operator.SliceSeperator
+    value: Operator.SliceSeparator
   }),
-  MapSeperator: createSelector({
+  MapSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ListSeperator: createSelector({
+  ListSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  CallSeperator: createSelector({
+  CallSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ArgumentSeperator: createSelector({
+  ArgumentSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Comma
   }),
-  ImportCodeSeperator: createSelector({
+  ImportCodeSeparator: createSelector({
     type: TokenType.SliceOperator,
-    value: Operator.SliceSeperator
+    value: Operator.SliceSeparator
   }),
   ElseIf: createSelector({
     type: TokenType.Keyword,
@@ -230,11 +239,11 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Keyword,
     value: Keyword.In
   }),
-  MemberSeperator: createSelector({
+  MemberSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Member
   }),
-  NumberSeperator: createSelector({
+  NumberSeparator: createSelector({
     type: TokenType.Punctuator,
     value: Operator.Member
   }),
@@ -264,7 +273,7 @@ export const Selectors: Record<SelectorType, Selector> = {
   }),
   Times: createSelector({
     type: TokenType.Punctuator,
-    value: Operator.Asterik
+    value: Operator.Asterisk
   }),
   Power: createSelector({
     type: TokenType.Punctuator,
@@ -310,6 +319,34 @@ export const Selectors: Record<SelectorType, Selector> = {
     type: TokenType.Keyword,
     value: Keyword.Not
   }),
+  Return: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Return
+  }),
+  If: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.If
+  }),
+  While: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.While
+  }),
+  For: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.For
+  }),
+  Continue: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Continue
+  }),
+  Break: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Break
+  }),
+  Repeat: createSelector({
+    type: TokenType.Keyword,
+    value: Keyword.Repeat
+  }),
   Comment: createSelector({
     type: TokenType.Comment
   })
@@ -318,6 +355,7 @@ export const Selectors: Record<SelectorType, Selector> = {
 export interface SelectorGroup {
   (token: Token): boolean;
   selectors: Selector[];
+  groupBit: number;
   name: string;
 }
 
@@ -325,47 +363,22 @@ export function createSelectorGroup(
   name: string,
   selectors: Selector[]
 ): SelectorGroup {
-  const selectorsWithValue = selectors.filter(
-    (item) => item.data.value !== undefined
+  const entries = selectors.map((s) =>
+    registerSelector(s.data.type, s.data.value)
   );
-  const casesWithValue = selectorsWithValue
-    .map((selector) => {
-      return `case '${selector.data.value}': return token.type === '${selector.data.type}';`;
-    })
-    .join('\n');
-  const selectorsWithoutValue = selectors.filter(
-    (item) => item.data.value === undefined
-  );
-  const casesWithoutValue = selectorsWithoutValue
-    .map((selector) => {
-      return `case '${selector.data.type}':`;
-    })
-    .join('\n');
-  const groupf = new Function(
-    'token',
-    `
-  ${
-    casesWithoutValue.length > 0
-      ? `switch(token.type) {
-    ${casesWithoutValue}
-      return true;
-  }`
-      : ''
-  }
-  ${
-    casesWithValue.length > 0
-      ? `switch(token.value) {
-    ${casesWithValue}
-  }`
-      : ''
-  }
-  return false;`
-  ) as SelectorGroup;
+  const bit = registerSelectorGroup(entries);
+
+  const groupf = function (token: Token): boolean {
+    return token != null && (token.groupBits & bit) !== 0;
+  } as SelectorGroup;
+
   Object.defineProperty(groupf, 'name', {
     value: `selector_group_${name}`,
     writable: false
   });
+
   groupf.selectors = selectors;
+  groupf.groupBit = bit;
   return groupf;
 }
 
@@ -382,7 +395,9 @@ export enum SelectorGroupType {
   FunctionDeclarationArgEnd = 'FunctionDeclarationArgEnd',
   ComparisonOperators = 'ComparisonOperators',
   MultiDivOperators = 'MultiDivOperators',
-  CallArgsEnd = 'CallArgsEnd'
+  CallArgsEnd = 'CallArgsEnd',
+  MapSeparator = 'MapSeparator',
+  ListSeparator = 'ListSeparator'
 }
 
 export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
@@ -412,7 +427,7 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
   ),
   AssignmentCommandArgs: createSelectorGroup(
     SelectorGroupType.AssignmentCommandArgs,
-    [Selectors.ArgumentSeperator, Selectors.EndOfLine, Selectors.EndOfFile]
+    [Selectors.ArgumentSeparator, Selectors.EndOfLine, Selectors.EndOfFile]
   ),
   ReturnStatementEnd: createSelectorGroup(
     SelectorGroupType.ReturnStatementEnd,
@@ -439,7 +454,17 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
     Selectors.Mod
   ]),
   CallArgsEnd: createSelectorGroup(SelectorGroupType.CallArgsEnd, [
-    Selectors.ArgumentSeperator,
+    Selectors.ArgumentSeparator,
     Selectors.RParenthesis
+  ]),
+  MapSeparator: createSelectorGroup(SelectorGroupType.MapSeparator, [
+    Selectors.MapSeparator,
+    Selectors.CRBracket
+  ]),
+  ListSeparator: createSelectorGroup(SelectorGroupType.ListSeparator, [
+    Selectors.MapSeparator,
+    Selectors.SRBracket
   ])
 };
+
+compile();

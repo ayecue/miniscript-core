@@ -12,14 +12,14 @@ export class ASTSliceExpression extends ASTBase {
   right: ASTBase;
 
   constructor(options: ASTSliceExpressionOptions) {
-    super(ASTType.SliceExpression, options);
+    super(ASTType.SliceExpression, { startLine: options.startLine, startChar: options.startChar, endLine: options.endLine, endChar: options.endChar, rangeStart: options.rangeStart, rangeEnd: options.rangeEnd, scope: options.scope });
     this.left = options.left;
     this.right = options.right;
     this.base = options.base;
   }
 
   toString(): string {
-    return `SliceExpression[${this.start}-${this.end}][${this.base}[${this.left}:${this.right}]]`;
+    return `SliceExpression[${this.startLine}:${this.startChar}-${this.endLine}:${this.endChar}][${this.base}[${this.left}:${this.right}]]`;
   }
 
   clone(): ASTSliceExpression {
@@ -27,9 +27,12 @@ export class ASTSliceExpression extends ASTBase {
       base: this.base.clone(),
       left: this.left.clone(),
       right: this.right.clone(),
-      start: this.start,
-      end: this.end,
-      range: this.range,
+      startLine: this.startLine,
+      startChar: this.startChar,
+      endLine: this.endLine,
+      endChar: this.endChar,
+      rangeStart: this.rangeStart,
+      rangeEnd: this.rangeEnd,
       scope: this.scope
     });
   }
