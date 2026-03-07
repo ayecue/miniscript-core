@@ -1,5 +1,6 @@
 import { Token, TokenType } from '../lexer/token';
 import {
+  compile,
   registerSelector,
   registerSelectorGroup
 } from '../utils/selector-registry';
@@ -465,3 +466,5 @@ export const SelectorGroups: Record<SelectorGroupType, SelectorGroup> = {
     Selectors.SRBracket
   ])
 };
+
+compile();

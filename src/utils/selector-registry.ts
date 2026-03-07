@@ -8,16 +8,16 @@ const EMPTY_ENTRY: Readonly<SelectorEntry> = Object.freeze({
   groupBits: 0
 });
 
-type CompiledResolver = (type: number, value: any) => Readonly<SelectorEntry>;
-
 export class SelectorRegistry {
   private nextSelectorId = 1;
   private nextGroupBit = 1;
 
   private exactLookup: Record<number, Record<string, SelectorEntry>> = {};
   private typeOnlyLookup: Record<number, SelectorEntry> = {};
-  private _compiled: CompiledResolver | null = null;
   private groupMembers: Map<number, number[]> = new Map();
+  private _compiledResolver:
+    | ((type: number, value: any) => Readonly<SelectorEntry>)
+    | null = null;
 
   registerSelector(type: number, value?: string): SelectorEntry {
     if (value !== undefined) {
@@ -53,8 +53,7 @@ export class SelectorRegistry {
     return this.groupMembers.get(bit) ?? [];
   }
 
-  private compile(): CompiledResolver {
-    // Collect all entries into a flat array for closure capture
+  compile(): (type: number, value: any) => Readonly<SelectorEntry> {
     const entries: Readonly<SelectorEntry>[] = [];
     const entryIndex = new WeakMap<SelectorEntry, number>();
 
@@ -65,13 +64,10 @@ export class SelectorRegistry {
       return idx;
     };
     const getIdx = (entry: SelectorEntry): number => {
-      return entryIndex.get(entry) || createIdx(entry);
+      return entryIndex.get(entry) ?? createIdx(entry);
     };
 
-    // Build source for the outer switch on type
     const typeCases: string[] = [];
-
-    // Gather all types that have exact (type+value) entries
     const allTypes = new Set<number>([
       ...Object.keys(this.exactLookup).map(Number),
       ...Object.keys(this.typeOnlyLookup).map(Number)
@@ -111,15 +107,20 @@ export class SelectorRegistry {
       ''
     )}}return d;}`;
 
-    return new Function('e', 'd', src)(entries, EMPTY_ENTRY);
-  }
-
-  private get compiled(): CompiledResolver {
-    return (this._compiled ??= this.compile());
+    this._compiledResolver = new Function('e', 'd', src)(entries, EMPTY_ENTRY);
+    return this._compiledResolver;
   }
 
   resolveSelector<T>(type: number, value?: T): Readonly<SelectorEntry> {
-    return this.compiled(type, value);
+    if (this._compiledResolver !== null) {
+      return this._compiledResolver(type, value);
+    }
+    const byType = this.exactLookup[type as number];
+    if (byType !== undefined) {
+      const exact = byType[value as unknown as string];
+      if (exact !== undefined) return exact;
+    }
+    return this.typeOnlyLookup[type as number] ?? EMPTY_ENTRY;
   }
 }
 
@@ -135,6 +136,13 @@ export function registerSelectorGroup(entries: SelectorEntry[]): number {
 
 export function getSelectorIdsForGroupBit(bit: number): readonly number[] {
   return defaultRegistry.getSelectorIdsForGroupBit(bit);
+}
+
+export function compile(): (
+  type: number,
+  value: any
+) => Readonly<SelectorEntry> {
+  return defaultRegistry.compile();
 }
 
 export function resolveSelector<T>(

@@ -1,6 +1,6 @@
+import { Comment } from '../types/comment';
 import { ASTBaseBlockWithScope, ASTLiteral } from './ast';
 import { LineRegistry } from './line-registry';
-import { Comment } from '../types/comment';
 
 export interface ParserStateSnapshot {
   literalsLength: number;

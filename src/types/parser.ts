@@ -5,9 +5,9 @@ import {
   ASTForGenericStatement,
   ASTWhileStatement
 } from '../parser/ast';
-import { ParserState } from '../parser/state';
 import { LineRegistry } from '../parser/line-registry';
 import { PendingBlock } from '../parser/pending-block';
+import { ParserState } from '../parser/state';
 import { Stack } from '../utils/stack';
 
 export interface ParserShape {
