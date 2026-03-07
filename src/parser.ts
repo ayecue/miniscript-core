@@ -220,7 +220,7 @@ export default class Parser implements ParserShape {
   }
 
   protected createComment(token: Token): Comment {
-    return { value: token.value, isMultiline: false };
+    return { value: token.value, isMultiline: false, startLine: token.line, endLine: token.endLine };
   }
 
   consumeNoop(): number {
